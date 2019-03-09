@@ -5,17 +5,17 @@
 
 // GENERATED API OVERRIDES
 
-interface RbxAnimationController extends RbxInstance {
+interface AnimationController extends RbxInstance {
 	readonly AnimationPlayed: RBXScriptSignal<(animationTrack: AnimationTrack) => void>;
 	GetPlayingAnimationTracks(): Array<AnimationTrack>;
 	LoadAnimation(animation: Animation): AnimationTrack;
 }
 
-interface RbxAnimator extends RbxInstance {
+interface Animator extends RbxInstance {
 	LoadAnimation(animation: Animation): AnimationTrack;
 }
 
-interface RbxAssetService extends RbxInstance {
+interface AssetService extends RbxInstance {
 	CreatePlaceInPlayerInventoryAsync(
 		player: Player,
 		placeName: string,
@@ -43,28 +43,28 @@ interface RbxBasePart extends RbxInstance {
 	UnionAsync(parts: Array<BasePart>, collisionfidelity?: Enum.CollisionFidelity): UnionOperation;
 }
 
-interface RbxBillboardGui extends RbxLayerCollector {
+interface BillboardGui extends RbxLayerCollector {
 	/** The Object the billboard gui uses as its base to render from.  Currently, the only way to set this property is thru a script, and must exist in the workspace.  This will only render if the object assigned derives from BasePart. */
 	Adornee: BasePart | Attachment | undefined;
 	/** Specifies a Player that the BillboardGui will not render to. */
 	PlayerToHideFrom: Player | undefined;
 }
 
-interface RbxBindableEvent extends RbxInstance {
+interface BindableEvent extends RbxInstance {
 	/** This event fires when the Fire() method is used.  Receives the variable length arguments from Fire(). */
 	readonly Event: RBXScriptSignal<(...arguments: Array<unknown>) => void>;
 	/** Used to make the custom event fire (see Event for more info). Arguments can be variable length. */
 	Fire(...arguments: Array<unknown>): void;
 }
 
-interface RbxBindableFunction extends RbxInstance {
+interface BindableFunction extends RbxInstance {
 	/** Should be defined as a function. This function is called when Invoke() is called. Number of arguments is variable. */
 	OnInvoke: (...arguments: Array<unknown>) => any;
 	/** Causes the function assigned to OnInvoke to be called. Arguments passed to this function get passed to OnInvoke function. */
 	Invoke(...arguments: Array<unknown>): Array<unknown>;
 }
 
-interface RbxCamera extends RbxInstance {
+interface Camera extends RbxInstance {
 	/** Where the Camera's focus is.  Any rotation of the camera will be about this subject. */
 	CameraSubject: Humanoid | BasePart | undefined;
 	GetPartsObscuringTarget(castPoints: Array<Vector3>, ignoreList: Array<Instance>): Array<Instance>;
@@ -74,14 +74,14 @@ interface RbxCamera extends RbxInstance {
 	WorldToViewportPoint(worldPoint: Vector3): LuaTuple<[Vector3, boolean]>;
 }
 
-interface RbxChat extends RbxInstance {
+interface Chat extends RbxInstance {
 	readonly Chatted: RBXScriptSignal<(part: BasePart, message: string, color: Enum.ChatColor) => void>;
 	Chat(partOrCharacter: BasePart | Model, message: string, color?: Enum.ChatColor): void;
 	FilterStringAsync(stringToFilter: string, playerFrom: Player, playerTo: Player): string;
 	FilterStringForBroadcast(stringToFilter: string, playerFrom: Player): string;
 }
 
-interface RbxClickDetector extends RbxInstance {
+interface ClickDetector extends RbxInstance {
 	/** Fired when a player clicks on the parent Part of ClickDetector. The argument provided is always of type Player. */
 	readonly MouseClick: RBXScriptSignal<(playerWhoClicked: Player) => void>;
 	/** Fired when a player's mouse enters on the parent Part of ClickDetector. The argument provided is always of type Player. */
@@ -91,7 +91,7 @@ interface RbxClickDetector extends RbxInstance {
 	readonly RightMouseClick: RBXScriptSignal<(playerWhoClicked: Player) => void>;
 }
 
-interface RbxCollectionService extends RbxInstance {
+interface CollectionService extends RbxInstance {
 	/** Returns a signal that fires when the given tag either has a new instance with that tag added to the data model or that tag is assigned to an instance within the data model. */
 	GetInstanceAddedSignal(tag: string): RBXScriptSignal<(instance: Instance) => void>;
 	/** Returns a signal that fires when the given tag either has an instance with that tag removed from the data model or that tag is removed from an instance within the data model. */
@@ -102,12 +102,12 @@ interface RbxCollectionService extends RbxInstance {
 	GetTags(instance: Instance): Array<string>;
 }
 
-interface RbxContentProvider extends RbxInstance {
+interface ContentProvider extends RbxInstance {
 	PreloadAsync(contentIdList: Array<Instance>): void;
 }
 
 /** @rbxts client */
-interface RbxContextActionService extends RbxInstance {
+interface ContextActionService extends RbxInstance {
 	readonly LocalToolEquipped: RBXScriptSignal<(toolEquipped: Tool) => void>;
 	readonly LocalToolUnequipped: RBXScriptSignal<(toolUnequipped: Tool) => void>;
 	/** Binds 'functionToBind' to fire when any 'inputTypes' happen. InputTypes can be variable in number and type. Types can be Enum.KeyCode, single character strings corresponding to keys, or Enum.UserInputType. 'actionName' is a key used by many other ContextActionService functions to query state. 'createTouchButton' if true will create a button on screen on touch devices.  This button will fire 'functionToBind' with three arguments: first argument is the actionName, second argument is the UserInputState of the input, and the third is the InputObject that fired this function. If 'functionToBind' yields or returns nil or Enum.ContextActionResult.Sink, the input will be sunk. If it returns Enum.ContextActionResult.Pass, the next bound action in the stack will be invoked. */
@@ -129,7 +129,7 @@ interface RbxContextActionService extends RbxInstance {
 }
 
 /** @rbxts server */
-interface RbxDataStoreService extends RbxInstance {
+interface DataStoreService extends RbxInstance {
 	/** Returns a data store with the given name and scope */
 	GetDataStore(name: string, scope?: string): GlobalDataStore;
 	/** Returns the default data store */
@@ -138,17 +138,17 @@ interface RbxDataStoreService extends RbxInstance {
 	GetOrderedDataStore(name: string, scope?: string): OrderedDataStore;
 }
 
-interface RbxDialog extends RbxInstance {
+interface Dialog extends RbxInstance {
 	readonly DialogChoiceSelected: RBXScriptSignal<(player: Player, dialogChoice: Dialog) => void>;
 	/** Returns an array of the players currently conversing with this dialog. */
 	GetCurrentPlayers(): Array<Player>;
 }
 
-interface RbxFlagStand extends RbxDerivesFromPart {
+interface FlagStand extends RbxDerivesFromPart {
 	readonly FlagCaptured: RBXScriptSignal<(player: Player) => void>;
 }
 
-interface RbxGamePassService extends RbxInstance {
+interface GamePassService extends RbxInstance {
 	PlayerHasPass(player: Player, gamePassId: number): boolean;
 }
 
@@ -194,7 +194,7 @@ interface GetGroupsAsyncResult {
 	IsInClan: boolean;
 }
 
-interface RbxGroupService extends RbxInstance {
+interface GroupService extends RbxInstance {
 	GetAlliesAsync(groupId: number): StandardPages;
 	GetEnemiesAsync(groupId: number): StandardPages;
 	GetGroupInfoAsync(groupId: number): GroupInfo;
@@ -231,14 +231,14 @@ interface RbxGuiObject extends RbxGuiBase2d {
 	readonly TouchTap: RBXScriptSignal<(touchPositions: Array<Vector2>) => void>;
 }
 
-interface RbxGuiService extends RbxInstance {
+interface GuiService extends RbxInstance {
 	AddSelectionParent(selectionName: string, selectionParent: GuiObject): void;
 	AddSelectionTuple(selectionName: string, selections: GuiObject): void;
 	/** Returns a Tuple containing two Vector2 values representing the offset of user GUIs in pixels from the top right corner of the screen and the bottom right corner of the screen respectively. */
 	GetGuiInset(): LuaTuple<[Vector2, Vector2]>;
 }
 
-interface Rbx_HapticService extends RbxInstance {
+interface _HapticService extends RbxInstance {
 	GetMotor(inputType: Enum.UserInputType, vibrationMotor: Enum.VibrationMotor): LuaTuple<[number]>;
 	SetMotor(
 		inputType: Enum.UserInputType,
@@ -267,7 +267,7 @@ interface RequestAsyncResponse {
 }
 
 /** @rbxts server */
-interface RbxHttpService extends RbxInstance {
+interface HttpService extends RbxInstance {
 	RequestAsync(requestOptions: RequestAsyncRequest): RequestAsyncResponse;
 	GetAsync(url: string, nocache?: boolean, headers?: HttpHeaders): string;
 	PostAsync(
@@ -279,7 +279,7 @@ interface RbxHttpService extends RbxInstance {
 	): string;
 }
 
-interface RbxHumanoid extends RbxInstance {
+interface Humanoid extends RbxInstance {
 	readonly AnimationPlayed: RBXScriptSignal<(animationTrack: AnimationTrack) => void>;
 	readonly Seated: RBXScriptSignal<(active: boolean, currentSeatPart: Seat | VehicleSeat) => void>;
 	readonly Touched: RBXScriptSignal<(touchingPart: BasePart, humanoidPart: BasePart) => void>;
@@ -330,7 +330,7 @@ interface FreeSearchResult {
 	TotalCount: string;
 }
 
-interface RbxInsertService extends RbxInstance {
+interface InsertService extends RbxInstance {
 	/** Returns a Model containing the Instance that resides at AssetId on the web. This call will also yield the script until the model is returned. Script execution can still continue, however, if you use a [coroutine](http://wiki.roblox.com/index.php?title=Coroutine). */
 	LoadAsset(assetId: number): Model;
 	/** Similar to LoadAsset, but instead an AssetVersionId is passed in, which refers to a particular version of the asset which is not neccessarily the latest version. */
@@ -345,7 +345,10 @@ interface RbxInsertService extends RbxInstance {
 	GetUserSets(userId: number): Array<SetInfo>;
 }
 
-interface InternalRbxInstance {
+interface CanIndex {
+	[i: string]: Instance;
+}
+interface RbxInstance {
 	/** Returns a copy of this Object and all its children. The copy's Parent is nil */
 	Clone(): this;
 	/** Returns a read-only table of this Object's children */
@@ -388,26 +391,26 @@ interface RbxJointInstance extends RbxInstance {
 	Part1: BasePart | undefined;
 }
 
-interface RbxKeyframe extends RbxInstance {
+interface Keyframe extends RbxInstance {
 	AddPose(pose: Pose): void;
 	GetPoses(): Array<Pose>;
 	RemovePose(pose: Pose): void;
 }
 
-interface RbxKeyframeSequence extends RbxInstance {
+interface KeyframeSequence extends RbxInstance {
 	AddKeyframe(keyframe: Keyframe): void;
 	GetKeyframes(): Array<Keyframe>;
 	RemoveKeyframe(keyframe: Keyframe): void;
 }
 
-interface RbxKeyframeSequenceProvider extends RbxInstance {
+interface KeyframeSequenceProvider extends RbxInstance {
 	RegisterActiveKeyframeSequence(keyframeSequence: KeyframeSequence): string;
 	RegisterKeyframeSequence(keyframeSequence: KeyframeSequence): string;
 	GetAnimations(userId: number): InventoryPages;
 	GetKeyframeSequenceAsync(assetId: string): KeyframeSequence;
 }
 
-interface RbxLocalizationService extends RbxInstance {
+interface LocalizationService extends RbxInstance {
 	GetTranslatorForPlayer(player: Player): Translator;
 }
 
@@ -419,7 +422,7 @@ interface LocalizationEntry {
 	Values: { [index: string]: string };
 }
 
-interface RbxLocalizationTable extends RbxInstance {
+interface LocalizationTable extends RbxInstance {
 	GetEntries(): Array<LocalizationEntry>;
 	GetTranslator(localeId: string): Translator;
 }
@@ -430,7 +433,7 @@ interface LogInfo {
 	timestamp: number;
 }
 
-interface RbxLogService extends RbxInstance {
+interface LogService extends RbxInstance {
 	GetLogHistory(): Array<LogInfo>;
 }
 
@@ -511,11 +514,11 @@ interface RbxServiceProvider extends RbxInstance {
 	GetService(className: string): Instance | undefined;
 }
 
-interface RbxDataModel extends RbxServiceProvider {
+interface DataModel extends RbxServiceProvider {
 	readonly Workspace: Workspace;
 }
 
-interface RbxMarketplaceService extends RbxInstance {
+interface MarketplaceService extends RbxInstance {
 	/**
 	 * Callback that is executed for pending Developer Product receipts.
 	 * If this function does not return Enum.ProductPurchaseDecision.PurchaseGranted, then you will not be granted the money for the purchase!
@@ -552,7 +555,7 @@ interface RbxMarketplaceService extends RbxInstance {
 	PlayerOwnsAsset(player: Player, assetId: number): boolean;
 }
 
-interface RbxModel extends RbxDerivesFromModel {
+interface Model extends RbxDerivesFromModel {
 	/** A Part that serves as a reference for the Model's CFrame. Used in conjunction with GetModelPrimaryPartCFrame and SetModelPrimaryPartCFrame. Use this to rotate/translate all Parts relative to the PrimaryPart. */
 	PrimaryPart?: BasePart;
 	/** Describes the smallest possible rotated cuboid to contain all the parts of the model as a CFrame and Vector3 size.*/
@@ -560,12 +563,12 @@ interface RbxModel extends RbxDerivesFromModel {
 }
 
 /** @rbxts server */
-interface RbxOrderedDataStore extends RbxGlobalDataStore {
+interface OrderedDataStore extends RbxGlobalDataStore {
 	/** Returns a DataStorePages object. The length of each page is determined by pageSize, and the order is determined by isAscending. minValue and maxValue are optional parameters which will filter the result.  */
 	GetSortedAsync(ascending: boolean, pagesize: number, minValue?: number, maxValue?: number): DataStorePages;
 }
 
-interface RbxPath extends RbxInstance {
+interface Path extends RbxInstance {
 	GetWaypoints(): Array<PathWaypoint>;
 }
 
@@ -576,7 +579,7 @@ interface AgentParameters {
 	AgentHeight?: number;
 }
 
-interface RbxPathfindingService extends RbxInstance {
+interface PathfindingService extends RbxInstance {
 	FindPathAsync(start: Vector3, finish: Vector3): Path;
 	CreatePath(agentParameters?: AgentParameters): Path;
 }
@@ -587,7 +590,7 @@ interface CollisionGroupInfo {
 	name: string;
 }
 
-interface RbxPhysicsService extends RbxInstance {
+interface PhysicsService extends RbxInstance {
 	GetCollisionGroups(): Array<CollisionGroupInfo>;
 }
 
@@ -602,7 +605,7 @@ interface FriendOnlineInfo {
 	LocationType: 0 | 1 | 2 | 3 | 4;
 }
 
-interface RbxPlayer extends RbxInstance {
+interface Player extends RbxInstance {
 	Character: Model | undefined;
 	ReplicationFocus: BasePart | undefined;
 	readonly CharacterAdded: RBXScriptSignal<(character: Model) => void>;
@@ -649,7 +652,7 @@ interface CharacterAppearanceInfo {
 	};
 }
 
-interface RbxPlayers extends RbxInstance {
+interface Players extends RbxInstance {
 	/** @rbxts client */
 	LocalPlayer: Player;
 	readonly PlayerAdded: RBXScriptSignal<(player: Player) => void>;
@@ -669,12 +672,12 @@ interface RbxPlayers extends RbxInstance {
 	): LuaTuple<[string, boolean]>;
 }
 
-interface RbxPointsService extends RbxInstance {
+interface PointsService extends RbxInstance {
 	/** Will attempt to award the 'amount' points to 'userId', returns 'userId' awarded to, the number of points awarded, the new point total the user has in the game, and the total number of points the user now has. Will also fire PointsService.PointsAwarded. Works with server scripts ONLY. */
 	AwardPoints(userId: number, amount: number): LuaTuple<[number, number, number, 0]>;
 }
 
-interface RbxRemoteEvent extends RbxInstance {
+interface RemoteEvent extends RbxInstance {
 	readonly OnClientEvent: RBXScriptSignal<(...arguments: Array<unknown>) => void, true>;
 	readonly OnServerEvent: RBXScriptSignal<(player: Player, ...arguments: Array<unknown>) => void>;
 	FireAllClients(...arguments: Array<unknown>): void;
@@ -682,14 +685,14 @@ interface RbxRemoteEvent extends RbxInstance {
 	FireServer(...arguments: Array<unknown>): void;
 }
 
-interface RbxRemoteFunction extends RbxInstance {
+interface RemoteFunction extends RbxInstance {
 	OnClientInvoke: Callback;
 	OnServerInvoke: Callback;
 	InvokeClient(player: Instance, ...arguments: Array<any>): unknown;
 	InvokeServer<R = unknown>(...arguments: Array<any>): R;
 }
 
-interface RbxSocialService extends RbxInstance {
+interface SocialService extends RbxInstance {
 	/** An event invoked when a game invite prompt is closed. 'senderPlayer' is the player who closed the prompt and 'recipientIds' is an array of UserIds that were invited. */
 	readonly GameInvitePromptClosed: RBXScriptSignal<(senderPlayer: Player, recipientIds: Array<number>) => void>;
 	/** Checks if a user can send a game invite. Can only be called from the client. Can throw if the web request fails. Will yield the current thread when called. */
@@ -698,7 +701,7 @@ interface RbxSocialService extends RbxInstance {
 	PromptGameInvite(targetPlayer: Player): void;
 }
 
-interface RbxSoundService extends RbxInstance {
+interface SoundService extends RbxInstance {
 	GetListener():
 		| [Enum.ListenerType.Camera, undefined]
 		| [Enum.ListenerType.CFrame, CFrame]
@@ -711,10 +714,10 @@ interface RbxSoundService extends RbxInstance {
 }
 
 /** @rbxts server */
-interface RbxServerScriptService {}
+interface ServerScriptService {}
 
 /** @rbxts server */
-interface RbxServerStorage {}
+interface ServerStorage {}
 
 interface MakeSystemMessageConfig {
 	Text: string;
@@ -733,7 +736,7 @@ interface SendNotificationConfig {
 	Button2?: string;
 }
 
-interface RbxStarterGui extends RbxBasePlayerGui {
+interface StarterGui extends RbxBasePlayerGui {
 	GetCore(parameterName: "PointsNotificationsActive"): boolean;
 	GetCore(parameterName: "BadgesNotificationsActive"): boolean;
 	GetCore(parameterName: "ChatActive"): boolean;
@@ -777,22 +780,22 @@ interface RbxStarterGui extends RbxBasePlayerGui {
 	): void;
 }
 
-interface RbxSurfaceGui extends RbxLayerCollector {
+interface SurfaceGui extends RbxLayerCollector {
 	/** The Object the surface gui uses as its base to render from.  Currently, the only way to set this property is thru a script, and must exist in the workspace.  This will only render if the object assigned derives from BasePart. */
 	Adornee: BasePart | undefined;
 }
 
-interface RbxTeam extends RbxInstance {
+interface Team extends RbxInstance {
 	readonly PlayerAdded: RBXScriptSignal<(player: Player) => void>;
 	readonly PlayerRemoved: RBXScriptSignal<(player: Player) => void>;
 	GetPlayers(): Array<Player>;
 }
 
-interface RbxTeams extends RbxInstance {
+interface Teams extends RbxInstance {
 	GetTeams(): Array<Team>;
 }
 
-interface RbxTeleportService {
+interface TeleportService {
 	readonly TeleportInitFailed: RBXScriptSignal<
 		(player: Player, teleportResult: Enum.TeleportResult, errorMessage: string) => void
 	>;
@@ -820,7 +823,7 @@ type ReadVoxelsArray<T> = Array<Array<Array<T>>> & {
 	Size: Vector3;
 };
 
-interface RbxTerrain extends RbxBasePart {
+interface Terrain extends RbxBasePart {
 	CopyRegion(region: Region3int16): TerrainRegion;
 	PasteRegion(region: TerrainRegion, corner: Vector3int16, pasteEmptyCells: boolean): void;
 
@@ -837,22 +840,22 @@ interface RbxTerrain extends RbxBasePart {
 	): void;
 }
 
-interface RbxTool extends RbxBackpackItem {
+interface Tool extends RbxBackpackItem {
 	readonly Equipped: RBXScriptSignal<(mouse: Mouse) => void>;
 }
 
 type Tweenable = number | boolean | CFrame | Rect | Color3 | UDim | UDim2 | Vector2 | Vector2int16 | Vector3;
 type FilterMembers<T, U> = Pick<T, { [K in keyof T]: T[K] extends U ? K : never }[keyof T]>;
 
-interface RbxTweenService {
-	// Create<T extends BaseTypes[keyof BaseTypes]>(
-	// 	instance: T,
-	// 	tweenInfo: TweenInfo,
-	// 	propertyTable: Partial<FilterMembers<BaseTypes[BaseType<T>], Tweenable>>,
-	// ): Tween;
+interface TweenService {
+	Create<T extends Instances[keyof Instances]>(
+		instance: T,
+		tweenInfo: TweenInfo,
+		propertyTable: Partial<FilterMembers<T, Tweenable>>,
+	): Tween;
 }
 
-interface RbxUserInputService {
+interface UserInputService {
 	/** Fired when a user begins interacting via a Human-Computer Interface device (Mouse button down, touch begin, keyboard button down, etc.). 'inputObject' is an InputObject, which contains useful data for querying user input.  This event only fires locally.  This event will always fire regardless of game state. */
 	readonly InputBegan: RBXScriptSignal<(input: InputObject, gameProcessedEvent: boolean) => void>;
 	/** Fired when a user changes interacting via a Human-Computer Interface device (Mouse move, touch move, mouse wheel, etc.). 'inputObject' is an InputObject, which contains useful data for querying user input.  This event only fires locally.  This event will always fire regardless of game state. */
@@ -869,7 +872,7 @@ interface RbxUserInputService {
 	GetSupportedGamepadKeyCodes(gamepadNum: Enum.UserInputType): Array<Enum.KeyCode>;
 }
 
-interface RbxWorkspace extends RbxDerivesFromModel {
+interface Workspace extends RbxDerivesFromModel {
 	Terrain: Terrain;
 	/** Return type is (BasePart, Vector3) if the ray hits.  If it misses it will return (nil, PointAtEndOfRay) */
 	FindPartOnRay(

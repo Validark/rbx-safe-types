@@ -1,4 +1,5 @@
-const a = {} as Instance;
+function getObjectClassName(obj: StarterPlayerScripts) {
+	return obj.ClassName;
+}
 
-const xof = a.ClassName;
-a.
+game.JobId;

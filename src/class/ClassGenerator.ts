@@ -347,59 +347,66 @@ export class ClassGenerator extends Generator {
 		}
 	}
 
+	private getClassData(rbxClassName: string) {}
+
 	private generateClass(rbxClass: ApiClass, tsFile: ts.SourceFile, n: NumberHelper) {
 		const name = this.generateClassName(rbxClass.Name);
-		const tsApiInterface = tsFile.getInterface(name);
+		const implName = IMPL_PREFIX + name;
+
 		const isClassCreatable = isCreatable(rbxClass);
 		const hasSubclasses = rbxClass.Subclasses.length > 0;
-		const implName = IMPL_PREFIX + name;
-		const tsImplInterface = tsFile.getInterface(implName);
 
-		if (!tsApiInterface) {
-			const extendsStr =
-				rbxClass.Superclass !== ROOT_CLASS_NAME
-					? `extends ${IMPL_PREFIX + this.generateClassName(rbxClass.Superclass)} `
-					: "";
+		const interfaceName = hasSubclasses ? implName : name;
+		const tsImplInterface = tsFile.getInterface(interfaceName);
 
-			const members = rbxClass.Members.filter(rbxMember => this.shouldGenerateMember(rbxClass, rbxMember));
-			const isEmpty = members.length === 0 && hasSubclasses;
-			this.write(`interface ${implName} ${extendsStr}{${isEmpty ? "}" : ""}`);
+		const extendsStr =
+			rbxClass.Superclass !== ROOT_CLASS_NAME
+				? `extends ${IMPL_PREFIX + this.generateClassName(rbxClass.Superclass)} `
+				: "";
 
-			if (!isEmpty) {
-				this.pushIndent();
+		const members = rbxClass.Members.filter(rbxMember => this.shouldGenerateMember(rbxClass, rbxMember));
+		const isEmpty = members.length === 0 && hasSubclasses;
 
-				if (!hasSubclasses) {
-					this.write(`/** The string name of this Instance's most derived class. */`);
-					this.write(`readonly ClassName: "${name}";`);
-				}
+		this.write(`interface ${interfaceName} ${extendsStr}{${isEmpty ? "}" : ""}`);
 
-				members.forEach(rbxMember => this.generateMember(rbxClass, rbxMember, name, tsImplInterface));
-				this.popIndent();
-				this.write(`}`);
+		if (!isEmpty) {
+			this.pushIndent();
+
+			if (!hasSubclasses) {
+				this.write(`/** The string name of this Instance's most derived class. */`);
+				this.write(`readonly ClassName: "${name}";`);
 			}
+
+			members.forEach(rbxMember => this.generateMember(rbxClass, rbxMember, name, tsImplInterface));
+			this.popIndent();
+			this.write(`}`);
 		}
 
 		if (hasSubclasses) {
 			const fullName = rbxClass.Name;
-			let initialString = `type ${fullName} = `;
 
 			if (isClassCreatable) {
-				const newImplName = `${IMPL_PREFIX + fullName}`;
-				this.write(`interface ${newImplName} extends ${implName} {`);
+				const newImplName = IMPL_PREFIX + fullName;
+				this.write(`interface ${fullName} extends ${implName} {`);
 				this.pushIndent();
+				this.write(`/** The string name of this Instance's most derived class. */`);
 				this.write(`readonly ClassName: "${fullName}";`);
 				this.popIndent();
 				this.write(`}`);
 				this.write(``);
-				this.write(`type ${fullName} = ${newImplName} & Indexable<${newImplName}>;`);
-				initialString = `type ${DERIVATIVE_PREFIX}${fullName} = ${fullName} | `;
+				this.write(`type ${newImplName} = ${fullName};`);
 			}
 
-			const possibilities = this.subclassify(fullName).join(" | ") + ";";
-			this.write(initialString + possibilities);
+			if (!this.classIsDerivative(rbxClass)) {
+				const subclassesArray = this.subclassify(fullName, fullName);
+				const possibilities = subclassesArray.join(" | ");
+				this.write(`type ${fullName} = ${possibilities};`);
+			}
 		} else {
-			this.write(`type ${name} = ${implName} & Indexable<${implName}>;`);
+			this.write(`type ${implName} = ${name};`);
 		}
+
+		this.write(``);
 	}
 
 	private generateHeader() {
@@ -425,11 +432,10 @@ export class ClassGenerator extends Generator {
 			.substr(1);
 
 		const extendedStr = extended ? " extends " + extended : "";
-
-		this.write(`// ${multispaceName} TABLE`);
-		this.write(``);
 		const isEmpty = rbxClasses.length === 0;
+
 		this.write(`interface ${tableName}${extendedStr} {${isEmpty ? "}" : ""}`);
+
 		if (!isEmpty) {
 			this.pushIndent();
 			if (callback === undefined) {
@@ -444,19 +450,25 @@ export class ClassGenerator extends Generator {
 		this.write(``);
 	}
 
-	private subclassify(rbxClassName: string): Array<string> {
+	private subclassify(rbxClassName: string, omission: string = ""): Array<string> {
 		const rbxClass = this.ClassReferences.get(rbxClassName);
 
 		if (rbxClass) {
-			const subclasses = rbxClass.Subclasses;
+			const classNames = [...rbxClass.Subclasses];
+			const numClassNames = classNames.length;
 
-			if (subclasses.length === 0) {
-				return [rbxClassName];
-			} else {
-				const allSubclasses: Array<string> = [];
-				for (const subclass of subclasses) allSubclasses.push(...this.subclassify(subclass));
-				return allSubclasses;
+			for (let i = 0; i < numClassNames; i++) {
+				const className = classNames[i];
+				const myClass = this.ClassReferences.get(className);
+
+				if (myClass) {
+					if (this.classIsDerivative(myClass)) {
+						classNames.push(...this.subclassify(className));
+					}
+				}
 			}
+
+			return classNames.filter(a => a !== omission);
 		} else {
 			throw new Error("Cannot subclassify " + rbxClassName);
 		}
@@ -464,7 +476,7 @@ export class ClassGenerator extends Generator {
 
 	private generateInstancesTables(rbxClasses: Array<ApiClass>) {
 		const baseFormat = ({ Name: name }: ApiClass) => {
-			this.write(`${name}: ${this.subclassify(name).join(" | ")};`);
+			this.write(`${name}: ${[name, ...this.subclassify(name)].join(" | ")};`);
 		};
 
 		const [CreatableInstancesInternal, InstancesInternal, CreatableInstances, Instances, Services] = multifilter(

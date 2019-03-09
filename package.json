@@ -1,5 +1,5 @@
 {
-	"name": "rbx-types",
+	"name": "rbx-safe-types",
 	"version": "1.0.13",
 	"description": "Generates a roblox.d.ts file from a combination of handwritten .d.ts files and generated data from Roblox's API dump",
 	"main": "include/roblox.d.ts",
@@ -9,14 +9,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/roblox-ts/type-declaration-generator.git"
+		"url": "git+https://github.com/Validark/rbx-types.git"
 	},
-	"author": "",
+	"author": "Validark",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/roblox-ts/type-declaration-generator/issues"
+		"url": "https://github.com/Validark/rbx-types/issues"
 	},
-	"homepage": "https://github.com/roblox-ts/type-declaration-generator#readme",
+	"homepage": "https://github.com/Validark/rbx-types#readme",
 	"devDependencies": {
 		"@types/libxmljs": "^0.18.2",
 		"@types/mz": "0.0.32",
@@ -26,5 +26,13 @@
 		"libxmljs": "^0.19.5",
 		"mz": "^2.7.0",
 		"ts-morph": "1.0.0"
-	}
+	},
+	"dependencies": {},
+	"keywords": [
+		"rbx-types",
+		"types",
+		"Roblox",
+		"ClassName",
+		"narrowing"
+	]
 }
