@@ -1,4 +1,5 @@
 import axios from "axios";
+import * as fs from "fs";
 import * as path from "path";
 import { ApiDump } from "./api";
 import { ClassGenerator } from "./class/ClassGenerator";

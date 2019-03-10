@@ -1,4 +1,10 @@
+import axios from "axios";
+import * as fs from "fs";
+import * as https from "https";
+import * as jsdom from "jsdom";
+import fetch from "node-fetch";
 import * as path from "path";
+import * as showdown from "showdown";
 import Project, * as ts from "ts-morph";
 import {
 	ApiCallback,
@@ -14,6 +20,7 @@ import {
 	MemberTag,
 } from "../api";
 import { Generator } from "./Generator";
+import { ReflectionMetadata } from "./ReflectionMetadata";
 
 export const IMPL_PREFIX = "Rbx";
 const ROOT_CLASS_NAME = "<<<ROOT>>>";
@@ -242,8 +249,75 @@ class NumberHelper {
 	}
 }
 
+function htmlToMarkdown(text: string) {
+	const converter = new showdown.Converter();
+	const { document } = new jsdom.JSDOM(`...`).window;
+	const md = converter.makeMarkdown(text, document);
+	return md;
+}
+
+function getDescriptionFromHtml(rawData: string) {
+	let data = rawData;
+	const openingStr = "Description:";
+	const startingPosition = data.indexOf(openingStr);
+
+	if (startingPosition) {
+		const descOpener = `<div class="markdown-field-data description">`;
+		const index = data.indexOf(descOpener, startingPosition + openingStr.length);
+
+		if (index) {
+			const frontIndex = index + descOpener.length;
+			data = data.slice(frontIndex);
+			const iter = 0;
+			let depth = 1;
+			let backIndex: number | undefined;
+			let searcher = data;
+
+			do {
+				const results = searcher.match(/<\/?div/);
+
+				if (results) {
+					backIndex = results.index!;
+					searcher = searcher.slice(backIndex + 3);
+					if (results[0] === "<div") {
+						depth++;
+					} else {
+						depth--;
+					}
+				} else {
+					break;
+				}
+			} while (depth !== 0);
+
+			if (backIndex) {
+				// console.log(data.slice(0, backIndex).trim());
+				return (
+					htmlToMarkdown(data.slice(0, backIndex).trim())
+						.replace(/<!--[^]+?-->/g, "")
+						.replace(/\(<\/([^<>]+)>[^()]*\)/g, (_, b) => {
+							if (b) {
+								return `(https://developer.roblox.com/${b as string})`;
+							} else {
+								return "";
+							}
+						})
+						.replace(/<[^]+?>/g, "")
+						.replace(/\[([^]+?)\]/g, a => a.trim())
+						// .replace(/```((?!lua).+?```)/g, (_, b) => "```lua" + b)
+						.trim()
+				);
+			}
+		}
+	}
+	return "";
+}
+
 export class ClassGenerator extends Generator {
 	private ClassReferences = new Map<string, ApiClass>();
+
+	constructor(outputDir: string, fileName: string, protected metadata: ReflectionMetadata) {
+		super(outputDir, fileName, metadata);
+	}
 
 	private generateCallback(rbxCallback: ApiCallback, className: string, tsImplInterface?: ts.InterfaceDeclaration) {
 		const name = rbxCallback.Name;
@@ -251,7 +325,7 @@ export class ClassGenerator extends Generator {
 			return;
 		}
 		const args = generateArgs(rbxCallback.Parameters);
-		const description = this.metadata.getCallbackDescription(className, name);
+		const description = rbxCallback.Description || this.metadata.getCallbackDescription(className, name);
 		if (description) {
 			this.write(`/** ${description} */`);
 		}
@@ -264,7 +338,7 @@ export class ClassGenerator extends Generator {
 			return;
 		}
 		const args = generateArgs(rbxEvent.Parameters);
-		const description = this.metadata.getEventDescription(className, name);
+		const description = rbxEvent.Description || this.metadata.getEventDescription(className, name);
 		if (description) {
 			this.write(`/** ${description} */`);
 		}
@@ -279,7 +353,7 @@ export class ClassGenerator extends Generator {
 		const returnType = safeReturnType(safeValueType(rbxFunction.ReturnType));
 		if (returnType !== null) {
 			const args = generateArgs(rbxFunction.Parameters);
-			const description = this.metadata.getMethodDescription(className, name);
+			const description = rbxFunction.Description || this.metadata.getMethodDescription(className, name);
 			if (description) {
 				this.write(`/** ${description} */`);
 			}
@@ -294,7 +368,7 @@ export class ClassGenerator extends Generator {
 		}
 		const valueType = safePropType(safeValueType(rbxProperty.ValueType));
 		if (valueType !== null) {
-			const description = this.metadata.getPropertyDescription(className, name);
+			const description = rbxProperty.Description || this.metadata.getPropertyDescription(className, name);
 			if (description) {
 				this.write(`/** ${description} */`);
 			}
@@ -346,8 +420,6 @@ export class ClassGenerator extends Generator {
 			throw new Error("Undefined class name! " + rbxClassName);
 		}
 	}
-
-	private getClassData(rbxClassName: string) {}
 
 	private generateClass(rbxClass: ApiClass, tsFile: ts.SourceFile, n: NumberHelper) {
 		const name = this.generateClassName(rbxClass.Name);
@@ -506,17 +578,94 @@ export class ClassGenerator extends Generator {
 	}
 
 	public async generate(rbxClasses: Array<ApiClass>) {
-		rbxClasses.forEach(rbxClass => {
+		const linkData = new Array<{
+			classFolder: string;
+			rbxMember: ApiMember;
+			link: string;
+		}>();
+
+		const parentFolder = "cache";
+		if (!fs.existsSync(parentFolder)) {
+			fs.mkdirSync(parentFolder);
+		}
+
+		for (const rbxClass of rbxClasses) {
+			const rbxClassName = rbxClass.Name;
+			const classFolder = `${parentFolder}\\${rbxClassName}`;
+
+			if (!fs.existsSync(classFolder)) {
+				fs.mkdirSync(classFolder);
+			}
+
 			rbxClass.Subclasses = new Array<string>();
 			this.ClassReferences.set(rbxClass.Name, rbxClass);
 
 			const superclass = this.ClassReferences.get(rbxClass.Superclass);
 
 			if (superclass) {
-				superclass.Subclasses.push(rbxClass.Name);
+				superclass.Subclasses.push(rbxClassName);
 			}
-		});
 
+			for (const rbxMember of rbxClass.Members) {
+				const rbxMemberName = rbxMember.Name;
+				if (this.shouldGenerateMember(rbxClass, rbxMember)) {
+					const memberType = rbxMember.MemberType.toLowerCase();
+					const link = `https://developer.roblox.com/api-reference/${memberType}/${rbxClassName}/${rbxMemberName}`;
+
+					linkData.push({
+						classFolder,
+						rbxMember,
+						link,
+					});
+				}
+			}
+		}
+
+		const interval = 100;
+		for (let i = interval; i < linkData.length; i += interval) {
+			const myLinks = new Array<Promise<any>>();
+			for (let k = i - interval; k < i; k++) {
+				const linkDatum = linkData[k];
+				if (linkDatum) {
+					const rbxMember = linkDatum.rbxMember;
+					const rbxMemberName = rbxMember.Name;
+					const classFolder = linkDatum.classFolder;
+					const memberFile = `${classFolder}\\${rbxMemberName}`;
+					const link = linkDatum.link;
+
+					myLinks.push(
+						new Promise((resolve, reject) => {
+							setTimeout(reject, 10000);
+							fetch(link)
+								.then(response => {
+									if (response.status !== 200) {
+										throw new Error("bad request");
+									}
+									return response.text();
+								})
+								.then(rawData => {
+									const desc = typeof rawData === "string" ? getDescriptionFromHtml(rawData) : "";
+									if (desc !== "") {
+										const cache = new Generator(classFolder, rbxMemberName + ".md");
+										cache.write(desc);
+										rbxMember.Description = desc;
+										resolve();
+									} else {
+										throw new Error("bad data");
+									}
+								})
+								.catch(reject);
+						}).catch(errorMessage => {
+							console.log("\tFailed for " + link);
+							return "";
+						}),
+					);
+				}
+			}
+			await Promise.all(myLinks);
+		}
+
+		console.log("\tFinishing...");
 		const project = new Project({
 			tsConfigFilePath: path.join(__dirname, "..", "..", "include", "tsconfig.json"),
 		});

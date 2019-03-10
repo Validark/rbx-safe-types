@@ -82,22 +82,26 @@ export interface ApiProperty extends ApiMemberBase {
 		CanSave: boolean;
 	};
 	ValueType: ApiValueType;
+	Description: string;
 }
 
 export interface ApiFunction extends ApiMemberBase {
 	MemberType: "Function";
 	Parameters: Array<ApiParameter>;
 	ReturnType: ApiValueType;
+	Description: string;
 }
 
 export interface ApiEvent extends ApiMemberBase {
 	MemberType: "Event";
 	Parameters: Array<ApiParameter>;
+	Description: string;
 }
 
 export interface ApiCallback extends ApiMemberBase {
 	MemberType: "Callback";
 	Parameters: Array<ApiParameter>;
+	Description: string;
 }
 
 type ApiMember = ApiProperty | ApiFunction | ApiEvent | ApiCallback;

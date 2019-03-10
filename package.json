@@ -1,6 +1,6 @@
 {
 	"name": "rbx-safe-types",
-	"version": "1.0.13.2",
+	"version": "1.0.13.3",
 	"description": "Generates a roblox.d.ts file from a combination of handwritten .d.ts files and generated data from Roblox's API dump",
 	"main": "include/roblox.d.ts",
 	"types": "include/roblox.d.ts",
@@ -25,9 +25,14 @@
 		"axios": "^0.18.0",
 		"libxmljs": "^0.19.5",
 		"mz": "^2.7.0",
-		"ts-morph": "1.0.0"
+		"ts-morph": "1.0.0",
+		"@types/jsdom": "^12.2.3",
+		"@types/node-fetch": "^2.1.6",
+		"@types/showdown": "^1.9.2",
+		"jsdom": "^13.2.0",
+		"node-fetch": "^2.3.0",
+		"showdown": "^1.9.0"
 	},
-	"dependencies": {},
 	"keywords": [
 		"rbx-types",
 		"types",
