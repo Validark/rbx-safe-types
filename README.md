@@ -1,6 +1,7 @@
 # How to use
 1. Drag the .d.ts files from this library's include folder to rbx-types' include folder. Overwrite the files in there, since these files are the only ones that should used by the transpiler and your project.
-2. Enjoy!
+2. Restart VSCode by pressing (Ctrl+Shift+P) and selecting Reload Window
+3. Enjoy!
 
 # rbx-safe-types
 Generates a roblox.d.ts file from a combination of handwritten .d.ts files and generated data from Roblox's API dump.
