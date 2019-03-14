@@ -1,3 +1,7 @@
+# How to use
+1. Drag the .d.ts files from this library's include folder to rbx-types' include folder. Overwrite the files in there, since they are the ones used by the transpiler and your project.
+2. Enjoy!
+
 # rbx-safe-types
 Generates a roblox.d.ts file from a combination of handwritten .d.ts files and generated data from Roblox's API dump.
 
@@ -68,8 +72,3 @@ Differences between this and mainstream rbx-types:
 
 - rbx-safe-types naively parses https://developer.roblox.com/api-reference for descriptions, and thus has far more type data.
 - rbx-safe-types is less automated, and updated manually
-
-
-# How to use
-1. Drag the .d.ts files from this library's include folder to rbx-types' include folder. Overwrite the files in there, since they are used by the transpiler.
-2. Enjoy!
