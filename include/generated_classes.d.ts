@@ -253,6 +253,7 @@ interface Services {
 	NetworkSettings: NetworkSettings;
 	NotificationService: NotificationService;
 	Workspace: Workspace;
+	PackageService: PackageService;
 	PathfindingService: PathfindingService;
 	PhysicsPacketCache: PhysicsPacketCache;
 	PhysicsService: PhysicsService;
@@ -564,7 +565,7 @@ object.AncestryChanged:Connect(function(_, parent)
 end)
 ``` */
 	readonly AncestryChanged: RBXScriptSignal<(child: Instance, parent: Instance) => void>;
-	/** If you want to detect changes of a single property only, you should use `Instance/GetPropertyChangedSignal` instead!
+	/** If you want to detect changes of a single property only, you should use `Instance/GetPropertyChangedSignal` instead! 
 
 The Changed event fires right after most properties change on objects. It is possible to find the present value of a changed property by using `object[property]`. To get the value of a property before it changes, you must have stored the value of the property before it changed.
 
@@ -623,7 +624,7 @@ The example below should help clarify how DescendantRemoving fires when there ar
     2. On **ModelA**, with **PartA** then **FireA**.
     3. On **PartA** with **FireA**.
 
-
+    
 
 
 
@@ -649,7 +650,7 @@ part.Parent = nil -- This triggers DescendantRemoving on Workspace:
 See also `Instance/DescendantAdded|DescendantAdded`. */
 	readonly DescendantRemoving: RBXScriptSignal<(descendant: Instance) => void>;
 }
-type Instance = ABTestService | Accoutrement | AdService | AdvancedDragger | AnalyticsService | Animation | AnimationController | AnimationTrack | Animator | AssetService | Attachment | Backpack | BackpackItem | BadgeService | BasePlayerGui | Beam | BindableEvent | BindableFunction | BodyMover | BrowserService | CacheableContentProvider | Camera | ChangeHistoryService | CharacterAppearance | Chat | ClickDetector | ClusterPacketCache | CollectionService | Configuration | Constraint | ContentProvider | ContextActionService | Controller | ControllerService | CookiesService | CorePackages | CoreScriptSyncService | CustomEvent | CustomEventReceiver | DataModelMesh | DataStoreService | Debris | DebugSettings | DebuggerBreakpoint | DebuggerManager | DebuggerWatch | Dialog | DialogChoice | Dragger | Explosion | FaceInstance | Feature | File | Fire | FlagStandService | FlyweightService | Folder | ForceField | FriendService | FunctionalTest | GamePassService | GameSettings | GamepadService | Geometry | GlobalDataStore | GoogleAnalyticsConfiguration | GroupService | GuiBase | GuiService | GuidRegistryService | HapticService | Hopper | HttpRbxApiService | HttpRequest | HttpService | Humanoid | HumanoidDescription | InputObject | InsertService | JointInstance | JointsService | KeyboardService | Keyframe | KeyframeMarker | KeyframeSequence | KeyframeSequenceProvider | Light | Lighting | LocalStorageService | LocalizationService | LocalizationTable | LogService | LoginService | LuaSettings | LuaSourceContainer | LuaWebService | MarketplaceService | Message | MessagingService | Mouse | MouseService | NetworkMarker | NetworkPeer | NetworkReplicator | NetworkSettings | NotificationService | PVInstance | PackageLink | Pages | PartOperationAsset | ParticleEmitter | Path | PathfindingService | PhysicsPacketCache | PhysicsService | PhysicsSettings | Player | PlayerScripts | Players | Plugin | PluginAction | PluginDragEvent | PluginGuiService | PluginManager | PluginMenu | PluginToolbar | PluginToolbarButton | PointsService | Pose | PostEffect | ReflectionMetadata | ReflectionMetadataCallbacks | ReflectionMetadataClasses | ReflectionMetadataEnums | ReflectionMetadataEvents | ReflectionMetadataFunctions | ReflectionMetadataItem | ReflectionMetadataProperties | ReflectionMetadataYieldFunctions | RemoteEvent | RemoteFunction | RenderSettings | RenderingTest | ReplicatedFirst | ReplicatedStorage | RobloxReplicatedStorage | RunService | RuntimeScriptService | ScriptContext | ScriptDebugger | ScriptService | Selection | ServerScriptService | ServerStorage | ServiceProvider | Sky | Smoke | SocialService | Sound | SoundEffect | SoundGroup | SoundService | Sparkles | SpawnerService | StarterGear | StarterPack | StarterPlayer | StarterPlayerScripts | Stats | StatsItem | StopWatchReporter | Studio | StudioService | StudioTheme | TaskScheduler | Team | Teams | TeleportService | TerrainRegion | TestService | TextFilterResult | TextService | ThirdPartyUserService | TimerService | TouchInputService | TouchTransmitter | Trail | Translator | TweenBase | TweenService | UIBase | UserGameSettings | UserInputService | VRService | ValueBase | VirtualInputManager | VirtualUser | Visit | WeldConstraint | Accessory | Hat | Hint | StarterCharacterScripts;
+type Instance = ABTestService | Accoutrement | AdService | AdvancedDragger | AnalyticsService | Animation | AnimationController | AnimationTrack | Animator | AssetService | Attachment | Backpack | BackpackItem | BadgeService | BasePlayerGui | Beam | BindableEvent | BindableFunction | BodyMover | BrowserService | CacheableContentProvider | Camera | ChangeHistoryService | CharacterAppearance | Chat | ClickDetector | ClusterPacketCache | CollectionService | Configuration | Constraint | ContentProvider | ContextActionService | Controller | ControllerService | CookiesService | CorePackages | CoreScriptSyncService | CustomEvent | CustomEventReceiver | DataModelMesh | DataStoreService | Debris | DebugSettings | DebuggerBreakpoint | DebuggerManager | DebuggerWatch | Dialog | DialogChoice | Dragger | Explosion | FaceInstance | Feature | File | Fire | FlagStandService | FlyweightService | Folder | ForceField | FriendService | FunctionalTest | GamePassService | GameSettings | GamepadService | Geometry | GlobalDataStore | GoogleAnalyticsConfiguration | GroupService | GuiBase | GuiService | GuidRegistryService | HapticService | Hopper | HttpRbxApiService | HttpRequest | HttpService | Humanoid | HumanoidDescription | InputObject | InsertService | JointInstance | JointsService | KeyboardService | Keyframe | KeyframeMarker | KeyframeSequence | KeyframeSequenceProvider | Light | Lighting | LocalStorageService | LocalizationService | LocalizationTable | LogService | LoginService | LuaSettings | LuaSourceContainer | LuaWebService | MarketplaceService | Message | MessagingService | Mouse | MouseService | NetworkMarker | NetworkPeer | NetworkReplicator | NetworkSettings | NotificationService | PVInstance | PackageLink | PackageService | Pages | PartOperationAsset | ParticleEmitter | Path | PathfindingService | PhysicsPacketCache | PhysicsService | PhysicsSettings | Player | PlayerScripts | Players | Plugin | PluginAction | PluginDragEvent | PluginGuiService | PluginManager | PluginMenu | PluginToolbar | PluginToolbarButton | PointsService | Pose | PostEffect | ReflectionMetadata | ReflectionMetadataCallbacks | ReflectionMetadataClasses | ReflectionMetadataEnums | ReflectionMetadataEvents | ReflectionMetadataFunctions | ReflectionMetadataItem | ReflectionMetadataProperties | ReflectionMetadataYieldFunctions | RemoteEvent | RemoteFunction | RenderSettings | RenderingTest | ReplicatedFirst | ReplicatedStorage | RobloxReplicatedStorage | RunService | RuntimeScriptService | ScriptContext | ScriptDebugger | ScriptService | Selection | ServerScriptService | ServerStorage | ServiceProvider | Sky | Smoke | SocialService | Sound | SoundEffect | SoundGroup | SoundService | Sparkles | SpawnerService | StarterGear | StarterPack | StarterPlayer | StarterPlayerScripts | Stats | StatsItem | StopWatchReporter | Studio | StudioService | StudioTheme | TaskScheduler | Team | Teams | TeleportService | TerrainRegion | TestService | TextFilterResult | TextService | ThirdPartyUserService | TimerService | TouchInputService | TouchTransmitter | Trail | Translator | TweenBase | TweenService | UIBase | UserGameSettings | UserInputService | VRService | ValueBase | VirtualInputManager | VirtualUser | Visit | WeldConstraint | Accessory | Hat | Hint | StarterCharacterScripts;
 
 interface ABTestService extends RbxInstance {
 	/** The string name of this Instance's most derived class. */
@@ -1123,9 +1124,7 @@ interface PlayerGui extends RbxBasePlayerGui {
 
 The screenshots below show the topbar at 1.0, 0.5 and 0.0 transparency.
 
-![The TopBar with a transparency of 1.0 (completely hidden)](https://developer.roblox.com/assets/5c2a51f2ad2d87331bc45024/Topbar_Transparency_1.0.png)
-![The TopBar with a transparency of 0.5 (50% transparency)](https://developer.roblox.com/assets/5c2a5257ac4084cd1b196622/Topbar_Transparency_0.5.png)
-![The TopBar with a transparency of 0.0 (completely opaque)](https://developer.roblox.com/assets/5c2a5230be5779ad1a89484d/Topbar_Transparency_0.png)
+![The TopBar with a transparency of 1.0 (completely hidden)]](https://developer.roblox.com/assets/5c2a51f2ad2d87331bc45024/Topbar_Transparency_1.0.png)![The TopBar with a transparency of 0.5 (50% transparency)]](https://developer.roblox.com/assets/5c2a5257ac4084cd1b196622/Topbar_Transparency_0.5.png)![The TopBar with a transparency of 0.0 (completely opaque)](https://developer.roblox.com/assets/5c2a5230be5779ad1a89484d/Topbar_Transparency_0.png)
 
 ## Usage
 
@@ -1448,7 +1447,7 @@ while true do
 	for i = 1, 0, -0.01 do
 		RunService.RenderStepped:Wait()
 		beam:SetTextureOffset(i)
-	end
+	end	
 end
 ```
 
@@ -1554,7 +1553,7 @@ interface BodyVelocity extends RbxBodyMover {
 	readonly ClassName: "BodyVelocity";
 	/** The MaxForce property determines the limit on the amount of force that may be applied on each axis in reaching the goal `BodyVelocity/Velocity|Velocity`. If a part isn’t moving, consider increasing this value (also check that it is not `BasePart/Anchored|Anchored` or attached to any anchored parts). */
 	MaxForce: Vector3;
-	/** Note: This property is ignored if PGS is enabled via Workspace.PGSPhysicsSolverEnabled, which is enabled by default.
+	/** Note: This property is ignored if PGS is enabled via Workspace.PGSPhysicsSolverEnabled, which is enabled by default. 
 
 The P property determines how much [power]() is used while applying force in order to reach the goal `BodyVelocity/Velocity|Velocity`. The higher this value, the more power will be used and the faster it will be used.
 
@@ -1720,7 +1719,7 @@ In these cases, you should update Focus every frame, using `RunService/BindToRen
 
 Focus has no bearing on the positioning or orientation of the `Camera` (see `Camera/CFrame|Camera.CFrame` for this). */
 	Focus: CFrame;
-	/** Un-linking the camera from a VR user's head motions can cause motion sickness. This property should only be set to false after extensive testing.
+	/** Un-linking the camera from a VR user's head motions can cause motion sickness. This property should only be set to false after extensive testing. 
 
 Toggles whether the `Camera` will automatically track the head motion of a player using a VR device.
 
@@ -1799,7 +1798,7 @@ This function will check all `BasePart|BaseParts` and `Terrain` in the `Workspac
 
 Note, as this function requires an *ignoreList* to run, you should pass an empty table when none is required. */
 	GetLargestCutoffDistance(ignoreList: Array<Instance>): number;
-	/** This function is broken and should not be used
+	/** This function is broken and should not be used 
 
 This function returns the current ‘pan’ speed of the `Camera`.
 
@@ -1838,7 +1837,7 @@ local function getActualRoll()
 end
 ``` */
 	GetRoll(): number;
-	/** This function is broken and should not be used
+	/** This function is broken and should not be used 
 
 This function returns the current ‘tilt’ speed of the `Camera`.
 
@@ -1923,7 +1922,7 @@ When the \*‘EdgeBump’ `Enum/CameraPanMode` is used, swipe to pan is disabled
 
 SetCameraPan mode has no effect on PC / Mac users. */
 	SetCameraPanMode(mode?: Enum.CameraPanMode): void;
-	/** This function is outdated and no longer considered best practice.
+	/** This function is outdated and no longer considered best practice. 
 
 This function sets the current roll, in radians, of the `Camera`. The roll is applied after the `Camera/CFrame` and represents the rotation around the `Camera|Camera’s` Z-axis.
 
@@ -2088,10 +2087,10 @@ This content ID is different to the website URL of the pants. The content ID can
 ```
 local webURL = "https://www.roblox.com/catalog/1804739/Jeans"
 local assetId = tonumber(string.match(webURL, "%d+") or 0) -- extract the number
-local success, model = pcall(function()
-	return game:GetService("InsertService"):LoadAsset(assetId)
+local success, model = pcall(function() 
+	return game:GetService("InsertService"):LoadAsset(assetId) 
 end)
-if success then
+if success then 
 	model.Parent = workspace
 end
 ```
@@ -2113,10 +2112,10 @@ This content ID is different to the website URL of the shirt. The content ID can
 ```
 local webURL = "https://www.roblox.com/catalog/1804747/White-Shirt"
 local assetId = tonumber(string.match(webURL, "%d+") or 0) -- extract the number
-local success, model = pcall(function()
-	return game:GetService("InsertService"):LoadAsset(assetId)
+local success, model = pcall(function() 
+	return game:GetService("InsertService"):LoadAsset(assetId) 
 end)
-if success then
+if success then 
 	model.Parent = workspace
 end
 ```
@@ -2139,10 +2138,10 @@ This content ID is different to the website URL of the T-shirt. The content ID c
 ```
 local webURL = "https://www.roblox.com/catalog/2591161/Sword-Fight-on-the-Heights-Ring-of-Fire-T-Shirt"
 local assetId = tonumber(string.match(webURL, "%d+") or 0) -- extract the number
-local success, model = pcall(function()
-	return game:GetService("InsertService"):LoadAsset(assetId)
+local success, model = pcall(function() 
+	return game:GetService("InsertService"):LoadAsset(assetId) 
 end)
-if success then
+if success then 
 	model.Parent = workspace
 end
 ``` */
@@ -2617,7 +2616,7 @@ When the KeyCode is used, it will fire the [Button1Down]( "Button1Down") event u
 -  You should only use the following \`Enum/UserInputType\` with the *userInputTypeForActivation* parameter, as the others will not do anything: -  *Keyboard*
     - *Gamepad1* through *Gamepad8*
 
-
+    
 
 
 
@@ -3462,10 +3461,6 @@ interface Geometry extends RbxInstance {
 type RbxGeometry = Geometry;
 
 interface RbxGlobalDataStore extends RbxInstance {
-	/** Sets the value of the key. This overwrites any existing data stored in the key.
-
- If the previous value of the key is important, use GlobalDataStore/UpdateAsync|UpdateAsync() instead. Using GlobalDataStore/GetAsync|GetAsync() to retrieve a value and then setting the key with GlobalData */
-	SetAsync(key: string, value?: any): void;
 }
 type GlobalDataStore = OrderedDataStore;
 
@@ -3771,8 +3766,8 @@ local mouse = game.Players.LocalPlayer:GetMouse()
 function getPosition(X, Y)
 	local gui_X = CustomScrollingFrame.AbsolutePosition.X
 	local gui_Y = CustomScrollingFrame.AbsolutePosition.Y
-
-
+	
+	
 	local pos = Vector2.new(math.abs(X - gui_X), math.abs(Y - gui_Y - 36))
 	print(pos)
 end
@@ -4468,7 +4463,7 @@ pluginGui:BindToClose(function()
     confirmButton.Activated:Connect(function()
         -- close the gui
         pluginGui.Enabled = false
-
+    
         -- remove confirm button
         confirmButton:Destroy()
     end)
@@ -4911,6 +4906,8 @@ When the AutoRotate property is set to true, the RotateType property has the fol
 
 The offset is applied in object-space, relative to the orientation of the Humanoid’s *HumanoidRootPart*. */
 	CameraOffset: Vector3;
+	/** An emum that selects the collision type for R15 and Rthro characters. InnerBox is classic style collisions for all characters, OuterBox is dynamically sized collisions based on Mesh size. */
+	readonly CollisionType: Enum.HumanoidCollisionType;
 	/** The DisplayDistanceType property controls how the humanoid display’s visibility behaves, based on the distance between the `Humanoid` and the player’s view.
 
 When a Humanoid’s parent `BaseModel` has a part named *Head*, a visual display of the `Player`'s name and health is drawn 1.5 studs above the character’s head. This visual display is known as the **Humanoid Display**.
@@ -4956,7 +4953,7 @@ In this example all of the NPC characters have their DisplayDistanceType set to 
 - When the Humanoid is not standing on a floor, the value of this property will be set to *Air*. - This occurs because Enum properties cannot have an empty value.
     - This can cause some confusion if a part has its material is set to Air, though in practice, parts are not supposed to use that material in the first place.
 
-
+    
 
 - The Humanoid’s character model must be able to collide with the floor, or else it will not be detected. - You cannot test if the Humanoid is swimming with this property. You should instead use the Humanoid’s GetState function. */
 	readonly FloorMaterial: Enum.Material;
@@ -6775,10 +6772,10 @@ This property can be set to any `Instance` or nil, for example:
 
 ```
 local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+local player = Players.LocalPlayer 
 local mouse = player:GetMouse()
 mouse.TargetFilter = workspace.Model
-
+ 
 -- Now, when the player hovers the cursor over the model, mouse.Target will be some object
 -- behind workspace.Model, if there is one.
 ```
@@ -8080,7 +8077,7 @@ This property can be read by scripts, but can only be set by plugins, the comman
 - Developers should also use the `Debris` service to clean up parts that are no longer needed, but have not fallen off the map
 - This property is clamped between -50,000 and 50,000. This is because `BasePart`s do not simulate or render properly at a great distance from the origin due to floating point inaccuracies */
 	readonly FallenPartsDestroyHeight: number;
-	/** Warning! Experimental Mode has been discontinued, meaning this property will no longer take effect.
+	/** Warning! Experimental Mode has been discontinued, meaning this property will no longer take effect. 
 
 Determines whether changes made from the client will replicate to the server or not. When this property is disabled, the game is in ‘Experimental Mode’.
 
@@ -8352,7 +8349,7 @@ Developers interested in seeing how this function is used in the Roblox Studio s
 As `Workspace/PGSPhysicsSolverEnabled` cannot be accessed by scripts, the PGSIsEnabled function allows developers to tell which physics solver the game is using.
 
 ```
-print(workspace:PGSIsEnabled()) -- true = PGS solver enabled
+print(workspace:PGSIsEnabled()) -- true = PGS solver enabled 
 print(workspace:PGSIsEnabled()) -- false = Legacy solver enabled
 ```
 
@@ -8397,6 +8394,12 @@ interface PackageLink extends RbxInstance {
 	readonly VersionNumber: number;
 }
 type RbxPackageLink = PackageLink;
+
+interface PackageService extends RbxInstance {
+	/** The string name of this Instance's most derived class. */
+	readonly ClassName: "PackageService";
+}
+type RbxPackageService = PackageService;
 
 interface RbxPages extends RbxInstance {
 	/** Whether or not the current page is the last page available. */
@@ -8772,7 +8775,7 @@ When \`Workspace/PGSPhysicsSolverEnabled\` is set to false, the contact points a
 
 When \`Workspace/PGSPhysicsSolverEnabled\` is set to true, the contact points are always colored RED
 
-, and the length of the arrow will always be 1 stud.
+, and the length of the arrow will always be 1 stud. 
 
 There are no special conditions tracked, because the PGS solver does not keep specific lookup tables for the states listed in the Spring Solver.
 
@@ -8909,6 +8912,38 @@ If *false*, the player will spawn with a default appearance - a grey character m
 
 Attempting to set the property after the character has spawned will not change the character, you must call `Player/LoadCharacter` to load the new appearance. */
 	CanLoadCharacterAppearance: boolean;
+	/** The Character property contains a reference to a `Model` containing a `Humanoid`, body parts, scripts and other objects required for simulating the player’s avatar in-game. The model is parented to the `Workspace`, but may be moved.
+
+Initially, this property is nil then set when the player’s character first spawns. Use the `Player/CharacterAdded` event to detect when a player’s character properly loads, and the `Player/CharacterRemoving` event to detect when the character is about to despawn. Avoid using `Instance/GetPropertyChangedSignal` on this property.
+
+## Notes
+
+LocalScripts that are cloned from `StarterGui` or `StarterPack` into a player’s `Backpack` or `PlayerGui` are often run before the old Character model is deleted. Player.Character still refers to a model, but that model’s parent is nil and it is has been destroyed. Because of this, if the Character already exists, you should check to make sure that the Character’s parent is not nil before using it.
+
+So if you’re writing a `LocalScript`, do this:
+
+```lua
+local player = game.Players.LocalPlayer
+local character = player.Character
+if not character or not character.Parent then
+    character = player.CharacterAdded:wait()
+end
+```
+
+But from the server it’s fine to do this:
+
+```lua
+if player.Character then
+	-- do something
+end
+```
+
+Or if you want to wait until the character respawns from a server `Script`:
+
+```lua
+local character = player.Character or player.CharacterAdded:wait()
+``` */
+	Character?: Model;
 	/** This property determines the user ID of the account whose character appearance is used for a player’s `character. By default, this property is the`Player`'s`Player/UserId\`, which uses the player’s avatar as they have created it on the Roblox website.
 
 Changing this property to the user ID of another account will cause the player to spawn with that account’s appearance (hats, shirt, pants, etc).
@@ -9263,7 +9298,7 @@ interface PointsService extends RbxInstance {
 When a player is awarded points successfully the below example would print the userId and their new point balance. If, for example, the Roblox account was awarded thirty points (and had none to begin with)
 
 > User: 1 has now earned 30 (+30) points in the current game, now making
->
+> 
 >  their total balance
 
 would be printed.
@@ -9313,7 +9348,7 @@ The way in which a joint will interpolate between two `Pose`s during animation p
     - **Out** \- Happens at the time of the next pose
     - **InOut** \- Happens at the midpoint between poses
 
-
+    
 
 - **Elastic** \- Springs back and overshoots the target in an elastic manner
 - **Cubic** \- Cubic interpolation, speed changes as target nears
@@ -9753,7 +9788,7 @@ local RunService = game:GetService("RunService")
 local success, message = pcall(function() RunService:UnbindFromRenderStep("drawImage") end)
 if success then
     print("Success: Function unbound!")
-else
+else 
     print("An error occurred: "..message)
 end
 ``` */
@@ -9904,13 +9939,13 @@ This ID can be found in the top right corner of the [game explorer]() in Roblox 
 - `DataModel/JobId`, which is a unique identifier for the server game instance running
 - `TeleportService`, which is a service that can be used to transport `Player|Players` between games */
 	readonly GameId: number;
-	/** This property is broken and should not be used.
+	/** This property is broken and should not be used. 
 
 This property historically described the `Enum/GearGenreSetting` of the `Articles/Place|place`, reflecting the gear permissions configured in the place settings. These settings determine what gear could be added to a `Player|Player's` `StarterGear`.
 
 This property, along with `DataModel/Genre&lt;` */
 	readonly GearGenreSetting: Enum.GearGenreSetting;
-	/** This property is broken and should not be used.
+	/** This property is broken and should not be used. 
 
 This property historically described the `Enum/Genre` of the `Articles/Place|place` as set on the Roblox website.
 
@@ -10022,7 +10057,7 @@ You are advised to use `RunService/IsStudio` to verify the current session is no
 
 - `PluginGui/BindToClose`, which is used to bind a function to a `PluginGui` close button and should not be confused with this function */
 	BindToClose(callback: Function): void;
-	/** Currently this function only returns the correct value on the client
+	/** Currently this function only returns the correct value on the client 
 
 This function returns whether gear of the given `Enum/GeareType` is permitted to be added to `Player|Players’` `StarterGear|StarterGears`. For example:
 
@@ -10593,7 +10628,7 @@ Increasing this value exaggerates the impact of the Doppler effect, whereas decr
 
 ```
 local SoundService = game:GetService("SoundService")
-SoundService.DopplerScale = 1 -- default
+SoundService.DopplerScale = 1 -- default 
 SoundService.DopplerScale = 2 -- exaggerated Doppler effect
 SoundService.DopplerEffect = 0.5 -- subdued Doppler effect
 ```
@@ -11392,7 +11427,7 @@ interface TestService extends RbxInstance {
 	readonly WarnCount: number;
 	/** If condition is true, prints "Check passed: ", followed by description to the output, in blue text. Otherwise, prints "Check failed: ", again, followed by description, but in red text. */
 	Check(condition: boolean, description: string, source?: Instance, line?: number): void;
-	/** Prints "Test checkpoint:
+	/** Prints "Test checkpoint: 
 
 ", followed by text
 
@@ -11420,11 +11455,11 @@ If this is called inside of a script running inside of the TestService, this wil
 
  is true
 
-, prints Warning passed:
+, prints Warning passed: 
 
 , followed by description
 
-, to the output, in blue text. Otherwise, prints Warning:
+, to the output, in blue text. Otherwise, prints Warning: 
 
 , followed by description
 
@@ -11732,6 +11767,7 @@ type RbxTween = Tween;
 interface TweenService extends RbxInstance {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "TweenService";
+	GetValue(alpha: number, easingStyle: Enum.EasingStyle, easingDirection: Enum.EasingDirection): number;
 }
 type RbxTweenService = TweenService;
 
@@ -12472,7 +12508,7 @@ The mouse button checked depends on the `Enum/UserInputType` value passed to the
 
 ```lua
 local UserInputService = game:GetService("UserInputService")
-
+    
 local pressed = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)
 ```
 
@@ -13243,7 +13279,6 @@ interface DoubleConstrainedValue extends RbxValueBase {
 	MaxValue: number;
 	/** The lowest number that the `DoubleConstrainedValue/Value` property can be. */
 	MinValue: number;
-	/** Used to hold a number value between `DoubleConstrainedValue/MinValue` and `DoubleConstrainedValue/MaxValue`. */
 	Value: number;
 }
 type RbxDoubleConstrainedValue = DoubleConstrainedValue;
@@ -13251,7 +13286,6 @@ type RbxDoubleConstrainedValue = DoubleConstrainedValue;
 interface IntConstrainedValue extends RbxValueBase {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "IntConstrainedValue";
-	/** Hold a `Integer` value between `/IntConstrainedValue/MinValue` and `/IntConstrainedValue/MaxValue`. Replaced by `/IntConstrainedValue/Value`, but still functional. */
 	ConstrainedValue: number;
 	MaxValue: number;
 	MinValue: number;
