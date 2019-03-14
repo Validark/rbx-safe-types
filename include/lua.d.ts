@@ -157,7 +157,11 @@ interface String {
 	byte(i?: number, j?: number): number;
 
 	/** Looks for the first match of pattern in the string s. If it finds a match, then find returns the indices of s where this occurrence starts and ends; otherwise, it returns nil. A third, optional numerical argument init specifies where to start the search; its default value is 1 and can be negative. A value of true as a fourth, optional argument plain turns off the pattern matching facilities, so the function does a plain "find substring" operation, with no characters in the pattern being considered "magic". Note that if `plain` is given, then `init` must be given as well. */
-	find(pattern: string, init?: number, plain?: boolean): [number, number] | [undefined, undefined];
+	find(
+		pattern: string,
+		init?: number,
+		plain?: boolean,
+	): LuaTuple<[number, number,  ...Array<string>] | Array<undefined>>;
 
 	/** Returns a formatted version of its variable number of arguments following the description given in its first argument (which must be a string). */
 	format(...args: Array<number | string>): string;
@@ -175,7 +179,7 @@ interface String {
 	lower(): string;
 
 	/** Looks for the first match of pattern in the string s. If a match is found, it is returned; otherwise, it returns nil. A third, optional numerical argument init specifies where to start the search; its default value is 1 and can be negative. */
-	match(pattern: string, init?: number): LuaTuple<Array<string | undefined>>;
+	match(pattern: string, init?: number): LuaTuple<Array<string> | Array<undefined>>;
 
 	/** Returns a string that is the concatenation of n copies of the string s separated by the string sep. */
 	rep(n: number): string;
@@ -198,7 +202,12 @@ declare namespace string {
 	function char(...args: Array<number>): string;
 
 	/** Looks for the first match of pattern in the string s. If it finds a match, then find returns the indices of s where this occurrence starts and ends; otherwise, it returns nil. A third, optional numerical argument init specifies where to start the search; its default value is 1 and can be negative. A value of true as a fourth, optional argument plain turns off the pattern matching facilities, so the function does a plain "find substring" operation, with no characters in the pattern being considered "magic". Note that if `plain` is given, then `init` must be given as well. */
-	function find(s: string, pattern: string, init?: number, plain?: boolean): [number, number];
+	function find(
+		s: string,
+		pattern: string,
+		init?: number,
+		plain?: boolean,
+	): LuaTuple<[number, number,  ...Array<string>] | Array<undefined>>;
 
 	/** Returns a formatted version of its variable number of arguments following the description given in its first argument (which must be a string). */
 	function format(pattern: string, ...args: Array<number | string>): string;
@@ -213,7 +222,7 @@ declare namespace string {
 	function lower(s: string): string;
 
 	/** Looks for the first match of pattern in the string s. If a match is found, it is returned; otherwise, it returns nil. A third, optional numerical argument init specifies where to start the search; its default value is 1 and can be negative. */
-	function match(s: string, pattern: string, init?: number): LuaTuple<Array<string | undefined>>;
+	function match(s: string, pattern: string, init?: number): LuaTuple<Array<string> | Array<undefined>>;
 
 	/** Returns a string that is the concatenation of n copies of the string s separated by the string sep. */
 	function rep(s: string, n: number): string;
@@ -330,9 +339,6 @@ declare namespace math {
 }
 
 declare namespace table {
-	/** Sorts list elements in a given order, in-place, from `list[1]` to `list[#list]`, using the standard Lua less-than operator. */
-	function sort<T>(t: Array<T>): void;
-
 	/** Sorts list elements in a given order, in-place, from `list[1]` to `list[#list]`. Comp is a function that receives two list elements and returns true when the first element must come before the second in the final order (so that `not comp(list[i+1],list[i])` will be true after the sort). */
 	function sort<T>(t: Array<T>, comp?: (a: T, b: T) => boolean): void;
 }
