@@ -1,5 +1,5 @@
 # How to use
-1. Drag the .d.ts files from this library's include folder to rbx-types' include folder. Overwrite the files in there, since they are the ones used by the transpiler and your project.
+1. Drag the .d.ts files from this library's include folder to rbx-types' include folder. Overwrite the files in there, since these files are the only ones that should used by the transpiler and your project.
 2. Enjoy!
 
 # rbx-safe-types
