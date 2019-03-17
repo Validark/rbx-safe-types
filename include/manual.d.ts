@@ -167,7 +167,7 @@ interface BillboardGui extends RbxLayerCollector {
 
 interface BindableEvent extends RbxInstance {
 	/** This event fires when the Fire() method is used.  Receives the variable length arguments from Fire(). */
-	readonly Event: RBXScriptSignal<(...arguments: Array<unknown>) => void>;
+	readonly Event: RBXScriptSignal<(...arguments: Array<unknown>) => void, true>;
 	/** Calling this method will fire the “Event” event. This function does not yield, even no script has connected to the “Event” event and even if a connected function yields. There are limitations on the values that can be sent as arguments; see the [code samples](https://developer.roblox.com/api-reference/function/BindableEvent/Fire) */
 	Fire(...arguments: Array<unknown>): void;
 }

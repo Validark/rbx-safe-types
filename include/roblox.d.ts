@@ -12,7 +12,7 @@ interface Indexable<T extends RbxInstance> {
 	[i: string]: Instance;
 }
 
-type FunctionArguments<T> = T extends (...args: infer U) => void ? U : never;
+type FunctionArguments<T> = T extends (...args: infer U) => void ? U : [];
 
 type Callback = (...args: Array<any>) => void;
 

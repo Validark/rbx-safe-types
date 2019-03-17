@@ -4,5 +4,15 @@ function f(plr: Player) {
 		} else {
 		}
 	}
-	const character: Model = plr.Character || plr.CharacterAdded.Wait()[0];
+	const character: Model = plr.Character || plr.CharacterAdded.Wait();
+	const str = plr.Changed.Wait();
 }
+
+interface Soup {
+	event: RBXScriptSignal;
+}
+
+const a = {} as Soup;
+
+const b = a.event.Wait();
+print(b);
