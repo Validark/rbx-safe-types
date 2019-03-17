@@ -1002,6 +1002,31 @@ interface RbxInstance {
 	FindFirstAncestor<T extends Instance = Instance>(name: string): T | undefined;
 	/** Returns the first child of this Instance that matches the first argument 'name'.  The second argument 'recursive' is an optional boolean (defaults to false) that will force the call to traverse down thru all of this Instance's descendants until it finds an object with a name that matches the 'name' argument.  The function will return nil if no Instance is found. */
 	FindFirstChild<T extends Instance = Instance>(name: string, recursive?: boolean): T | undefined;
+	/** Returns the child of the Instance with the given name. If the child does not exist, it will yield the current thread until it does.
+	 *
+	 * If the timeOut parameter is specified, this function will return nil and time out after timeOut seconds elapsing without the child being found.
+	 *
+	 * ### Where should I use WaitForChild?
+	 * WaitForChild is extremely important when working on code ran by the client. Roblox does not guarantee the time or order in which objects are replicated from the server to the client. This can cause scripts to break when indexing objects that do not exist yet.
+	 *
+	 * For example, a LocalScript may access a Model in the Workspace called ‘Ship’ like so:
+	 * ```ts
+const ship = Workspace.FindFirstChild("Ship")
+// ship may not have replicated yet
+	   ```
+	 * Instead WaitForChild should be used:
+	 * ```ts
+const ship = Workspace.WaitForChild("Ship")
+// Will yield until the ship has replicated before continuing
+```
+	 * ### Notes
+	 *
+	 * - If a call to this function exceeds 5 seconds without returning, and no timeOut parameter has been specified, a warning will be printed to the output that the thread may yield indefinitely
+	 *
+	 * - This function will return immediately without yielding if the child exists when the call is made
+	 *
+	 * - WaitForChild is less efficient than Instance:FindFirstChild or the dot operator. Therefore it should only be used when the developer is not sure if the object has replicated to the client. Generally this is only the first time the object is accessed
+	 */
 	WaitForChild<T extends Instance = Instance>(childName: string): T;
 	WaitForChild<T extends Instance = Instance>(childName: string, timeOut: number): T | undefined;
 	/** Returns a boolean if this Instance is of type 'className' or a is a subclass of type 'className'.  If 'className' is not a valid class type in ROBLOX, this function will always return false.  [More info](http://wiki.roblox.com/index.php/IsA) */
