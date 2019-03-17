@@ -55,7 +55,7 @@ interface RBXScriptSignal<T = Function, P = false> {
 	/**
 	 * Yields the current thread until this signal is fired. Returns what was fired to the signal.
 	 */
-	Wait(): FunctionArguments<T>;
+	Wait(): LuaTuple<FunctionArguments<T>>;
 }
 
 // generated in generated_classes.d.ts
@@ -287,16 +287,16 @@ interface BrickColorConstructor {
 	/** Constructs a BrickColor from its name. */
 	new <T extends BrickColors[keyof BrickColors]["Name"]>(val: T): BrickColors[keyof BrickColors];
 	/** Constructs a BrickColor from its name. */
-	new(val: string): BrickColors[keyof BrickColors];
+	new (val: string): BrickColors[keyof BrickColors];
 	/** Constructs a BrickColor from its numerical index. */
 	new <T extends BrickColors[keyof BrickColors]["Number"]>(val: T): BrickColors[keyof BrickColors];
 	/** Constructs a BrickColor from its numerical index. */
-	new(val: number): BrickColors[keyof BrickColors];
+	new (val: number): BrickColors[keyof BrickColors];
 
 	/** Constructs the closest BrickColor that can be matched to the specified RGB components. */
-	new(r: number, g: number, b: number): BrickColors[keyof BrickColors];
+	new (r: number, g: number, b: number): BrickColors[keyof BrickColors];
 	/** Constructs the closest BrickColor that can be matched to the specified Color3. */
-	new(color: Color3): BrickColors[keyof BrickColors];
+	new (color: Color3): BrickColors[keyof BrickColors];
 	/** Constructs a BrickColor from its palette index. */
 	palette<T extends keyof BrickColors>(paletteValue: T): BrickColors[T];
 	/** Constructs a BrickColor from its palette index. */

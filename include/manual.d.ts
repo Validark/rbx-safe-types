@@ -1360,16 +1360,62 @@ interface PhysicsService extends RbxInstance {
 	GetCollisionGroups(): Array<CollisionGroupInfo>;
 }
 
-interface FriendOnlineInfo {
-	VisitorId: number;
-	UserName: string;
-	LastOnline: string;
-	IsOnline: boolean;
-	LastLocation: string;
-	PlaceId: number;
-	GameId: string;
-	LocationType: 0 | 1 | 2 | 3 | 4;
+declare const enum FriendLocationType {
+	MobileWebsite = 0,
+	MobileInGame = 1,
+	Website = 2,
+	Studio = 3,
+	InGame = 4,
+	XBoxApp = 5,
+	TeamCreate = 6,
 }
+
+interface FriendOnlineInfoFields {
+	/** The UserId of the friend. */
+	VisitorId: number;
+	/** The user name of the friend. */
+	UserName: string;
+	/** When the user was last online. */
+	LastOnline: string;
+	/** If the friend is currently online. */
+	IsOnline: boolean;
+	/** The name of the friends current location. */
+	LastLocation: string;
+	/** The placeId of the friends last location. Check the `LocationType` to determine whether this property exists. */
+	PlaceId: number;
+	/** The DataModel / JobId of the friends last location. Check the `LocationType` to determine whether this property exists. */
+	GameId: string;
+	/** A numeric enum of the friends last location. In TS, you can check this value against the `FriendLocationType` const enum */
+	LocationType: FriendLocationType;
+}
+
+/** Similar to Pick, but instead turns excluded values to undefined (so they can still be browsed) */
+type PresentFields<T, K extends keyof T> = { [P in keyof T]: P extends K ? T[P] : undefined };
+
+/** When a member (M) of T is a particular Value (E), Pick<K> */
+type FieldsPresentWhen<T, M extends keyof T, E extends T[M], K extends keyof T> = {
+	[P in keyof T]: P extends M ? E : P extends K ? T[P] : undefined
+};
+
+type FriendOnlineInfo =
+	| FieldsPresentWhen<
+			FriendOnlineInfoFields,
+			"LocationType",
+			FriendLocationType.MobileWebsite | FriendLocationType.Website | FriendLocationType.XBoxApp,
+			"VisitorId" | "UserName" | "LastOnline" | "IsOnline" | "LastLocation"
+	  >
+	| FieldsPresentWhen<
+			FriendOnlineInfoFields,
+			"LocationType",
+			FriendLocationType.MobileInGame | FriendLocationType.InGame | FriendLocationType.TeamCreate,
+			"VisitorId" | "UserName" | "LastOnline" | "IsOnline" | "LastLocation" | "PlaceId" | "GameId"
+	  >
+	| FieldsPresentWhen<
+			FriendOnlineInfoFields,
+			"LocationType",
+			FriendLocationType.Studio,
+			"VisitorId" | "UserName" | "LastOnline" | "IsOnline" | "LastLocation" | "PlaceId"
+	  >;
 
 interface Player extends RbxInstance {
 	/** The ReplicationFocus `Player` property sets the part to focus replication around a Player. Different Roblox systems that communicate over the network (such as physics, streaming, etc) replicate at different rates depending on how close objects are to the replication focus.
@@ -1419,9 +1465,9 @@ Players.PlayerAdded:connect(onPlayerAdded)
 
 This event is only concerned with the `Player/Character|Character` of a `Player`. If you instead need to track when a player joins/leaves the game, use the events `Players/PlayerAdded` and `Players/PlayerRemoving`. */
 	readonly CharacterRemoving: RBXScriptSignal<(character: Model) => void>;
-	/** The GetFriendsOnline `Player` function returns a `Articles/Table#dictionaries` of online friends, specified by *maxFriends*.
+	/** Returns an array of `FriendOnlineInfo` dictionaries of a Player's online friends capped by *maxFriends*.
 
-## The Array’s Content
+### The FriendOnlineInfo dictionary's Content
 
 Some fields are only present for certain location types. For example, *PlaceId* won’t be present when the location type is *(mobile) website*.
 
