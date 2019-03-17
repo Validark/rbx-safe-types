@@ -1,12 +1,17 @@
-# How to use
-1. Drag the .d.ts files from this library's include folder to rbx-types' include folder. Overwrite the files in there, since these files are the only ones that should used by the transpiler and your project.
-2. Restart VSCode by pressing (Ctrl+Shift+P) and selecting Reload Window
-3. Enjoy!
-
 # rbx-safe-types
-Generates a roblox.d.ts file from a combination of handwritten .d.ts files and generated data from Roblox's API dump.
+This is a drop-in replacement for rbx-types.
 
-Differences between this and mainstream rbx-types:
+# How to use
+0) Install via the command: `npm install rbx-safe-types`
+
+1) Drag the .d.ts files from this library's include folder to rbx-types' include folder. Overwrite the files in there, since these files are the only ones that should used by the transpiler and your project.
+
+2) Restart VSCode by pressing (Ctrl+Shift+P) and selecting Reload Window
+
+3) Enjoy!
+
+# Advantages
+Advantages of using rbx-safe-types over rbx-types:
 
 - rbx-safe-types allows type narrowing via ClassName
 	```ts
@@ -43,7 +48,7 @@ Differences between this and mainstream rbx-types:
 	```
 	Basically, in rbx-safe-types a `Script` is `ClassName === "Script"` and in rbx-types it is `IsA("Script")`. In other words, in rbx-types a `Script` is equivalent to rbx-safe-types' `Script | LocalScript`. The same behavior applies to everything in the `InstanceBases` interface.
 
-- rbx-safe-types disallows indexing random strings for referencing instances. This has a number of problems:
+- rbx-safe-types disallows referencing instances through the dot operator because it's bad practice and can cause name collisions. Disabling random indexing also increases performance [in cases like this](https://github.com/roblox-ts/roblox-ts/issues/281).
 	```ts
 	const Workspace = game.GetService("Workspace");
 
@@ -73,3 +78,4 @@ Differences between this and mainstream rbx-types:
 
 - rbx-safe-types naively parses https://developer.roblox.com/api-reference for descriptions, and thus has far more type data.
 - rbx-safe-types is less automated, and updated manually
+- rbx-safe-types sometimes contains better type information. For example, the fields in [GetFriendsOnline](https://developer.roblox.com/api-reference/function/Player/GetFriendsOnline) which may or may not be undefined can be validated by checking the `LocationType`, which rbx-safe-types has a const enum for.
