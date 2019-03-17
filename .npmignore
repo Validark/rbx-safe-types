@@ -5,3 +5,4 @@ tsconfig.json
 .travis.yml
 .history
 cache
+include/test.ts
