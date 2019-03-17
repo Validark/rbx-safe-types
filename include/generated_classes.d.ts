@@ -2071,6 +2071,27 @@ interface CharacterMesh extends RbxCharacterAppearance {
 type RbxCharacterMesh = CharacterMesh;
 
 interface RbxClothing extends RbxCharacterAppearance {
+	/** This property determines the colorization to be applied to the `Clothing` texture. The default colorization value is \`DataType/Color3\|Color3.new(1,1,1) (white). When set to white no colorization occurs
+
+It functions similarly to `ImageLabel/ImageColor3` and `Decal/Color3`except that it is applied to Clothing textures.
+
+It is useful for creating outfits that have many different color variations, but share the same basic look, possibly for a character creator in a roleplaying game or generating a lot of different varied NPCs.
+
+### Examples
+
+- Outfits that fade to different colors over time
+- Outfits that have many different color variations, but share the same basic look
+- A targeting texture that changes from red to blue when you target a specific type of object
+
+
+
+The image below demonstrates the same shirt with two different colorizations. The first shirt has a red colorization and the second shirt has a blue colorization.
+
+![Color3 Property in Studio Explorer](https://developer.roblox.com/assets/5c8c1026cfc5dd8137f7b6dd/ClothingColor3.png)
+
+### See also
+
+- `ShirtGraphic/Color3`, determines the colorization to be applied to the ShirtGraphic texture */
 	Color3: Color3;
 }
 type Clothing = Pants | Shirt;
@@ -2128,6 +2149,27 @@ type RbxShirt = Shirt;
 interface ShirtGraphic extends RbxCharacterAppearance {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "ShirtGraphic";
+	/** This property determines the colorization to be applied to the `ShirtGraphic|Shirt` texture. The default colorization value is \`DataType/Color3\|Color3.new(1,1,1).
+
+It functions similarly to `ImageLabel/ImageColor3` and `Decal/Color3`except that it is applied to Shirt textures.
+
+It is useful for creating shirts that have many different color variations, but share the same basic look, possibly for a character creator in a roleplaying game or generating a lot of different varied NPCs.
+
+### Examples
+
+- Shirts that fade to different colors over time
+- Shirts that have many different color variations, but share the same basic look
+- A targeting texture that changes from red to blue when you target a specific type of object
+
+ The image below demonstrates the same clothing with two different colorizations. The clothing on the left has a red colorization and the clothing on the left has a blue colorization.
+
+
+
+![Color3 Property in Studio Explorer](https://developer.roblox.com/assets/5c8c1017574d11943778382d/ShirtGraphicColor3.png)
+
+### See also
+
+- `Clothing.Color3`, determines the colorization to be applied to the `Clothing` texture */
 	Color3: Color3;
 	/** The content ID link pointing to the T-shirt texture hosted on the Roblox website. This property sets the texture associated with a `ShirtGraphic`, or T-shirt, object.
 
@@ -2262,6 +2304,18 @@ type Constraint = AlignOrientation | AlignPosition | BallSocketConstraint | Hing
 interface AlignOrientation extends RbxConstraint {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "AlignOrientation";
+	/** Specifies the desired relationship between the primary axes of the two `Attachment|Attachments`. The constraint will try to maintain this relationship by applying forces within specified limits.
+
+This property is visible in Studio and meaningful only when `AlignOrientation/PrimaryAxisOnly` is set *true*.
+
+### Enums
+
+It can be set to any of the possible `Enum/AlignType` values.
+
+| Name                   | Value                  | Description            |
+| ---------------------- | ---------------------- | ---------------------- |
+|                        | 0                      | Two parallel axes      |
+|                        | 1                      | Two perpendicular axes | */
 	AlignType: Enum.AlignType;
 	/** The maximum angular velocity the constraint can use to reach its goal. */
 	MaxAngularVelocity: number;
@@ -9210,6 +9264,22 @@ There are 8 players in a server where the `Player/MaximumPlayers` is 10 and the 
 - If the player has **at least one friend** in the server, Roblox selects the already-existing server so the player can play with their friend.
 - If the player has **no friends** in the server, a new server is started since the existing server has met the number of PreferredPlayers (the player could still join the server by manually selecting it or following another user). */
 	readonly PreferredPlayers: number;
+	/** The RespawnTime property controls the time, in seconds, it takes for a player to respawn when `Players/CharacterAutoLoads` is *true*. It defaults to 5.0 seconds.
+
+![RespawnTime property in Studio Explorer Window](https://developer.roblox.com/assets/5c8af0a4574d119437783086/RespawnTimeInExplorer.png)
+
+This is useful when you want to change how long it takes to respawn based on the type of your game but don’t want to handle spawning players individually. Social games may want to decrease the respawn time whereas action games may want to increase it.
+
+Although this can be set from within a `Script`, you will likely set the property from within Studio via the Players service property window.
+
+```lua
+local Players = game:GetService(“Players”)
+Players.RespawnTime = 10.0
+```
+
+### See also
+
+- `Player/SpawnLocation`, if set, the player will respawn at the given `SpawnLocation` */
 	RespawnTime: number;
 	/** The GetNameFromUserIdAsync `Players` function will send a query to the Roblox website asking what the username is of the account with the given `Player/UserId|UserId`. This function **does not cache**; it always sends a web request even if a UserId was already queried or if the player is already connected to the server (and thus has their username exposed).
 
@@ -9237,6 +9307,11 @@ interface PluginAction extends RbxInstance {
 	readonly ClassName: "PluginAction";
 	/** A string that uniquely identifies this action. This string is the key used when saving and loading the action’s state in Roblox Studio. */
 	readonly ActionId: string;
+	/** This property determines whether the `PluginAction` will be hidden from Studio’s shortcuts view. Useful for contextual actions. It defaults to true.
+
+## See also
+
+- `Plugin/CreationPluginAction`, creates a PluginAction */
 	readonly AllowBinding: boolean;
 	/** The description of the action, when viewing it from the keyboard shortcuts window in Roblox Studio. */
 	readonly StatusTip: string;
@@ -9270,7 +9345,35 @@ type RbxPluginManager = PluginManager;
 interface PluginMenu extends RbxInstance {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "PluginMenu";
+	/** This property determines the icon to be displayed when used as a sub menu. It defaults to an empty string `””`.
+
+## See also
+
+- `articles/Intro to Plugins`, an introductory article to plugin use and development
+- `PluginAction`, an object that represents a generic performable action in Roblox Studio, with no directly associated `Toolbar` or `Button`.
+- `Plugin/CreatePluginAction`, creates a PluginAction
+- `PluginMenu/Title`, the text to be displayed when used as a sub menu
+- `PluginMenu/AddAction`, adds the given action to the menu
+- `PluginMenu/AddNewAction`, creates a temporary action that is hidden from Studio’s customize shortcuts window
+- `PluginMenu/AddMenu`, adds the given menu as a separator
+- `PluginMenu/AddSeparator`, adds a separator between items in the menu
+- `PluginMenu/Clear`, clears the menu
+- `PluginMenu/ShowAsync`, shows the menu at the mouse cursor. Yields until either an item is selected or the menu is closed. The selected action fires its Triggered event */
 	Icon: string;
+	/** This property determines the text to be displayed when a `PluginMenu` is used as a sub menu. It defaults to an empty string `””`.
+
+## See also
+
+- `articles/Intro to Plugins`, an introductory article to plugin use and development
+- `PluginAction`, an object that represents a generic performable action in Roblox Studio, with no directly associated `Toolbar` or `Button`.
+- `Plugin/CreatePluginAction`, creates a PluginAction
+- `PluginMenu/Icon`, the icon to be displayed when used as a sub menu
+- `PluginMenu/AddAction`, adds the given action to the menu
+- `PluginMenu/AddNewAction`, creates a temporary action that is hidden from Studio’s customize shortcuts window
+- `PluginMenu/AddMenu`, adds the given menu as a separator
+- `PluginMenu/AddSeparator`, adds a separator between items in the menu
+- `PluginMenu/Clear`, clears the menu
+- `PluginMenu/ShowAsync`, shows the menu at the mouse cursor. Yields until either an item is selected or the menu is closed. The selected action fires its Triggered event */
 	Title: string;
 }
 type RbxPluginMenu = PluginMenu;
