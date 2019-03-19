@@ -1,12 +1,19 @@
 {
 	"extends": "tslint:recommended",
 	"rules": {
-		"array-type": [true, "generic"],
+		"array-type": [
+			true,
+			"generic"
+		],
 		"arrow-parens": false,
 		"class-name": true,
 		"curly": false,
 		"forin": false,
-		"indent": [true, "tabs", 4],
+		"indent": [
+			true,
+			"tabs",
+			4
+		],
 		"interface-name": false,
 		"max-classes-per-file": false,
 		"no-bitwise": true,
@@ -19,12 +26,40 @@
 		"no-var-keyword": true,
 		"no-namespace": false,
 		"prefer-const": true,
-		"quotemark": [true, "double", "avoid-escape" ],
-		"semicolon": [true, "always", "ignore-bound-class-methods"],
+		"quotemark": [
+			true,
+			"double",
+			"avoid-escape"
+		],
+		"semicolon": [
+			true,
+			"always",
+			"ignore-bound-class-methods"
+		],
 		"triple-equals": true,
-		"no-string-throw":false,
-		"max-line-length": [false],
-		"object-literal-sort-keys":false,
-		"member-ordering": [false]
+		"no-string-throw": false,
+		"object-literal-sort-keys": false,
+		"member-ordering": [
+			true,
+			{
+				"order": [
+					"private-static-field",
+					"protected-static-field",
+					"public-static-field",
+					"private-static-method",
+					"protected-static-method",
+					"public-static-method",
+					"private-instance-field",
+					"protected-instance-field",
+					"public-instance-field",
+					"private-constructor",
+					"protected-constructor",
+					"public-constructor",
+					"private-instance-method",
+					"protected-instance-method",
+					"public-instance-method"
+				]
+			}
+		]
 	}
 }
