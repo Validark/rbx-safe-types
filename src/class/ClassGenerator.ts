@@ -302,7 +302,7 @@ function getDescriptionFromHtml(rawData: string) {
 							}
 						})
 						.replace(/<[^]+?>/g, "")
-						.replace(/\[([^]+?)\]/g, a => a.trim())
+						.replace(/\s+\]/g, "]")
 						// .replace(/```((?!lua).+?```)/g, (_, b) => "```lua" + b)
 						.trim()
 				);

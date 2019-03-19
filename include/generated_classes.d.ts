@@ -2005,53 +2005,29 @@ type CharacterAppearance = BodyColors | CharacterMesh | Clothing | ShirtGraphic 
 interface BodyColors extends RbxCharacterAppearance {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "BodyColors";
-	/** Sets the color of this limb, as a [BrickColor
-
-](https://developer.roblox.com/api-reference/datatype/BrickColor). */
+	/** Sets the color of this limb, as a [BrickColor](https://developer.roblox.com/api-reference/datatype/BrickColor). */
 	HeadColor: BrickColor;
-	/** Sets the color of this limb, as a [Color3
-
-](https://developer.roblox.com/api-reference/datatype/Color3). */
+	/** Sets the color of this limb, as a [Color3](https://developer.roblox.com/api-reference/datatype/Color3). */
 	HeadColor3: Color3;
-	/** Sets the color of this limb, as a [BrickColor
-
-](https://developer.roblox.com/api-reference/datatype/BrickColor). */
+	/** Sets the color of this limb, as a [BrickColor](https://developer.roblox.com/api-reference/datatype/BrickColor). */
 	LeftArmColor: BrickColor;
-	/** Sets the color of this limb, as a [Color3
-
-](https://developer.roblox.com/api-reference/datatype/Color3). */
+	/** Sets the color of this limb, as a [Color3](https://developer.roblox.com/api-reference/datatype/Color3). */
 	LeftArmColor3: Color3;
-	/** Sets the color of this limb, as a [BrickColor
-
-](https://developer.roblox.com/api-reference/datatype/BrickColor). */
+	/** Sets the color of this limb, as a [BrickColor](https://developer.roblox.com/api-reference/datatype/BrickColor). */
 	LeftLegColor: BrickColor;
-	/** Sets the color of this limb, as a [Color3
-
-](https://developer.roblox.com/api-reference/datatype/Color3). */
+	/** Sets the color of this limb, as a [Color3](https://developer.roblox.com/api-reference/datatype/Color3). */
 	LeftLegColor3: Color3;
-	/** Sets the color of this limb, as a [BrickColor
-
-](https://developer.roblox.com/api-reference/datatype/BrickColor). */
+	/** Sets the color of this limb, as a [BrickColor](https://developer.roblox.com/api-reference/datatype/BrickColor). */
 	RightArmColor: BrickColor;
-	/** Sets the color of this limb, as a [Color3
-
-](https://developer.roblox.com/api-reference/datatype/Color3). */
+	/** Sets the color of this limb, as a [Color3](https://developer.roblox.com/api-reference/datatype/Color3). */
 	RightArmColor3: Color3;
-	/** Sets the color of this limb, as a [BrickColor
-
-](https://developer.roblox.com/api-reference/datatype/BrickColor). */
+	/** Sets the color of this limb, as a [BrickColor](https://developer.roblox.com/api-reference/datatype/BrickColor). */
 	RightLegColor: BrickColor;
-	/** Sets the color of this limb, as a [Color3
-
-](https://developer.roblox.com/api-reference/datatype/Color3). */
+	/** Sets the color of this limb, as a [Color3](https://developer.roblox.com/api-reference/datatype/Color3). */
 	RightLegColor3: Color3;
-	/** Sets the color of this limb, as a [BrickColor
-
-](https://developer.roblox.com/api-reference/datatype/BrickColor). */
+	/** Sets the color of this limb, as a [BrickColor](https://developer.roblox.com/api-reference/datatype/BrickColor). */
 	TorsoColor: BrickColor;
-	/** Sets the color of this limb, as a [Color3
-
-](https://developer.roblox.com/api-reference/datatype/Color3). */
+	/** Sets the color of this limb, as a [Color3](https://developer.roblox.com/api-reference/datatype/Color3). */
 	TorsoColor3: Color3;
 }
 type RbxBodyColors = BodyColors;
@@ -2727,11 +2703,7 @@ interface SkateboardController extends RbxController {
 	readonly Throttle: number;
 	/** Fired when any input state of the skateboard controller is updated.
 
-The *axis* is fired with either ["Throttle"
-
-](https://developer.roblox.com/articles/String) if the throttle state of the skateboard was updated or ["Steer"
-
-](https://developer.roblox.com/articles/String) if the steering state of the skateboard was updated.Fired when any input state of the skateboard controller is updated. */
+The *axis* is fired with either ["Throttle"](https://developer.roblox.com/articles/String) if the throttle state of the skateboard was updated or ["Steer"](https://developer.roblox.com/articles/String) if the steering state of the skateboard was updated.Fired when any input state of the skateboard controller is updated. */
 	readonly AxisChanged: RBXScriptSignal<(axis: string) => void>;
 }
 type RbxSkateboardController = SkateboardController;
@@ -3023,9 +2995,7 @@ interface DebugSettings extends RbxInstance {
 	ReportSoundWarnings: boolean;
 	/** The purpose of this property is unknown.
 
- Its value is always [“?”
-
-](https://developer.roblox.com/articles/String). */
+ Its value is always [“?”](https://developer.roblox.com/articles/String). */
 	readonly RobloxProductName: string;
 	/** The current client version of Roblox. Can also be retrieved by using the version() function. */
 	readonly RobloxVersion: string;
@@ -9639,13 +9609,9 @@ Currently there are two constraints available:
 	IsBackend: boolean;
 	/** Describes the context where this member can be used.
 
-If set to ["Server"
+If set to ["Server"](https://developer.roblox.com/articles/String), this member will not be available to auto fill when editing a \`LocalScript\`.
 
-](https://developer.roblox.com/articles/String), this member will not be available to auto fill when editing a \`LocalScript\`.
-
- If set to ["Client"
-
-](https://developer.roblox.com/articles/String), this member will not be available to auto fill when editing a \`Script\`. */
+ If set to ["Client"](https://developer.roblox.com/articles/String), this member will not be available to auto fill when editing a \`Script\`. */
 	ScriptContext: string;
 	ServerOnly: boolean;
 	/** The maximum value of this property. Used with `ReflectionMetadataItem/UIMinimum` to control the slider bar of this property in the *Properties* window. */
@@ -12111,9 +12077,7 @@ interface UserGameSettings extends RbxInstance {
 	SetGamepadCameraSensitivityVisible(): void;
 	/** Records that the user has finished the specified *onboardingId*.
 
-Currently, this function only accepts ["DynamicThumbstick"
-
-](https://developer.roblox.com/articles/String), and it is used to persistently track whether or not the player has finished the tutorial for the *Dynamic Thumbstick* control scheme. */
+Currently, this function only accepts ["DynamicThumbstick"](https://developer.roblox.com/articles/String), and it is used to persistently track whether or not the player has finished the tutorial for the *Dynamic Thumbstick* control scheme. */
 	SetOnboardingCompleted(onboardingId: string): void;
 	/** Fires if the user’s full screen mode is changed.
 
