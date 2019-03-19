@@ -499,31 +499,43 @@ declare var WeakMap: WeakMapConstructor;
 
 interface Set<T> extends ToString, IsEmpty, MapSet<T, T> {
 	/**
+	 * ### [NOT YET MERGED INTO MASTER]
+	 *
 	 * Adds a value to the set
 	 */
 	add(value: T): this;
 
 	/**
+	 * ### [NOT YET MERGED INTO MASTER]
+	 *
 	 * Returns a new set with every element that occurs at least once in either `this` or a given set
 	 */
 	union<U>(set: Set<U>): Set<T | U>;
 
 	/**
+	 * ### [NOT YET MERGED INTO MASTER]
+	 *
 	 * Returns a new set with every element that occurs in both `this` and a given set
 	 */
 	intersect<U>(set: Set<U>): Set<T | U>;
 
 	/**
+	 * ### [NOT YET MERGED INTO MASTER]
+	 *
 	 * Returns a new set which is the result of subtracting a given set from `this`
 	 */
 	difference<U>(set: Set<U>): Set<T | U>;
 
 	/**
+	 * ### [NOT YET MERGED INTO MASTER]
+	 *
 	 * Returns true if `this` and a given set have no elements in common, else false.
 	 */
 	isDisjointWith<U>(set: Set<U>): boolean;
 
 	/**
+	 * ### [NOT YET MERGED INTO MASTER]
+	 *
 	 * Returns a boolean for whether `this` is a subset of a given set.
 	 *
 	 * Note: Every set is a subset of itself, so this will return true for identical sets.
