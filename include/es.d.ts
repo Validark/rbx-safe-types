@@ -11,13 +11,16 @@ interface NewableFunction extends Function {}
 
 /** @rbxts array */
 interface ArrayLike<T> {
+	/**
+	 * Gets the length of the array. This is one higher than the highest index defined in an array.
+	 */
 	readonly length: number;
 	readonly [n: number]: T;
 }
 
 interface ToString {
 	/**
-	 * Returns a string representation of an array.
+	 * Returns a string representation of this data structure.
 	 */
 	toString(): string;
 }
@@ -29,7 +32,7 @@ interface IsEmpty {
 	isEmpty(): boolean;
 }
 
-interface ObjectConstructor extends IsEmpty {
+interface ObjectConstructor {
 	/**
 	 * Copy the values of all of the enumerable own properties from one or more source objects to a
 	 * target object. Returns the target object.
@@ -94,6 +97,11 @@ interface ObjectConstructor extends IsEmpty {
 	 * @param o Object that contains the properties and methods. This can be an object that you created or an existing Document Object Model (DOM) object.
 	 */
 	entries(o: {}): Array<[string, any]>;
+
+	/**
+	 * Returns true if empty, otherwise false.
+	 */
+	isEmpty(o: {}): boolean;
 
 	/**
 	 * Returns a shallow copy of the object
@@ -179,26 +187,15 @@ interface IterableIterator<T> extends Iterator<T> {
 }
 
 /** @rbxts array */
-interface ConcatArray<T> extends ArrayLike<T> {
-	join(separator?: string): string;
-	slice(start?: number, end?: number): Array<T>;
-}
-
-/** @rbxts array */
 interface ReadonlyArray<T> extends ArrayLike<T> {
 	/** Iterator */
 	[Symbol.iterator](): IterableIterator<T>;
 
 	/**
-	 * Gets the length of the array. This is a number one higher than the highest element defined in an array.
-	 */
-	readonly length: number;
-
-	/**
-	 * Combines two or more arrays.
+	 * Creates a new array and shallow copies `this` and the items into the new array, in that order.
 	 * @param items Additional items to add to the end of array1.
 	 */
-	concat(...items: Array<T | ConcatArray<T>>): Array<T>;
+	concat<T>(...items: Array<T>): Array<T>;
 
 	/**
 	 * Adds all the elements of an array separated by the specified separator string.
@@ -357,8 +354,6 @@ interface ReadonlyArray<T> extends ArrayLike<T> {
 	 * @param compareFunction Specifies a function that defines the sort order. If omitted, the array is sorted according to each character's Unicode code point value, according to the string conversion of each element. (a, b) => a - b is a good starting point for numbers. If compareFunction(a, b) is less than 0, sort a to an index lower than b (i.e. a comes first), and vice versa.
 	 */
 	sort(compareFunction?: (a: T, b: T) => number): Array<T>;
-
-	readonly [n: number]: T;
 }
 
 /** @rbxts array */
@@ -440,11 +435,6 @@ interface MapSet<K, V> {
 	clear(): void;
 
 	/**
-	 * Returns an array of tuples for all members of this data structure
-	 */
-	entries(): Array<[K, V]>;
-
-	/**
 	 * Returns the number of elements in the data structure
 	 */
 	size(): number;
@@ -467,7 +457,12 @@ interface MapSet<K, V> {
 
 interface Map<K, V> extends ToString, IsEmpty, MapSet<K, V> {
 	/**
-	 * Returns an array with all of this structure's keys
+	 * Returns an array of tuples for all members of this data structure
+	 */
+	entries(): Array<[K, V]>;
+
+	/**
+	 * Returns an array with all of this map's keys
 	 */
 	keys(): Array<K>;
 
@@ -521,16 +516,16 @@ interface Set<T> extends ToString, IsEmpty, MapSet<T, T> {
 	intersect<U>(set: Set<U>): Set<T | U>;
 
 	/**
-	 * Returns true if `this` and a given set have no elements in common, else false.
-	 * @param set
-	 */
-	isDisjointWith<U>(set: Set<U>): boolean;
-
-	/**
 	 * Returns a new set which is the result of subtracting a given set from `this`
 	 * @param set
 	 */
 	difference<U>(set: Set<U>): Set<T | U>;
+
+	/**
+	 * Returns true if `this` and a given set have no elements in common, else false.
+	 * @param set
+	 */
+	isDisjointWith<U>(set: Set<U>): boolean;
 
 	/**
 	 * Returns a boolean for whether `this` is a subset of a given set.
@@ -550,7 +545,20 @@ interface SetConstructor {
 }
 declare const Set: SetConstructor;
 
-type ReadonlySet<T> = Pick<Set<T>, "forEach" | "has" | "entries" | "values" | "size" | "isEmpty" | "toString">;
+type ReadonlySet<T> = Pick<
+	Set<T>,
+	| "forEach"
+	| "has"
+	| "values"
+	| "size"
+	| "isEmpty"
+	| "toString"
+	| "union"
+	| "intersect"
+	| "difference"
+	| "isDisjointWith"
+	| "isSubsetOf"
+>;
 type WeakSet<T> = Pick<Set<T>, "add" | "delete" | "has" | "isEmpty" | "toString">;
 
 interface WeakSetConstructor {
