@@ -15,7 +15,21 @@ interface ArrayLike<T> {
 	readonly [n: number]: T;
 }
 
-interface ObjectConstructor {
+interface ToString {
+	/**
+	 * Returns a string representation of an array.
+	 */
+	toString(): string;
+}
+
+interface IsEmpty {
+	/**
+	 * Returns true if empty, otherwise false.
+	 */
+	isEmpty(): boolean;
+}
+
+interface ObjectConstructor extends IsEmpty {
 	/**
 	 * Copy the values of all of the enumerable own properties from one or more source objects to a
 	 * target object. Returns the target object.
@@ -82,11 +96,6 @@ interface ObjectConstructor {
 	entries(o: {}): Array<[string, any]>;
 
 	/**
-	 * Returns true if empty, otherwise false.
-	 */
-	isEmpty(o: {}): boolean;
-
-	/**
 	 * Returns a shallow copy of the object
 	 */
 	copy<T extends object>(o: T): T;
@@ -121,8 +130,7 @@ interface String {
 	trimEnd(): string;
 }
 
-interface Symbol {
-	toString(): string;
+interface Symbol extends ToString {
 	valueOf(): symbol;
 }
 
@@ -166,162 +174,139 @@ interface Iterator<T> {
 	throw?(e?: any): IteratorResult<T>;
 }
 
-interface Iterable<T> {
-	[Symbol.iterator](): Iterator<T>;
-}
-
 interface IterableIterator<T> extends Iterator<T> {
 	[Symbol.iterator](): IterableIterator<T>;
 }
 
 /** @rbxts array */
-interface ConcatArray<T> {
-	readonly length: number;
-	readonly [n: number]: T;
+interface ConcatArray<T> extends ArrayLike<T> {
 	join(separator?: string): string;
 	slice(start?: number, end?: number): Array<T>;
 }
 
 /** @rbxts array */
-interface Array<T> {
+interface ReadonlyArray<T> extends ArrayLike<T> {
 	/** Iterator */
 	[Symbol.iterator](): IterableIterator<T>;
 
 	/**
-	 * Gets or sets the length of the array. This is a number one higher than the highest element defined in an array.
+	 * Gets the length of the array. This is a number one higher than the highest element defined in an array.
 	 */
 	readonly length: number;
-	/**
-	 * Appends new elements to an array, and returns the new length of the array.
-	 * @param items New elements of the Array.
-	 */
-	push(...items: Array<T>): number;
-	/**
-	 * Removes the last element from an array and returns it.
-	 */
-	pop(): T | undefined;
+
 	/**
 	 * Combines two or more arrays.
 	 * @param items Additional items to add to the end of array1.
 	 */
-	concat(...items: Array<ConcatArray<T>>): Array<T>;
+	concat(...items: Array<T | ConcatArray<T>>): Array<T>;
+
 	/**
 	 * Adds all the elements of an array separated by the specified separator string.
 	 * @param separator A string used to separate one element of an array from the next in the resulting String. If omitted, the array elements are separated with a comma.
 	 */
 	join(separator?: string): string;
-	/**
-	 * Returns a copy of the array with elements in reverse order.
-	 */
-	reverse(): Array<T>;
-	/**
-	 * Removes the first element from an array and returns it.
-	 */
-	shift(): T | undefined;
+
 	/**
 	 * Returns a section of an array.
 	 * @param start The beginning of the specified portion of the array.
 	 * @param end The end of the specified portion of the array.
 	 */
 	slice(start?: number, end?: number): Array<T>;
-	/**
-	 * Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.
-	 * @param start The zero-based location in the array from which to start removing elements.
-	 * @param deleteCount The number of elements to remove.
-	 */
-	splice(start: number, deleteCount?: number): Array<T>;
-	/**
-	 * Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.
-	 * @param start The zero-based location in the array from which to start removing elements.
-	 * @param deleteCount The number of elements to remove.
-	 * @param items Elements to insert into the array in place of the deleted elements.
-	 */
-	splice(start: number, deleteCount: number, ...items: Array<T>): Array<T>;
-	/**
-	 * Inserts new elements at the start of an array.
-	 * @param items  Elements to insert at the start of the Array.
-	 */
-	unshift(...items: Array<T>): number;
+
 	/**
 	 * Returns the index of the first occurrence of a value in an array.
 	 * @param searchElement The value to locate in the array.
 	 * @param fromIndex The array index at which to begin the search. If fromIndex is omitted, the search starts at index 0.
 	 */
 	indexOf(searchElement: T, fromIndex?: number): number;
+
 	/**
 	 * Returns the index of the last occurrence of a specified value in an array.
 	 * @param searchElement The value to locate in the array.
 	 * @param fromIndex The array index at which to begin the search. If fromIndex is omitted, the search starts at the last index in the array.
 	 */
 	lastIndexOf(searchElement: T, fromIndex?: number): number;
+
 	/**
 	 * Determines whether all the members of an array satisfy the specified test.
 	 * @param callbackfn A function that accepts up to three arguments. The every method calls the callbackfn function for each element in array1 until the callbackfn returns false, or until the end of the array.
 	 */
-	every(callbackfn: (value: T, index: number, array: Array<T>) => boolean): boolean;
+	every(callbackfn: (value: T, index: number, array: ReadonlyArray<T>) => boolean): boolean;
+
 	/**
 	 * Determines whether the specified callback function returns true for any element of an array.
 	 * @param callbackfn A function that accepts up to three arguments. The some method calls the callbackfn function for each element in array1 until the callbackfn returns true, or until the end of the array.
 	 */
-	some(callbackfn: (value: T, index: number, array: Array<T>) => boolean): boolean;
+	some(callbackfn: (value: T, index: number, array: ReadonlyArray<T>) => boolean): boolean;
+
 	/**
 	 * Performs the specified action for each element in an array.
 	 * @param callbackfn  A function that accepts up to three arguments. forEach calls the callbackfn function one time for each element in the array.
 	 */
-	forEach(callbackfn: (value: T, index: number, array: Array<T>) => void): void;
+	forEach(callbackfn: (value: T, index: number, array: ReadonlyArray<T>) => void): void;
+
 	/**
 	 * Calls a defined callback function on each element of an array, and returns an array that contains the results.
 	 * @param callbackfn A function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in the array.
 	 */
-	map<U>(callbackfn: (value: T, index: number, array: Array<T>) => U): Array<U>;
+	map<U>(callbackfn: (value: T, index: number, array: ReadonlyArray<T>) => U): Array<U>;
+
 	/**
 	 * Returns the elements of an array that meet the condition specified in a callback function.
 	 * @param callbackfn A function that accepts up to three arguments. The filter method calls the callbackfn function one time for each element in the array.
 	 */
-	filter<S extends T>(callbackfn: (value: T, index: number, array: Array<T>) => value is S): Array<S>;
+	filter<S extends T>(callbackfn: (value: T, index: number, array: ReadonlyArray<T>) => value is S): Array<S>;
+
 	/**
 	 * Returns the elements of an array that meet the condition specified in a callback function.
 	 * @param callbackfn A function that accepts up to three arguments. The filter method calls the callbackfn function one time for each element in the array.
 	 */
-	filter(callbackfn: (value: T, index: number, array: Array<T>) => boolean): Array<T>;
+	filter(callbackfn: (value: T, index: number, array: ReadonlyArray<T>) => boolean): Array<T>;
+
 	/**
 	 * Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
 	 * @param callbackfn A function that accepts up to four arguments. The reduce method calls the callbackfn function one time for each element in the array.
 	 * @param initialValue If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of an array value.
 	 */
-	reduce(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: Array<T>) => T): T;
 	reduce(
-		callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: Array<T>) => T,
-		initialValue: T,
+		callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: ReadonlyArray<T>) => T,
+		initialValue?: T,
 	): T;
+
 	/**
 	 * Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
 	 * @param callbackfn A function that accepts up to four arguments. The reduce method calls the callbackfn function one time for each element in the array.
 	 * @param initialValue If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of an array value.
 	 */
 	reduce<U>(
-		callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: Array<T>) => U,
+		callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: ReadonlyArray<T>) => U,
 		initialValue: U,
 	): U;
+
 	/**
 	 * Calls the specified callback function for all the elements in an array, in descending order. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
 	 * @param callbackfn A function that accepts up to four arguments. The reduceRight method calls the callbackfn function one time for each element in the array.
 	 * @param initialValue If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of an array value.
 	 */
-	reduceRight(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: Array<T>) => T): T;
 	reduceRight(
-		callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: Array<T>) => T,
-		initialValue: T,
+		callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: ReadonlyArray<T>) => T,
+		initialValue?: T,
 	): T;
+
 	/**
 	 * Calls the specified callback function for all the elements in an array, in descending order. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
 	 * @param callbackfn A function that accepts up to four arguments. The reduceRight method calls the callbackfn function one time for each element in the array.
 	 * @param initialValue If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of an array value.
 	 */
 	reduceRight<U>(
-		callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: Array<T>) => U,
+		callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: ReadonlyArray<T>) => U,
 		initialValue: U,
 	): U;
+
+	/**
+	 * Returns a copy of the array with elements in reverse order.
+	 */
+	reverse(): Array<T>;
 
 	/**
 	 * Returns the value of the first element in the array where predicate is true, and undefined
@@ -330,18 +315,8 @@ interface Array<T> {
 	 * order, until it finds one where predicate returns true. If such an element is found, find
 	 * immediately returns that element value. Otherwise, find returns undefined.
 	 */
-	find<S extends T>(predicate: (value: T, index: number, obj: Array<T>) => value is S): S | undefined;
-	find(predicate: (value: T, index: number, obj: Array<T>) => boolean): T | undefined;
-
-	/**
-	 * Returns true if empty, otherwise false.
-	 */
-	isEmpty(): boolean;
-
-	/**
-	 * Returns a string representation of an array
-	 */
-	toString(): string;
+	find<S extends T>(predicate: (value: T, index: number, obj: ReadonlyArray<T>) => value is S): S | undefined;
+	find(predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean): T | undefined;
 
 	/**
 	 * Returns the index of the first element in the array that satisfies the provided testing function. Otherwise, it returns -1, indicating no element passed the test.
@@ -349,7 +324,26 @@ interface Array<T> {
 	 * order, until it finds one where predicate returns true. If such an element is found, find
 	 * immediately returns the index at which it was found. Otherwise, find returns -1.
 	 */
-	findIndex<T>(predicate: (value: T, index: number, obj: Array<T>) => boolean): number;
+	findIndex<T>(predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean): number;
+
+	/**
+	 * Returns a shallow copy of the array
+	 */
+	copy(): this;
+
+	/**
+	 * Returns a deep copy of the array
+	 */
+	deepCopy(): this;
+
+	/**
+	 * Returns true if
+	 * - each member of `a` equals each member of `b`
+	 * - `b` has no members that do not exist in `a`.
+	 *
+	 * Searches recursively.
+	 */
+	deepEquals<U>(other: Array<U>): boolean;
 
 	/**
 	 * The flat() method creates a new array with all sub-array elements concatenated into it recursively up to the specified depth. Also removes empty slots in arrays.
@@ -364,6 +358,48 @@ interface Array<T> {
 	 */
 	sort(compareFunction?: (a: T, b: T) => number): Array<T>;
 
+	readonly [n: number]: T;
+}
+
+/** @rbxts array */
+interface Array<T> extends ReadonlyArray<T> {
+	/**
+	 * Appends new elements to an array, and returns the new length of the array.
+	 * @param items New elements of the Array.
+	 */
+	push(...items: Array<T>): number;
+
+	/**
+	 * Removes the last element from an array and returns it.
+	 */
+	pop(): T | undefined;
+
+	/**
+	 * Removes the first element from an array and returns it.
+	 */
+	shift(): T | undefined;
+
+	/**
+	 * Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.
+	 * @param start The zero-based location in the array from which to start removing elements.
+	 * @param deleteCount The number of elements to remove.
+	 */
+	splice(start: number, deleteCount?: number): Array<T>;
+
+	/**
+	 * Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.
+	 * @param start The zero-based location in the array from which to start removing elements.
+	 * @param deleteCount The number of elements to remove.
+	 * @param items Elements to insert into the array in place of the deleted elements.
+	 */
+	splice(start: number, deleteCount: number, ...items: Array<T>): Array<T>;
+
+	/**
+	 * Inserts new elements at the start of an array.
+	 * @param items  Elements to insert at the start of the Array.
+	 */
+	unshift(...items: Array<T>): number;
+
 	/**
 	 * Shallow copies part of an array to another location in the same array and returns it, without modifying its size.
 	 * @param target Zero based index at which to copy the sequence to. If negative, target will be counted from the end. If target is at or greater than arr.length, nothing will be copied. If target is positioned after start, the copied sequence will be trimmed to fit arr.length.
@@ -371,25 +407,6 @@ interface Array<T> {
 	 * @param end Zero based index at which to end copying elements from. copyWithin copies up to but not including end. If negative, end will be counted from the end. If end is omitted, copyWithin will copy until the end (default to arr.length).
 	 */
 	copyWithin(target: number, start?: number, end?: number): this;
-
-	/**
-	 * Returns a shallow copy of the array
-	 */
-	copy(): this;
-
-	/**
-	 * Returns a deep copy of the array
-	 */
-	deepCopy(): this;
-
-	/**
-	 * Returns true if
-	 * - each member of `a` equals each member of `b`
-	 * - `b` has no members that do not exist in `a`.
-	 *
-	 * Searches recursively.
-	 */
-	deepEquals<U>(other: Array<U>): boolean;
 
 	/**
 	 * Inserts `value` into the array at `index` and shifts array members forwards if needed.
@@ -404,186 +421,68 @@ interface Array<T> {
 	[n: number]: T;
 }
 
-/** @rbxts array */
-interface ReadonlyArray<T> {
-	readonly [n: number]: T;
-
-	/**
-	 * Gets the length of the array. This is a number one higher than the highest element defined in an array.
-	 */
-	readonly length: number;
-	/** Iterator */
-	[Symbol.iterator](): IterableIterator<T>;
-	/**
-	 * Returns a string representation of an array.
-	 */
-	toString(): string;
-	/**
-	 * Combines two or more arrays.
-	 * @param items Additional items to add to the end of array1.
-	 */
-	concat(...items: Array<ConcatArray<T>>): Array<T>;
-	/**
-	 * Combines two or more arrays.
-	 * @param items Additional items to add to the end of array1.
-	 */
-	concat(...items: Array<T | ConcatArray<T>>): Array<T>;
-	/**
-	 * Adds all the elements of an array separated by the specified separator string.
-	 * @param separator A string used to separate one element of an array from the next in the resulting String. If omitted, the array elements are separated with a comma.
-	 */
-	join(separator?: string): string;
-	/**
-	 * Returns a section of an array.
-	 * @param start The beginning of the specified portion of the array.
-	 * @param end The end of the specified portion of the array.
-	 */
-	slice(start?: number, end?: number): Array<T>;
-	/**
-	 * Returns the index of the first occurrence of a value in an array.
-	 * @param searchElement The value to locate in the array.
-	 * @param fromIndex The array index at which to begin the search. If fromIndex is omitted, the search starts at index 0.
-	 */
-	indexOf(searchElement: T, fromIndex?: number): number;
-	/**
-	 * Returns the index of the last occurrence of a specified value in an array.
-	 * @param searchElement The value to locate in the array.
-	 * @param fromIndex The array index at which to begin the search. If fromIndex is omitted, the search starts at the last index in the array.
-	 */
-	lastIndexOf(searchElement: T, fromIndex?: number): number;
-	/**
-	 * Determines whether all the members of an array satisfy the specified test.
-	 * @param callbackfn A function that accepts up to three arguments. The every method calls the callbackfn function for each element in array1 until the callbackfn returns false, or until the end of the array.
-	 */
-	every(callbackfn: (value: T, index: number, array: ReadonlyArray<T>) => boolean): boolean;
-	/**
-	 * Determines whether the specified callback function returns true for any element of an array.
-	 * @param callbackfn A function that accepts up to three arguments. The some method calls the callbackfn function for each element in array1 until the callbackfn returns true, or until the end of the array.
-	 */
-	some(callbackfn: (value: T, index: number, array: ReadonlyArray<T>) => boolean): boolean;
-	/**
-	 * Performs the specified action for each element in an array.
-	 * @param callbackfn  A function that accepts up to three arguments. forEach calls the callbackfn function one time for each element in the array.
-	 */
-	forEach(callbackfn: (value: T, index: number, array: ReadonlyArray<T>) => void): void;
-	/**
-	 * Calls a defined callback function on each element of an array, and returns an array that contains the results.
-	 * @param callbackfn A function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in the array.
-	 */
-	map<U>(callbackfn: (value: T, index: number, array: ReadonlyArray<T>) => U): Array<U>;
-	/**
-	 * Returns the elements of an array that meet the condition specified in a callback function.
-	 * @param callbackfn A function that accepts up to three arguments. The filter method calls the callbackfn function one time for each element in the array.
-	 */
-	filter<S extends T>(callbackfn: (value: T, index: number, array: ReadonlyArray<T>) => value is S): Array<S>;
-	/**
-	 * Returns the elements of an array that meet the condition specified in a callback function.
-	 * @param callbackfn A function that accepts up to three arguments. The filter method calls the callbackfn function one time for each element in the array.
-	 */
-	filter(callbackfn: (value: T, index: number, array: ReadonlyArray<T>) => boolean): Array<T>;
-	/**
-	 * Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
-	 * @param callbackfn A function that accepts up to four arguments. The reduce method calls the callbackfn function one time for each element in the array.
-	 * @param initialValue If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of an array value.
-	 */
-	reduce(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: ReadonlyArray<T>) => T): T;
-	reduce(
-		callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: ReadonlyArray<T>) => T,
-		initialValue: T,
-	): T;
-	/**
-	 * Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
-	 * @param callbackfn A function that accepts up to four arguments. The reduce method calls the callbackfn function one time for each element in the array.
-	 * @param initialValue If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of an array value.
-	 */
-	reduce<U>(
-		callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: ReadonlyArray<T>) => U,
-		initialValue: U,
-	): U;
-	/**
-	 * Calls the specified callback function for all the elements in an array, in descending order. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
-	 * @param callbackfn A function that accepts up to four arguments. The reduceRight method calls the callbackfn function one time for each element in the array.
-	 * @param initialValue If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of an array value.
-	 */
-	reduceRight(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: ReadonlyArray<T>) => T): T;
-	reduceRight(
-		callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: ReadonlyArray<T>) => T,
-		initialValue: T,
-	): T;
-	/**
-	 * Calls the specified callback function for all the elements in an array, in descending order. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
-	 * @param callbackfn A function that accepts up to four arguments. The reduceRight method calls the callbackfn function one time for each element in the array.
-	 * @param initialValue If initialValue is specified, it is used as the initial value to start the accumulation. The first call to the callbackfn function provides this value as an argument instead of an array value.
-	 */
-	reduceRight<U>(
-		callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: ReadonlyArray<T>) => U,
-		initialValue: U,
-	): U;
-
-	/**
-	 * Returns true if empty, otherwise false.
-	 */
-	isEmpty(): boolean;
-
-	/**
-	 * Returns a string representation of an array
-	 */
-	toString(): string;
-
-	/**
-	 * Returns the index of the first element in the array that satisfies the provided testing function. Otherwise, it returns -1, indicating no element passed the test.
-	 * @param predicate findIndex calls predicate once for each element of the array, in ascending
-	 * order, until it finds one where predicate returns true. If such an element is found, find
-	 * immediately returns the index at which it was found. Otherwise, find returns -1.
-	 */
-	findIndex<T>(predicate: (value: T, index: number, obj: Array<T>) => boolean): number;
-
-	/**
-	 * Returns a shallow copy of the array
-	 */
-	copy(): this;
-
-	/**
-	 * Returns a deep copy of the array
-	 */
-	deepCopy(): this;
-
-	/**
-	 * Returns true if
-	 * - each member of `a` equals each member of `b`
-	 * - `b` has no members that do not exist in `a`.
-	 *
-	 * Searches recursively.
-	 */
-	deepEquals<U>(other: Array<U>): boolean;
-}
-
 interface ArrayConstructor {
 	new <T>(): Array<T>;
 }
 
 declare const Array: ArrayConstructor;
 
-interface Map<K, V> {
-	clear(): void;
-	delete(key: K): boolean;
-	forEach(callbackfn: (value: V, key: K, map: Map<K, V>) => void): void;
-	get(key: K): V | undefined;
-	has(key: K): boolean;
-	set(key: K, value: V): this;
-	entries(): Array<[K, V]>;
-	keys(): Array<K>;
-	values(): Array<V>;
-	size(): number;
+interface MapSet<K, V> {
 	/**
-	 * Returns true if empty, otherwise false.
+	 * Performs the specified action for each (element / pair of elements) in the data structure
+	 * @param callbackfn  A function that accepts up to three arguments. forEach calls the callbackfn function one time for each (element / pair of elements) in the array.
 	 */
-	isEmpty(): boolean;
+	forEach(callbackfn: (value: V, key: K, dataStructure: this) => void): void;
 
 	/**
-	 * Returns a string representation
+	 * Deletes all members of the data structure
 	 */
-	toString(): string;
+	clear(): void;
+
+	/**
+	 * Returns an array of tuples for all members of this data structure
+	 */
+	entries(): Array<[K, V]>;
+
+	/**
+	 * Returns the number of elements in the data structure
+	 */
+	size(): number;
+
+	/**
+	 * Deletes the given key from the data structure
+	 */
+	delete(key: K): boolean;
+
+	/**
+	 * Returns an array with all values of this data structure
+	 */
+	values(): Array<V>;
+
+	/**
+	 * Returns a boolean for whether the given key exists in the data structure
+	 */
+	has(key: K): boolean;
+}
+
+interface Map<K, V> extends ToString, IsEmpty, MapSet<K, V> {
+	/**
+	 * Returns an array with all of this structure's keys
+	 */
+	keys(): Array<K>;
+
+	/**
+	 * Returns the value associated with the given key
+	 * @param key
+	 */
+	get(key: K): V | undefined;
+
+	/**
+	 * Associates a key with a value which can be accessed later by `Map.get`
+	 * @param key
+	 * @param value
+	 */
+	set(key: K, value: V): this;
 }
 
 interface MapConstructor {
@@ -591,65 +490,59 @@ interface MapConstructor {
 }
 declare var Map: MapConstructor;
 
-interface ReadonlyMap<K, V> {
-	forEach(callbackfn: (value: V, key: K, map: ReadonlyMap<K, V>) => void): void;
-	get(key: K): V | undefined;
-	has(key: K): boolean;
-	entries(): Array<[K, V]>;
-	keys(): Array<K>;
-	values(): Array<V>;
-	size(): number;
-	/**
-	 * Returns true if empty, otherwise false.
-	 */
-	isEmpty(): boolean;
-
-	/**
-	 * Returns a string representation
-	 */
-	toString(): string;
-}
-
-interface WeakMap<K extends object, V> {
-	delete(key: K): boolean;
-	get(key: K): V | undefined;
-	has(key: K): boolean;
-	set(key: K, value: V): this;
-	/**
-	 * Returns true if empty, otherwise false.
-	 */
-	isEmpty(): boolean;
-
-	/**
-	 * Returns a string representation
-	 */
-	toString(): string;
-}
+type ReadonlyMap<K, V> = Pick<
+	Map<K, V>,
+	"forEach" | "get" | "has" | "entries" | "keys" | "values" | "size" | "isEmpty" | "toString"
+>;
+type WeakMap<K extends object, V> = Pick<Map<K, V>, "delete" | "get" | "has" | "set" | "isEmpty" | "toString">;
 
 interface WeakMapConstructor {
 	new <K extends object = object, V = any>(entries?: ReadonlyArray<[K, V]> | null): WeakMap<K, V>;
 }
 declare var WeakMap: WeakMapConstructor;
 
-interface Set<T> {
-	add(value: T): this;
-	clear(): void;
-	delete(value: T): boolean;
-	forEach(callbackfn: (value: T, value2: T, set: Set<T>) => void): void;
-	has(value: T): boolean;
-	entries(): Array<[T, T]>;
-	keys(): Array<T>;
-	values(): Array<T>;
-	size(): number;
+interface Set<T> extends ToString, IsEmpty, MapSet<T, T> {
 	/**
-	 * Returns true if empty, otherwise false.
+	 * Adds a value to the set
+	 * @param value
 	 */
-	isEmpty(): boolean;
+	add(value: T): this;
 
 	/**
-	 * Returns a string representation
+	 * Returns a new set with every element that occurs at least once in either `this` or a given set
+	 * @param set
 	 */
-	toString(): string;
+	union<U>(set: Set<U>): Set<T | U>;
+
+	/**
+	 * Returns a new set with every element that occurs in both `this` and a given set
+	 * @param set
+	 */
+	intersect<U>(set: Set<U>): Set<T | U>;
+
+	/**
+	 * Returns true if `this` and a given set have no elements in common, else false.
+	 * @param set
+	 */
+	isDisjointWith<U>(set: Set<U>): boolean;
+
+	/**
+	 * Returns a new set which is the result of subtracting a given set from `this`
+	 * @param set
+	 */
+	difference<U>(set: Set<U>): Set<T | U>;
+
+	/**
+	 * Returns a boolean for whether `this` is a subset of a given set.
+	 *
+	 * Note: Every set is a subset of itself, so this will return true for identical sets.
+	 * A "proper subset" relationship can be checked via:
+	 * ```ts
+set1.isSubsetOf(set2) && !set2.isSubsetOf(set1)
+```
+	 * @param set
+	 */
+	isSubsetOf<U>(set: Set<U>): boolean;
 }
 
 interface SetConstructor {
@@ -657,38 +550,8 @@ interface SetConstructor {
 }
 declare const Set: SetConstructor;
 
-interface ReadonlySet<T> {
-	forEach(callbackfn: (value: T, value2: T, set: ReadonlySet<T>) => void): void;
-	has(value: T): boolean;
-	entries(): Array<[T, T]>;
-	keys(): Array<T>;
-	values(): Array<T>;
-	size(): number;
-	/**
-	 * Returns true if empty, otherwise false.
-	 */
-	isEmpty(): boolean;
-
-	/**
-	 * Returns a string representation
-	 */
-	toString(): string;
-}
-
-interface WeakSet<T extends object> {
-	add(value: T): this;
-	delete(value: T): boolean;
-	has(value: T): boolean;
-	/**
-	 * Returns true if empty, otherwise false.
-	 */
-	isEmpty(): boolean;
-
-	/**
-	 * Returns a string representation
-	 */
-	toString(): string;
-}
+type ReadonlySet<T> = Pick<Set<T>, "forEach" | "has" | "entries" | "values" | "size" | "isEmpty" | "toString">;
+type WeakSet<T> = Pick<Set<T>, "add" | "delete" | "has" | "isEmpty" | "toString">;
 
 interface WeakSetConstructor {
 	new <T extends object = object>(values?: ReadonlyArray<T> | null): WeakSet<T>;
