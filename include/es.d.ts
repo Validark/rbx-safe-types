@@ -15,7 +15,7 @@ interface ArrayLike<T> {
 	 * Gets the length of the array. This is one higher than the highest index defined in an array.
 	 */
 	readonly length: number;
-	readonly [n: number]: T;
+	readonly [n: number]: T | undefined;
 }
 
 interface ToString {
@@ -413,7 +413,7 @@ interface Array<T> extends ReadonlyArray<T> {
 	 */
 	remove(index: number): T | undefined;
 
-	[n: number]: T;
+	[n: number]: T | undefined;
 }
 
 interface ArrayConstructor {
@@ -468,14 +468,11 @@ interface Map<K, V> extends ToString, IsEmpty, MapSet<K, V> {
 
 	/**
 	 * Returns the value associated with the given key
-	 * @param key
 	 */
 	get(key: K): V | undefined;
 
 	/**
 	 * Associates a key with a value which can be accessed later by `Map.get`
-	 * @param key
-	 * @param value
 	 */
 	set(key: K, value: V): this;
 }
@@ -499,35 +496,40 @@ declare var WeakMap: WeakMapConstructor;
 interface Set<T> extends ToString, IsEmpty, MapSet<T, T> {
 	/**
 	 * Adds a value to the set
-	 * @param value
 	 */
 	add(value: T): this;
 
 	/**
+	 * ### [NOT YET MERGED INTO MASTER]
+	 *
 	 * Returns a new set with every element that occurs at least once in either `this` or a given set
-	 * @param set
 	 */
 	union<U>(set: Set<U>): Set<T | U>;
 
 	/**
+	 * ### [NOT YET MERGED INTO MASTER]
+	 *
 	 * Returns a new set with every element that occurs in both `this` and a given set
-	 * @param set
 	 */
 	intersect<U>(set: Set<U>): Set<T | U>;
 
 	/**
+	 * ### [NOT YET MERGED INTO MASTER]
+	 *
 	 * Returns a new set which is the result of subtracting a given set from `this`
-	 * @param set
 	 */
 	difference<U>(set: Set<U>): Set<T | U>;
 
 	/**
+	 * ### [NOT YET MERGED INTO MASTER]
+	 *
 	 * Returns true if `this` and a given set have no elements in common, else false.
-	 * @param set
 	 */
 	isDisjointWith<U>(set: Set<U>): boolean;
 
 	/**
+	 * ### [NOT YET MERGED INTO MASTER]
+	 *
 	 * Returns a boolean for whether `this` is a subset of a given set.
 	 *
 	 * Note: Every set is a subset of itself, so this will return true for identical sets.
@@ -535,7 +537,6 @@ interface Set<T> extends ToString, IsEmpty, MapSet<T, T> {
 	 * ```ts
 set1.isSubsetOf(set2) && !set2.isSubsetOf(set1)
 ```
-	 * @param set
 	 */
 	isSubsetOf<U>(set: Set<U>): boolean;
 }
