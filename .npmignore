@@ -6,3 +6,7 @@ tsconfig.json
 .history
 cache
 include/test.ts
+.editorconfig
+.prettierrc.json
+LICENSE
+tslint.json

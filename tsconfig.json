@@ -21,6 +21,7 @@
 		"jsx": "react",
 		"jsxFactory": "Roact.createElement",
 		"forceConsistentCasingInFileNames": true,
+		"sourceMap": true,
 	},
 	"typeAcquisition": {
 		"enable": true
