@@ -2,13 +2,13 @@
 This is a drop-in replacement for rbx-types.
 
 # How to use
-0) Install via the command: `npm install rbx-safe-types`
+1) Install via the command: `npm install rbx-safe-types`
 
-1) Drag the .d.ts files from this library's include folder to rbx-types' include folder. Overwrite the files in there, since these files are the only ones that should used by the transpiler and your project.
+2) Drag the .d.ts files from this library's include folder to rbx-types' include folder. Overwrite the files in there, since these files are the only ones that should used by the transpiler and your project.
 
-2) Restart VSCode by pressing (Ctrl+Shift+P) and selecting Reload Window
+3) Restart VSCode by pressing (Ctrl+Shift+P) and selecting Reload Window
 
-3) Enjoy!
+4) Enjoy!
 
 # Advantages
 Advantages of using rbx-safe-types over rbx-types:
@@ -46,9 +46,9 @@ Advantages of using rbx-safe-types over rbx-types:
 		return obj.ClassName;
 	}
 	```
-	Basically, in rbx-safe-types a `Script` is `ClassName === "Script"` and in rbx-types it is `IsA("Script")`. In other words, in rbx-types a `Script` is equivalent to rbx-safe-types' `Script | LocalScript`. The same behavior applies to everything in the [InstanceBases interface](https://github.com/Validark/rbx-types/blob/master/include/generated_classes.d.ts#L407).
+	Basically, in rbx-safe-types a `Script` is `ClassName === "Script"` and in rbx-types it is `IsA("Script")`. In other words, in rbx-types a `Script` is equivalent to rbx-safe-types' `Script | LocalScript`. The same behavior applies to everything in the `InstanceBases` interface.
 
-- rbx-safe-types disallows referencing instances through the dot operator because it's bad practice and can cause name collisions. Disabling random indexing also increases performance [in cases like this](https://github.com/roblox-ts/roblox-ts/issues/281).
+- rbx-safe-types disallows referencing instances through the dot operator because it's bad practice and can cause name collisions. Disabling random indexing also increases transpiler performance [in cases like this](https://github.com/roblox-ts/roblox-ts/issues/281).
 	```ts
 	const Workspace = game.GetService("Workspace");
 
@@ -70,14 +70,26 @@ Advantages of using rbx-safe-types over rbx-types:
 	// rbx-types thinks this returns an Instance.
 	f(game);
 	// rbx-safe-types will give you an error,
-	// because your function signature should accept a DataModel instead of an Instance.
+	// because your function signature should accept a DataModel instead of an Instance:
+
+	function g(a: DataModel) {
+		return a.JobId;
+	}
+
+	g(game); // works! returns a string
 	```
 	Any time you have a type which is less specific than the actual instance, you risk running into property-instance name collisions. Thus, rbx-safe-types disallows inferring that accessing non-members are `Instance` types.
 - rbx-safe-types assumes that properties of classes which are some kind of Instance type are possibly undefined unless manually specified. For example, `WeldConstraint.Part0` or `Model.PrimaryPart` could be undefined.
 
-- rbx-safe-types naively parses https://developer.roblox.com/api-reference for descriptions, and thus has far more type data.
+- rbx-safe-types pulls documentation from https://developer.roblox.com/api-reference and thus has far more documentation.
 - rbx-safe-types sometimes contains better type information. For example, the fields in [GetFriendsOnline](https://developer.roblox.com/api-reference/function/Player/GetFriendsOnline) which may or may not be undefined can be validated by checking the `LocationType`, which rbx-safe-types has a const enum for.
-- rbx-safe-types doesn't have a bunch of internal members of Instances which look like: `_210`
+- rbx-safe-types doesn't have a bunch of internal members of Instances which look like: `_210: never`
+- rbx-safe-types removes 99% of the internal `Rbx_` classes. Those that remain now carry the prefix `RbxInternal` instead to avoid confusion for users.
+- rbx-safe-types has more dank documentation:
+
+![AddAccessory docs](https://user-images.githubusercontent.com/15217173/54723753-a2040380-4b36-11e9-90ff-b1ab72f5b8e2.png)
+
+(this documentation was copied from [this page](https://developer.roblox.com/api-reference/function/Humanoid/AddAccessory), but I thought it was particularly funny)
 
 # Differences
 - rbx-safe-types is not updated automatically... But don't worry, I'm on top of things :)
