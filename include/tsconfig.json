@@ -10,13 +10,16 @@
 		"types": [],
 		"strictNullChecks": true,
 		// required, configurable
-		"rootDir": "src",
+		"rootDir": ".",
 		"outDir": "out",
 		// optional
 		"baseUrl": "src",
 		"declaration": false,
 		"forceConsistentCasingInFileNames": true,
 		"sourceMap": true,
+		"typeRoots": [
+			"."
+		]
 	},
 	"typeAcquisition": {
 		"enable": true

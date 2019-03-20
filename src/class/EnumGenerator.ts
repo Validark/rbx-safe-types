@@ -7,7 +7,6 @@ export class EnumGenerator extends Generator {
 		this.write(``);
 		this.write('/// <reference no-default-lib="true"/>');
 		this.write('/// <reference path="roblox.d.ts" />');
-		this.write('/// <reference path="manual.d.ts" />');
 		this.write('/// <reference path="generated_classes.d.ts" />');
 		this.write(``);
 		this.write(`// GENERATED ROBLOX ENUMS`);

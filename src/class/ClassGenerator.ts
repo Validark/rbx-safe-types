@@ -1,6 +1,3 @@
-import axios from "axios";
-import * as fs from "fs";
-import * as https from "https";
 import * as jsdom from "jsdom";
 import fetch from "node-fetch";
 import * as path from "path";
@@ -22,7 +19,7 @@ import {
 import { Generator } from "./Generator";
 import { ReflectionMetadata } from "./ReflectionMetadata";
 
-export const IMPL_PREFIX = "Rbx";
+export const IMPL_PREFIX = "RbxInternal";
 const ROOT_CLASS_NAME = "<<<ROOT>>>";
 const DERIVATIVE_PREFIX = "DerivesFrom";
 
@@ -256,57 +253,68 @@ function htmlToMarkdown(text: string) {
 	return md;
 }
 
-function getDescriptionFromHtml(rawData: string) {
+function getDescriptionFromHtml(rawData: string, link: string) {
 	let data = rawData;
 	const openingStr = "Description:";
 	const startingPosition = data.indexOf(openingStr);
 
-	if (startingPosition) {
-		const descOpener = `<div class="markdown-field-data description">`;
-		const index = data.indexOf(descOpener, startingPosition + openingStr.length);
+	let descOpener: string;
+	let index: number;
 
-		if (index) {
-			const frontIndex = index + descOpener.length;
-			data = data.slice(frontIndex);
-			const iter = 0;
-			let depth = 1;
-			let backIndex: number | undefined;
-			let searcher = data;
+	if (startingPosition !== -1) {
+		descOpener = `<div class="markdown-field-data description">`;
+		index = data.indexOf(descOpener, startingPosition + openingStr.length);
+	} else {
+		descOpener = `<div class="markdown-field-data">`;
+		index = data.indexOf(descOpener);
+	}
 
-			do {
-				const results = searcher.match(/<\/?div/);
+	if (index !== -1) {
+		const frontIndex = index + descOpener.length;
+		data = data.slice(frontIndex);
+		const iter = 0;
+		let depth = 1;
+		let backIndex = 0;
+		let searcher = data;
 
-				if (results) {
-					backIndex = results.index!;
-					searcher = searcher.slice(backIndex + 3);
-					if (results[0] === "<div") {
-						depth++;
-					} else {
-						depth--;
-					}
+		do {
+			const results = searcher.match(/<\/?div/);
+
+			if (results) {
+				const resultIndex = results.index || 0;
+				backIndex += resultIndex;
+				searcher = searcher.slice(resultIndex + 3);
+				if (results[0] === "<div") {
+					depth++;
 				} else {
-					break;
+					depth--;
 				}
-			} while (depth !== 0);
-
-			if (backIndex) {
-				// console.log(data.slice(0, backIndex).trim());
-				return (
-					htmlToMarkdown(data.slice(0, backIndex).trim())
-						.replace(/<!--[^]+?-->/g, "")
-						.replace(/\(<\/([^<>]+)>[^()]*\)/g, (_, b) => {
-							if (b) {
-								return `(https://developer.roblox.com/${b as string})`;
-							} else {
-								return "";
-							}
-						})
-						.replace(/<[^]+?>/g, "")
-						.replace(/\s+\]/g, "]")
-						// .replace(/```((?!lua).+?```)/g, (_, b) => "```lua" + b)
-						.trim()
-				);
+			} else {
+				break;
 			}
+		} while (depth !== 0);
+
+		if (backIndex) {
+			const myHtml = data.slice(0, backIndex).trim();
+
+			return (
+				htmlToMarkdown(myHtml)
+					.replace(/<!--[^]+?-->/g, "")
+					.replace(/\(<\/([^<>]+)>[^()]*\)/g, (_, b) => {
+						if (b) {
+							return `(https://developer.roblox.com/${b as string})`;
+						} else {
+							return "";
+						}
+					})
+					.replace(/<[^]+?>/g, "")
+					.replace(/\s+\]/g, "]")
+					.replace(/#+/g, a => (a.length < 3 ? "###" : a))
+					.replace(/\*\//g, "*")
+					.replace(/```(?!lua)[^]+?```/g, a => "```lua" + a.slice(3))
+					// .replace(/```((?!lua).+?```)/g, (_, b) => "```lua" + b)
+					.trim()
+			);
 		}
 	}
 	return "";
@@ -319,62 +327,108 @@ export class ClassGenerator extends Generator {
 		super(outputDir, fileName, metadata);
 	}
 
+	private getSignature(node?: ts.Node) {
+		// I don't 100% trust `getText()`
+		if (node) {
+			let documentation = "";
+			const signature = node
+				.getFullText()
+				.replace(/\/\*\*[^]+\*\//g, a => {
+					documentation = a;
+					return "";
+				})
+				.trim();
+			return [signature, documentation];
+		} else {
+			return ["", ""];
+		}
+	}
+
+	private writeSignatures(
+		rbxMember: ApiMemberBase,
+		getNodes: (tsImplInterface: ts.InterfaceDeclaration) => Array<ts.PropertySignature | ts.MethodSignature>,
+		tsImplInterface?: ts.InterfaceDeclaration,
+		description?: string,
+	) {
+		if (tsImplInterface) {
+			const name = rbxMember.Name;
+			const signatures = Array<string>();
+			const documentations = Array<string>();
+			if (description) {
+				documentations.push(`/** ${description} */`);
+			}
+			const nodes = getNodes(tsImplInterface);
+			nodes
+				.filter(prop => prop.getName() === name)
+				.forEach(node => {
+					const [signature, documentation] = this.getSignature(node);
+					signatures.push(signature);
+					documentations.push(documentation);
+				});
+
+			this.write(documentations.join("\n\t"));
+			const written = signatures.length > 0;
+			if (written) {
+				this.write(signatures.join("\n\t"));
+			}
+			return written;
+		} else {
+			this.writeDescription(rbxMember, description);
+			return false;
+		}
+	}
+
+	private writeDescription(rbxMember: ApiMemberBase, desc?: string) {
+		const description = desc || "";
+		const tags = rbxMember.Tags;
+		const tagStr = tags && tags.length > 0 ? description + "\n\nTags: " + tags.join(", ") : "";
+
+		this.write(`/** ${(description || "[LACKS DOCUMENTATION]") + tagStr} */`);
+	}
+
 	private generateCallback(rbxCallback: ApiCallback, className: string, tsImplInterface?: ts.InterfaceDeclaration) {
 		const name = rbxCallback.Name;
-		if (tsImplInterface && tsImplInterface.getProperty(name)) {
-			return;
-		}
 		const args = generateArgs(rbxCallback.Parameters);
 		const description = rbxCallback.Description || this.metadata.getCallbackDescription(className, name);
-		if (description) {
-			this.write(`/** ${description} */`);
+
+		if (!this.writeSignatures(rbxCallback, impl => impl.getProperties(), tsImplInterface, description)) {
+			this.write(`${name}: (${args}) => void;`);
 		}
-		this.write(`${name}: (${args}) => void;`);
 	}
 
 	private generateEvent(rbxEvent: ApiEvent, className: string, tsImplInterface?: ts.InterfaceDeclaration) {
 		const name = rbxEvent.Name;
-		if (tsImplInterface && tsImplInterface.getProperty(name)) {
-			return;
-		}
 		const args = generateArgs(rbxEvent.Parameters);
 		const description = rbxEvent.Description || this.metadata.getEventDescription(className, name);
-		if (description) {
-			this.write(`/** ${description} */`);
+
+		if (!this.writeSignatures(rbxEvent, impl => impl.getProperties(), tsImplInterface, description)) {
+			this.write(`readonly ${name}: RBXScriptSignal<(${args}) => void>;`);
 		}
-		this.write(`readonly ${name}: RBXScriptSignal<(${args}) => void>;`);
 	}
 
 	private generateFunction(rbxFunction: ApiFunction, className: string, tsImplInterface?: ts.InterfaceDeclaration) {
 		const name = rbxFunction.Name;
-		if (tsImplInterface && tsImplInterface.getMethod(name)) {
-			return;
-		}
 		const returnType = safeReturnType(safeValueType(rbxFunction.ReturnType));
 		if (returnType !== null) {
 			const args = generateArgs(rbxFunction.Parameters);
 			const description = rbxFunction.Description || this.metadata.getMethodDescription(className, name);
-			if (description) {
-				this.write(`/** ${description} */`);
+			if (!this.writeSignatures(rbxFunction, impl => impl.getMethods(), tsImplInterface, description)) {
+				this.write(`${name}(${args}): ${returnType};`);
 			}
-			this.write(`${name}(${args}): ${returnType};`);
 		}
 	}
 
 	private generateProperty(rbxProperty: ApiProperty, className: string, tsImplInterface?: ts.InterfaceDeclaration) {
 		const name = rbxProperty.Name;
-		if (tsImplInterface && tsImplInterface.getProperty(name)) {
-			return;
-		}
 		const valueType = safePropType(safeValueType(rbxProperty.ValueType));
 		if (valueType !== null) {
 			const description = rbxProperty.Description || this.metadata.getPropertyDescription(className, name);
-			if (description) {
-				this.write(`/** ${description} */`);
-			}
 			const surelyDefined = rbxProperty.ValueType.Category !== "Class";
 			const prefix = canWrite(rbxProperty) && !memberHasTag(rbxProperty, "ReadOnly") ? "" : "readonly ";
-			this.write(`${prefix}${safeName(name)}${surelyDefined ? "" : "?"}: ${valueType};`);
+
+			if (!this.writeSignatures(rbxProperty, impl => impl.getProperties(), tsImplInterface, description)) {
+				this.write(`${prefix}${safeName(name)}${surelyDefined ? "" : "?"}: ${valueType};`);
+			}
 		}
 	}
 
@@ -438,6 +492,18 @@ export class ClassGenerator extends Generator {
 
 		const members = rbxClass.Members.filter(rbxMember => this.shouldGenerateMember(rbxClass, rbxMember));
 		const isEmpty = members.length === 0 && hasSubclasses;
+		const descriptions = new Array<string>();
+		if (tsImplInterface)
+			tsImplInterface.getLeadingCommentRanges().forEach(comment => descriptions.push(comment.getText()));
+
+		const desc = rbxClass.Description;
+
+		if (desc) {
+			descriptions.push(`/** ${desc} */`);
+		}
+
+		const description = descriptions.join("\n\t");
+		if (description && !hasSubclasses) this.write(description);
 
 		this.write(`interface ${interfaceName} ${extendsStr}{${isEmpty ? "}" : ""}`);
 
@@ -459,6 +525,7 @@ export class ClassGenerator extends Generator {
 
 			if (isClassCreatable) {
 				const newImplName = IMPL_PREFIX + fullName;
+				if (description) this.write(description);
 				this.write(`interface ${fullName} extends ${implName} {`);
 				this.pushIndent();
 				this.write(`/** The string name of this Instance's most derived class. */`);
@@ -466,16 +533,12 @@ export class ClassGenerator extends Generator {
 				this.popIndent();
 				this.write(`}`);
 				this.write(``);
-				this.write(`type ${newImplName} = ${fullName};`);
-			}
-
-			if (!this.classIsDerivative(rbxClass)) {
+			} else {
 				const subclassesArray = this.subclassify(fullName, fullName);
 				const possibilities = subclassesArray.join(" | ");
+				if (description) this.write(description);
 				this.write(`type ${fullName} = ${possibilities};`);
 			}
-		} else {
-			this.write(`type ${implName} = ${name};`);
 		}
 
 		this.write(``);
@@ -486,7 +549,6 @@ export class ClassGenerator extends Generator {
 		this.write(``);
 		this.write(`/// <reference no-default-lib="true"/>`);
 		this.write(`/// <reference path="roblox.d.ts" />`);
-		this.write(`/// <reference path="manual.d.ts" />`);
 		this.write(`/// <reference path="generated_enums.d.ts" />`);
 		this.write(``);
 	}
@@ -579,23 +641,23 @@ export class ClassGenerator extends Generator {
 
 	public async generate(rbxClasses: Array<ApiClass>) {
 		const linkData = new Array<{
-			classFolder: string;
-			rbxMember: ApiMember;
+			// classFolder: string;
+			rbxMember: ApiMember | ApiClass;
 			link: string;
 		}>();
 
-		const parentFolder = "cache";
-		if (!fs.existsSync(parentFolder)) {
-			fs.mkdirSync(parentFolder);
-		}
+		// const parentFolder = "cache";
+		// if (!fs.existsSync(parentFolder)) {
+		// 	fs.mkdirSync(parentFolder);
+		// }
 
 		for (const rbxClass of rbxClasses) {
 			const rbxClassName = rbxClass.Name;
-			const classFolder = `${parentFolder}\\${rbxClassName}`;
+			// const classFolder = `${parentFolder}\\${rbxClassName}`;
 
-			if (!fs.existsSync(classFolder)) {
-				fs.mkdirSync(classFolder);
-			}
+			// if (!fs.existsSync(classFolder)) {
+			// 	fs.mkdirSync(classFolder);
+			// }
 
 			rbxClass.Subclasses = new Array<string>();
 			this.ClassReferences.set(rbxClass.Name, rbxClass);
@@ -606,14 +668,19 @@ export class ClassGenerator extends Generator {
 				superclass.Subclasses.push(rbxClassName);
 			}
 
+			linkData.push({
+				rbxMember: rbxClass,
+				link: `https://developer.roblox.com/api-reference/class/${rbxClassName}`,
+			});
+
 			for (const rbxMember of rbxClass.Members) {
-				const rbxMemberName = rbxMember.Name;
+				const rbxMemberName = rbxMember.Name.replace(/\s+/g, "-");
 				if (this.shouldGenerateMember(rbxClass, rbxMember)) {
 					const memberType = rbxMember.MemberType.toLowerCase();
 					const link = `https://developer.roblox.com/api-reference/${memberType}/${rbxClassName}/${rbxMemberName}`;
 
 					linkData.push({
-						classFolder,
+						// classFolder,
 						rbxMember,
 						link,
 					});
@@ -629,8 +696,8 @@ export class ClassGenerator extends Generator {
 				if (linkDatum) {
 					const rbxMember = linkDatum.rbxMember;
 					const rbxMemberName = rbxMember.Name;
-					const classFolder = linkDatum.classFolder;
-					const memberFile = `${classFolder}\\${rbxMemberName}`;
+					// const classFolder = linkDatum.classFolder;
+					// const memberFile = `${classFolder}\\${rbxMemberName}`;
 					const link = linkDatum.link;
 
 					myLinks.push(
@@ -644,10 +711,11 @@ export class ClassGenerator extends Generator {
 									return response.text();
 								})
 								.then(rawData => {
-									const desc = typeof rawData === "string" ? getDescriptionFromHtml(rawData) : "";
+									const desc =
+										typeof rawData === "string" ? getDescriptionFromHtml(rawData, link) : "";
 									if (desc !== "") {
-										const cache = new Generator(classFolder, rbxMemberName + ".md");
-										cache.write(desc);
+										// const cache = new Generator(classFolder, rbxMemberName + ".md");
+										// cache.write(desc);
 										rbxMember.Description = desc;
 										resolve();
 									} else {
@@ -669,7 +737,7 @@ export class ClassGenerator extends Generator {
 		const project = new Project({
 			tsConfigFilePath: path.join(__dirname, "..", "..", "include", "tsconfig.json"),
 		});
-		const sourceFile = project.getSourceFileOrThrow("manual.d.ts");
+		const sourceFile = project.getSourceFileOrThrow("customDefinitions.d.ts");
 		this.generateHeader();
 		this.generateInstancesTables(rbxClasses);
 		this.generateClasses(rbxClasses, sourceFile);

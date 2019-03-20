@@ -1,16 +1,11 @@
 /// <reference no-default-lib="true"/>
 /// <reference path="es.d.ts" />
 /// <reference path="lua.d.ts" />
-/// <reference path="manual.d.ts" />
 /// <reference path="macro_math.d.ts" />
 /// <reference path="generated_enums.d.ts" />
 /// <reference path="generated_classes.d.ts" />
 
 // ROBLOX API
-
-interface Indexable<T extends RbxInstance> {
-	[i: string]: Instance;
-}
 
 type FunctionArguments<T> = T extends (...args: infer U) => void ? U : [];
 
@@ -21,19 +16,308 @@ interface Base<T extends string> {
 }
 type BaseType<T> = T extends Base<infer U> ? U : never;
 
+declare const enum FriendLocationType {
+	MobileWebsite = 0,
+	MobileInGame = 1,
+	Website = 2,
+	Studio = 3,
+	InGame = 4,
+	XBoxApp = 5,
+	TeamCreate = 6,
+}
+
+/** Similar to Pick, but instead turns excluded values to undefined (so they can still be browsed) */
+type PresentFields<T, K extends keyof T> = { [P in keyof T]: P extends K ? T[P] : undefined };
+
+/** When a member (M) of T is a particular Value (E), Pick<K> */
+type FieldsPresentWhen<T, M extends keyof T, E extends T[M], K extends keyof T> = {
+	[P in keyof T]: P extends M ? E : P extends K ? T[P] : undefined
+};
+
+/** @rbxts array */
+type ReadVoxelsArray<T> = Array<Array<Array<T>>> & {
+	Size: Vector3;
+};
+
+type Tweenable = number | boolean | CFrame | Rect | Color3 | UDim | UDim2 | Vector2 | Vector2int16 | Vector3;
+type FilterMembers<T, U> = Pick<T, { [K in keyof T]: T[K] extends U ? K : never }[keyof T]>;
+
+type FriendOnlineInfo =
+	| FieldsPresentWhen<
+			FriendOnlineInfoFields,
+			"LocationType",
+			FriendLocationType.MobileWebsite | FriendLocationType.Website | FriendLocationType.XBoxApp,
+			"VisitorId" | "UserName" | "LastOnline" | "IsOnline" | "LastLocation"
+	  >
+	| FieldsPresentWhen<
+			FriendOnlineInfoFields,
+			"LocationType",
+			FriendLocationType.MobileInGame | FriendLocationType.InGame | FriendLocationType.TeamCreate,
+			"VisitorId" | "UserName" | "LastOnline" | "IsOnline" | "LastLocation" | "PlaceId" | "GameId"
+	  >
+	| FieldsPresentWhen<
+			FriendOnlineInfoFields,
+			"LocationType",
+			FriendLocationType.Studio,
+			"VisitorId" | "UserName" | "LastOnline" | "IsOnline" | "LastLocation" | "PlaceId"
+	  >;
+
+interface GroupInfo {
+	Name: string;
+	Id: number;
+	Owner: {
+		Name: string;
+		Id: number;
+	};
+	EmblemUrl: string;
+	Description: string;
+	Roles: Array<{
+		Name: string;
+		Rank: number;
+	}>;
+}
+
+interface GetGroupsAsyncResult {
+	Name: string;
+	Id: number;
+	EmblemUrl: string;
+	Description: string;
+	Rank: number;
+	Role: string;
+	IsPrimary: boolean;
+	IsInClan: boolean;
+}
+
+interface HttpHeaders {
+	[index: string]: string;
+}
+
+interface RequestAsyncRequest {
+	Url: string;
+	Method?: "GET" | "HEAD" | "POST" | "PUT" | "DELETE";
+	Body?: string;
+	Headers?: HttpHeaders;
+}
+
+interface RequestAsyncResponse {
+	Success: boolean;
+	StatusCode: number;
+	StatusMessage: string;
+	Headers: HttpHeaders;
+	Body: string;
+}
+
+interface SetInfo {
+	AssetSetId: string;
+	CategoryId: string;
+	CreatorName: string;
+	Description: string;
+	ImageAssetId: string;
+	Name: string;
+	SetType: string;
+}
+
+interface CollectionInfo {
+	AssetId: string;
+	AssetSetId: string;
+	AssetVersionId: string;
+	IsTrusted: boolean;
+	Name: string;
+	CreatorName: string;
+}
+
+interface FreeSearchResult {
+	CurrentStartIndex: string;
+	Results: Array<{
+		AssetId: string;
+		AssetVersionId: string;
+		CreatorName: string;
+		Name: string;
+	}>;
+	TotalCount: string;
+}
+
+interface LocalizationEntry {
+	Key: string;
+	Source: string;
+	Context: string;
+	Example: string;
+	Values: { [index: string]: string };
+}
+
+interface LogInfo {
+	message: string;
+	messageType: Enum.MessageType;
+	timestamp: number;
+}
+
+interface ReceiptInfo {
+	/** the id of the player making the purchase */
+	PlayerId: number;
+	/** the specific place where the purchase was made */
+	PlaceIdWherePurchased: number;
+	/** a unique identifier for the purchase, should be used to prevent granting an item multiple times for one purchase */
+	PurchaseId: string;
+	/** the id of the purchased product */
+	ProductId: number;
+	/** the type of currency used (Tix, Robux) */
+	CurrencyType: Enum.CurrencyType;
+	/** the amount of currency spent on the product for this purchase */
+	CurrencySpent: number;
+}
+
+interface ProductInfo {
+	/** The name shown on the asset's page */
+	Name: string;
+	/** The description as shown on the asset's page; can be nil if blank. */
+	Description: string;
+	/** The cost of purchasing the asset using Robux */
+	PriceInRobux: number;
+	/** Timestamp of when the asset was created, e.g. `2018-08-01T17:55:11.98Z` */
+	Created: string;
+	/** Timestamp of when the asset was last updated by its creator, e.g. `2018-08-01T17:55:11.98Z` */
+	Updated: string;
+	/** Indicates whether the item is marked as 13+ in catalog */
+	ContentRatingTypeId: number;
+	/** The minimum Builder's Club subscription necessary to purchase the item */
+	MinimumMembershipLevel: number;
+	/** Describes whether the asset can be taken for free */
+	IsPublicDomain: boolean;
+	/** Describes whether the asset is a User Product, Developer Product, or Game Pass */
+	ProductType: "User Product" | "Developer Product" | "Game Pass";
+	/** A table of information describing the creator of the asset */
+	Creator: {
+		/** Either `User` or `Group` */
+		CreatorType: "User" | "Group";
+		/** The ID of the creator user or group */
+		CreatorTargetId: number;
+		/** The name/username of the creator */
+		Name: string;
+	};
+	IconImageAssetId: number;
+	TargetId: number;
+}
+
+interface AssetProductInfo extends ProductInfo {
+	/** If InfoType was Asset, this is the ID of the given asset. */
+	AssetId: number;
+	/** The [type of asset](https://developer.roblox.com/articles/Asset-types) (e.g. place, model, shirt) */
+	AssetTypeId: number;
+	/** Describes whether the asset is purchasable */
+	IsForSale: boolean;
+	/** Describes whether the asset is a "limited item" that is no longer (if ever) sold */
+	IsLimited: boolean;
+	/** Describes whether the asset is a "limited unique" ("Limited U") item that only has a fixed number sold */
+	IsLimitedUnique: boolean;
+	/** Describes whether the asset is marked as "new" in the catalog */
+	IsNew: boolean;
+	/** The remaining number of items a limited unique item may be sold */
+	Remaining: number;
+	/** The number of items the asset has been sold */
+	Sales: number;
+}
+
+interface DeveloperProductInfo extends ProductInfo {
+	/** If the InfoType was Product, this is the product's ID */
+	ProductId: number;
+}
+
+interface AgentParameters {
+	/** Humanoid radius. Used to determine the minimum separation from obstacles. */
+	AgentRadius?: number;
+	/** Humanoid height. Empty space smaller than this value, like the space under stairs, will be marked as non-traversable. */
+	AgentHeight?: number;
+}
+
+interface CollisionGroupInfo {
+	id: number;
+	mask: number;
+	name: string;
+}
+
+interface FriendOnlineInfoFields {
+	/** The UserId of the friend. */
+	VisitorId: number;
+	/** The user name of the friend. */
+	UserName: string;
+	/** When the user was last online. */
+	LastOnline: string;
+	/** If the friend is currently online. */
+	IsOnline: boolean;
+	/** The name of the friends current location. */
+	LastLocation: string;
+	/** The placeId of the friends last location. Check the `LocationType` to determine whether this property exists. */
+	PlaceId: number;
+	/** The DataModel / JobId of the friends last location.
+	 * Check the `LocationType` to determine whether this property exists.
+	 */
+	GameId: string;
+	/** A numeric enum of the friends last location.
+	 * In TS, you can check this value against the `FriendLocationType` const enum
+	 */
+	LocationType: FriendLocationType;
+}
+
+interface CharacterAppearanceInfo {
+	bodyColors: {
+		leftArmColorId: number;
+		torsoColorId: number;
+		rightArmColorId: number;
+		headColorId: number;
+		leftLegColorId: number;
+		rightLegColorId: number;
+	};
+	assets: Array<{
+		id: number;
+		assetType: {
+			name: string;
+			id: number;
+		};
+		name: string;
+	}>;
+	defaultPantsApplied: boolean;
+	defaultShirtApplied: boolean;
+	playerAvatarType: string;
+	scales: {
+		bodyType: number;
+		head: number;
+		height: number;
+		proportion: number;
+		depth: number;
+		width: number;
+	};
+}
+
+interface MakeSystemMessageConfig {
+	Text: string;
+	Color?: Color3;
+	Font?: Enum.Font;
+	FontSize?: Enum.FontSize;
+}
+
+interface SendNotificationConfig {
+	Title: string;
+	Text: string;
+	Icon?: string;
+	Duration?: number;
+	Callback?: BindableFunction;
+	Button1?: string;
+	Button2?: string;
+}
+
 /**
  * RBXScriptConnection, also known as a Connection,
  * is a special object returned by the Connect method of an Event (RBXScriptSignal).
  * This is used primarily to disconnect a listener from an Event.
  */
 interface RBXScriptConnection {
-	/** Disconnects the connection from the event. */
-	Disconnect(): void;
 	/**
 	 * Describes whether or not the connection is still alive.
 	 * This will become false if connection:Disconnect() is called.
 	 */
 	Connected: boolean;
+	/** Disconnects the connection from the event. */
+	Disconnect(): void;
 }
 
 /**
@@ -89,6 +373,11 @@ interface InstanceConstructor {
 }
 
 declare const Instance: InstanceConstructor;
+
+interface PointsService extends RbxInternalInstance {
+	/** This function was once part of the PointService class used to control an ancient achievement system since removed and deprecated. It should not be used in new work. */
+	AwardPoints(userId: number, amount: number): LuaTuple<[number, number, number, 0]>;
+}
 
 /**
  * Axes is a datatype used for the ArcHandles class to control what rotation axes are currently enabled.
@@ -284,6 +573,16 @@ interface BrickColors {
 }
 
 interface BrickColorConstructor {
+	/** Returns a random BrickColor. */
+	random: () => BrickColors[keyof BrickColors];
+	White: () => BrickColors[87];
+	Gray: () => BrickColors[123];
+	DarkGray: () => BrickColors[122];
+	Black: () => BrickColors[3];
+	Red: () => BrickColors[68];
+	Yellow: () => BrickColors[71];
+	Green: () => BrickColors[8];
+	Blue: () => BrickColors[21];
 	/** Constructs a BrickColor from its name. */
 	new <T extends BrickColors[keyof BrickColors]["Name"]>(val: T): BrickColors[keyof BrickColors];
 	/** Constructs a BrickColor from its name. */
@@ -301,17 +600,6 @@ interface BrickColorConstructor {
 	palette<T extends keyof BrickColors>(paletteValue: T): BrickColors[T];
 	/** Constructs a BrickColor from its palette index. */
 	palette(paletteValue: number): BrickColors[keyof BrickColors];
-
-	/** Returns a random BrickColor. */
-	random: () => BrickColors[keyof BrickColors];
-	White: () => BrickColors[87];
-	Gray: () => BrickColors[123];
-	DarkGray: () => BrickColors[122];
-	Black: () => BrickColors[3];
-	Red: () => BrickColors[68];
-	Yellow: () => BrickColors[71];
-	Green: () => BrickColors[8];
-	Blue: () => BrickColors[21];
 }
 declare const BrickColor: BrickColorConstructor;
 
@@ -361,6 +649,20 @@ interface CFrame {
 	toAxisAngle(): [Vector3, number];
 }
 interface CFrameConstructor {
+	/** Equivalent to fromEulerAnglesXYZ */
+	Angles: (rX: number, rY: number, rZ: number) => CFrame;
+	/** Creates a rotated CFrame from a Unit Vector3 and a rotation in radians */
+	fromAxisAngle: (unit: Vector3, rotation: number) => CFrame;
+	/** Creates a rotated CFrame using angles (rx, ry, rz) in radians. Rotations are applied in Z, Y, X order. */
+	fromEulerAnglesXYZ: (rX: number, rY: number, rZ: number) => CFrame;
+	/** Creates a rotated CFrame using angles (rx, ry, rz) in radians. Rotations are applied in Z, X, Y order. */
+	fromEulerAnglesYXZ: (rX: number, rY: number, rZ: number) => CFrame;
+	/** Creates a CFrame from a translation and the columns of a rotation matrix. If vz is excluded,
+	 * the third column is calculated as `[vx:Cross(vy).Unit]`.
+	 */
+	fromMatrix: (pos: Vector3, vX: Vector3, vY: Vector3, vZ?: Vector3) => CFrame;
+	/** Equivalent to fromEulerAnglesYXZ */
+	fromOrientation: (rX: number, rY: number, rZ: number) => CFrame;
 	/** Creates a blank identity CFrame. */
 	new (): CFrame;
 	/** Creates a CFrame from a Vector3 */
@@ -386,24 +688,16 @@ interface CFrameConstructor {
 		R21: number,
 		R22: number,
 	): CFrame;
-	/** Equivalent to fromEulerAnglesXYZ */
-	Angles: (rX: number, rY: number, rZ: number) => CFrame;
-	/** Creates a rotated CFrame from a Unit Vector3 and a rotation in radians */
-	fromAxisAngle: (unit: Vector3, rotation: number) => CFrame;
-	/** Creates a rotated CFrame using angles (rx, ry, rz) in radians. Rotations are applied in Z, Y, X order. */
-	fromEulerAnglesXYZ: (rX: number, rY: number, rZ: number) => CFrame;
-	/** Creates a rotated CFrame using angles (rx, ry, rz) in radians. Rotations are applied in Z, X, Y order. */
-	fromEulerAnglesYXZ: (rX: number, rY: number, rZ: number) => CFrame;
-	/** Creates a CFrame from a translation and the columns of a rotation matrix. If vz is excluded,
-	 * the third column is calculated as `[vx:Cross(vy).Unit]`.
-	 */
-	fromMatrix: (pos: Vector3, vX: Vector3, vY: Vector3, vZ?: Vector3) => CFrame;
-	/** Equivalent to fromEulerAnglesYXZ */
-	fromOrientation: (rX: number, rY: number, rZ: number) => CFrame;
 }
 declare const CFrame: CFrameConstructor;
 
 interface Color3Constructor {
+	/** Creates a Color3 with the given red, green, and blue. The numbers can range from 0 to 255. */
+	fromRGB: (r: number, g: number, b: number) => Color3;
+	/** Creates a Color3 with the given hue, saturation, and value. The numbers can range from 0 to 1. */
+	fromHSV: (hue: number, sat: number, val: number) => Color3;
+	/** Returns the hue, saturation, and value of a Color3. */
+	toHSV: (color: Color3) => [number, number, number];
 	/** Creates a Color3 whose values are (0,0,0) [black] */
 	new (): Color3<0, 0, 0>;
 	/** Returns a Color3 with the given red, green, and blue values. The numbers can range from 0 to 1. */
@@ -412,12 +706,6 @@ interface Color3Constructor {
 		green: Green,
 		blue: Blue,
 	): Color3<Red, Green, Blue>;
-	/** Creates a Color3 with the given red, green, and blue. The numbers can range from 0 to 255. */
-	fromRGB: (r: number, g: number, b: number) => Color3;
-	/** Creates a Color3 with the given hue, saturation, and value. The numbers can range from 0 to 1. */
-	fromHSV: (hue: number, sat: number, val: number) => Color3;
-	/** Returns the hue, saturation, and value of a Color3. */
-	toHSV: (color: Color3) => [number, number, number];
 }
 declare const Color3: Color3Constructor;
 
@@ -558,11 +846,11 @@ declare const Random: RandomConstructor;
 
 // Ray
 interface Ray {
-	ClosestPoint(point: Vector3): Vector3;
-	Distance(point: Vector3): number;
 	readonly Origin: Vector3;
 	readonly Direction: Vector3;
 	readonly Unit: Ray;
+	ClosestPoint(point: Vector3): Vector3;
+	Distance(point: Vector3): number;
 }
 interface RayConstructor {
 	new (origin: Vector3, direction: Vector3): Ray;
@@ -676,20 +964,20 @@ declare const Vector2int16: Vector2int16Constructor;
 
 // Vector3
 interface Vector3 {
-	Lerp(goal: Vector3, alpha: number): Vector3;
-	Dot(other: Vector3): number;
-	Cross(other: Vector3): Vector3;
-	isClose(other: Vector3, epsilon: number): boolean;
 	readonly X: number;
 	readonly Y: number;
 	readonly Z: number;
 	readonly Unit: Vector3;
 	readonly Magnitude: number;
+	Lerp(goal: Vector3, alpha: number): Vector3;
+	Dot(other: Vector3): number;
+	Cross(other: Vector3): Vector3;
+	isClose(other: Vector3, epsilon: number): boolean;
 }
 interface Vector3Constructor {
-	new (x?: number, y?: number, z?: number): Vector3;
 	FromNormalId: (norm: Enum.NormalId) => Vector3;
 	FromAxis: (axis: Enum.Axis) => Vector3;
+	new (x?: number, y?: number, z?: number): Vector3;
 }
 declare const Vector3: Vector3Constructor;
 

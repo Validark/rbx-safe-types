@@ -10,3 +10,4 @@ include/test.ts
 .prettierrc.json
 LICENSE
 tslint.json
+include/customDefinitions.d.ts

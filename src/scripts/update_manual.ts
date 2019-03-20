@@ -11,7 +11,7 @@ const REFLECTION_METADATA_URL = BASE_URL + "ReflectionMetadata.xml";
 	const response = await axios.get(REFLECTION_METADATA_URL);
 	const metadata = new ReflectionMetadata(response.data);
 	const project = new Project({ tsConfigFilePath: path.join(__dirname, "..", "..", "include", "tsconfig.json") });
-	const sourceFile = project.getSourceFileOrThrow("manual.d.ts");
+	const sourceFile = project.getSourceFileOrThrow("customDefinitions.d.ts");
 	for (const statement of sourceFile.getStatements()) {
 		if (ts.TypeGuards.isInterfaceDeclaration(statement)) {
 			let className = statement.getName();

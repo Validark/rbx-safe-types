@@ -4,12 +4,9 @@
 		"allowSyntheticDefaultImports": true,
 		"downlevelIteration": true,
 		"module": "commonjs",
-		"noLib": true,
+		"noLib": false,
 		"strict": true,
 		"target": "es6",
-		"types": [
-			"rbx-types"
-		],
 		"strictNullChecks": true,
 		// required, configurable
 		"rootDir": "src",
