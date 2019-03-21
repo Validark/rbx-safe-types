@@ -622,7 +622,7 @@ interface CFrame {
 	/** The up-direction component of the CFrame’s orientation. */
 	readonly UpVector: Vector3;
 	/** Returns the inverse of this CFrame */
-	inverse(): CFrame;
+	Inverse(): CFrame;
 	/** Returns a CFrame interpolated between this CFrame and the goal by the fraction alpha */
 	Lerp(goal: CFrame, alpha: number): CFrame;
 	/** Returns a CFrame transformed from Object to World space. Equivalent to `[CFrame * cf]` */
