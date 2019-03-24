@@ -93,7 +93,7 @@ interface ContentProvider extends RbxInternalInstance {
 	PreloadAsync(contentIdList: Array<Instance>): void;
 }
 
-/** @rbxts client */
+/** @client */
 interface ContextActionService extends RbxInternalInstance {
 	readonly LocalToolEquipped: RBXScriptSignal<(toolEquipped: Tool) => void>;
 	readonly LocalToolUnequipped: RBXScriptSignal<(toolUnequipped: Tool) => void>;
@@ -101,7 +101,7 @@ interface ContextActionService extends RbxInternalInstance {
 		actionName: string,
 		functionToBind: (actionName: string, state: Enum.UserInputState, inputObject: InputObject) => void,
 		createTouchButton: boolean,
-		...inputTypes: Array<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType>,
+		...inputTypes: Array<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType>
 	): void;
 
 	BindActionAtPriority(
@@ -109,13 +109,13 @@ interface ContextActionService extends RbxInternalInstance {
 		functionToBind: (actionName: string, state: Enum.UserInputState, inputObject: InputObject) => void,
 		createTouchButton: boolean,
 		priorityLevel: number,
-		...inputTypes: Array<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType>,
+		...inputTypes: Array<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType>
 	): void;
 
 	GetButton(actionName: string): ImageButton | undefined;
 }
 
-/** @rbxts server */
+/** @server */
 interface DataStoreService extends RbxInternalInstance {
 	GetDataStore(name: string, scope?: string): GlobalDataStore;
 	GetGlobalDataStore(): GlobalDataStore;
@@ -136,7 +136,7 @@ interface GamePassService extends RbxInternalInstance {
 	PlayerHasPass(player: Player, gamePassId: number): boolean;
 }
 
-/** @rbxts server */
+/** @server */
 interface RbxInternalGlobalDataStore extends RbxInternalInstance {
 	GetAsync<T = unknown>(key: string): T | undefined;
 	IncrementAsync(key: string, delta?: number): number;
@@ -189,11 +189,11 @@ interface _HapticService extends RbxInternalInstance {
 	SetMotor(
 		inputType: Enum.UserInputType,
 		vibrationMotor: Enum.VibrationMotor,
-		...vibrationValues: Array<number>,
+		...vibrationValues: Array<number>
 	): void;
 }
 
-/** @rbxts server */
+/** @server */
 interface HttpService extends RbxInternalInstance {
 	GetAsync(url: string, nocache?: boolean, headers?: HttpHeaders): string;
 
@@ -365,7 +365,7 @@ interface RbxInternalDerivesFromModel extends RbxInternalPVInstance {
 	GetBoundingBox(): LuaTuple<[CFrame, Vector3]>;
 }
 
-/** @rbxts server */
+/** @server */
 interface OrderedDataStore extends RbxInternalGlobalDataStore {
 	GetSortedAsync(ascending: boolean, pagesize: number, minValue?: number, maxValue?: number): DataStorePages;
 }
@@ -457,10 +457,10 @@ interface SoundService extends RbxInternalInstance {
 	SetListener(listenerType: Enum.ListenerType.ObjectPosition, basePart: BasePart): void;
 }
 
-/** @rbxts server */
+/** @server */
 interface ServerScriptService {}
 
-/** @rbxts server */
+/** @server */
 interface ServerStorage {}
 
 interface StarterGui extends RbxInternalBasePlayerGui {

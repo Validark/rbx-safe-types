@@ -10,8 +10,8 @@ This is a drop-in replacement for rbx-types.
 
 4) Enjoy!
 
-# Advantages
-Advantages of using rbx-safe-types over rbx-types:
+# Differences
+Here are the reasons I use rbx-safe-types over rbx-types:
 
 - rbx-safe-types allows type narrowing via ClassName
 	```ts
@@ -80,7 +80,7 @@ Advantages of using rbx-safe-types over rbx-types:
 	```
 	Any time you have a type which is less specific than the actual instance, you risk running into property-instance name collisions. Thus, rbx-safe-types disallows inferring that accessing non-members are `Instance` types.
 - rbx-safe-types assumes that properties of classes which are some kind of Instance type are possibly undefined unless manually specified. For example, `WeldConstraint.Part0` or `Model.PrimaryPart` could be undefined.
-
+- rbx-safe-types does not assume that indexing arrays results in defined values.
 - rbx-safe-types pulls documentation from https://developer.roblox.com/api-reference and thus has far more documentation.
 - rbx-safe-types sometimes contains better type information. For example, the fields in [GetFriendsOnline](https://developer.roblox.com/api-reference/function/Player/GetFriendsOnline) which may or may not be undefined can be validated by checking the `LocationType`, which rbx-safe-types has a const enum for.
 - rbx-safe-types doesn't have a bunch of internal members of Instances which look like: `_210: never`
@@ -90,6 +90,3 @@ Advantages of using rbx-safe-types over rbx-types:
 ![AddAccessory docs](https://user-images.githubusercontent.com/15217173/54723753-a2040380-4b36-11e9-90ff-b1ab72f5b8e2.png)
 
 (this documentation was copied from [this page](https://developer.roblox.com/api-reference/function/Humanoid/AddAccessory), but I thought it was particularly funny)
-
-# Differences
-- rbx-safe-types is not updated automatically... But don't worry, I'm on top of things :)
