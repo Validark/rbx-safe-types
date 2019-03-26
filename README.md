@@ -51,6 +51,7 @@ Here are the reasons I use rbx-safe-types over rbx-types:
 - rbx-safe-types disallows referencing instances through the dot operator because it's bad practice and can cause name collisions. Disabling random indexing also increases transpiler performance [in cases like this](https://github.com/roblox-ts/roblox-ts/issues/281).
 	```ts
 	const Workspace = game.GetService("Workspace");
+	const ReplicatedStorage = game.GetService("ReplicatedStorage");
 
 	// bad practice, and disallowed in rbx-safe-types:
 	const myPart = Workspace.Maps.Valiant.Houses;
@@ -60,6 +61,17 @@ Here are the reasons I use rbx-safe-types over rbx-types:
 		.FindFirstChild("Maps")!
 		.FindFirstChild("Valiant")!
 		.FindFirstChild("Houses")!;
+
+	// Another alternative is using unioned types:
+
+	interface RemoteEvents {
+		Chatted: RemoteEvent;
+		Attacked: RemoteEvent;
+		Usurped: RemoteEvent;
+	}
+
+	const remoteFolder = ReplicatedStorage.WaitForChild("Remotes") as Folder & RemoteEvents;
+	remoteFolder.Chatted // exists!
 	```
 	Consider this code, which rbx-types will improperly handle:
 	```ts

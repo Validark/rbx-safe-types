@@ -15,24 +15,27 @@ interface ArrayLike<T> {
 	 * Gets the length of the array. This is one higher than the highest index defined in an array.
 	 */
 	readonly length: number;
-	readonly [n: number]: T | undefined;
+	readonly [n: number]: T;
 }
 
-interface ToString {
+interface HasToString {
 	/**
 	 * Returns a string representation of this data structure.
 	 */
 	toString(): string;
 }
 
-interface IsEmpty {
+interface HasIsEmpty {
 	/**
 	 * Returns true if empty, otherwise false.
 	 */
 	isEmpty(): boolean;
 }
 
-interface ObjectConstructor {
+/**
+ * Provides functionality common to all JavaScript objects.
+ */
+declare const Object: {
 	/**
 	 * Copy the values of all of the enumerable own properties from one or more source objects to a
 	 * target object. Returns the target object.
@@ -121,12 +124,7 @@ interface ObjectConstructor {
 	 * Searches recursively.
 	 */
 	deepEquals(a: object, b: object): boolean;
-}
-
-/**
- * Provides functionality common to all JavaScript objects.
- */
-declare const Object: ObjectConstructor;
+};
 
 interface String {
 	readonly length: number;
@@ -138,11 +136,11 @@ interface String {
 	trimEnd(): string;
 }
 
-interface Symbol extends ToString {
+interface Symbol extends HasToString {
 	valueOf(): symbol;
 }
 
-interface SymbolConstructor {
+declare const Symbol: {
 	/**
 	 * A method that returns the default iterator for an object. Called by the semantics of the
 	 * for-of statement.
@@ -168,8 +166,7 @@ interface SymbolConstructor {
 	 * @param sym Symbol to find the key for.
 	 */
 	keyFor(sym: symbol): string | undefined;
-}
-declare var Symbol: SymbolConstructor;
+};
 
 interface IteratorResult<T> {
 	done: boolean;
@@ -191,7 +188,7 @@ interface IterableIterator<T> extends Iterator<T> {
 }
 
 /** @rbxts array */
-interface ReadonlyArray<T> extends IsEmpty, ToString, ArrayLike<T> {
+interface ReadonlyArray<T> extends HasToString, HasIsEmpty, ArrayLike<T> {
 	/** Iterator */
 	[Symbol.iterator](): IterableIterator<T>;
 
@@ -199,7 +196,7 @@ interface ReadonlyArray<T> extends IsEmpty, ToString, ArrayLike<T> {
 	 * Creates a new array and shallow copies `this` and the items into the new array, in that order.
 	 * @param items Additional items to add to the end of array1.
 	 */
-	concat<T>(...items: Array<T>): Array<T>;
+	concat<T>(...items: Array<ReadonlyArray<T>>): Array<T>;
 
 	/**
 	 * Adds all the elements of an array separated by the specified separator string.
@@ -417,58 +414,30 @@ interface Array<T> extends ReadonlyArray<T> {
 	 */
 	remove(index: number): T | undefined;
 
-	[n: number]: T | undefined;
+	[n: number]: T;
 }
 
-interface ArrayConstructor {
-	new <T>(): Array<T>;
-}
-
-declare const Array: ArrayConstructor;
-
-interface MapSet<K, V> {
+interface ReadonlyMap<K, V> extends HasToString, HasIsEmpty {
 	/**
-	 * Performs the specified action for each (element / pair of elements) in the data structure
+	 * Performs the specified action for each (element / pair of elements) in the Map
 	 * @param callbackfn  A function that accepts up to three arguments. forEach calls the callbackfn function one time for each (element / pair of elements) in the array.
 	 */
-	forEach(callbackfn: (value: V, key: K, dataStructure: this) => void): void;
+	forEach(callbackfn: (value: V, key: K, self: this) => void): void;
 
 	/**
-	 * Deletes all members of the data structure
-	 */
-	clear(): void;
-
-	/**
-	 * Returns the number of elements in the data structure
+	 * Returns the number of elements in the Map
 	 */
 	size(): number;
 
 	/**
-	 * Deletes the given key from the data structure
-	 */
-	delete(key: K): boolean;
-
-	/**
-	 * Returns an array with all values of this data structure
+	 * Returns an array with all values of this Map
 	 */
 	values(): Array<V>;
 
 	/**
-	 * Returns a boolean for whether the given key exists in the data structure
+	 * Returns a boolean for whether the given key exists in the Map
 	 */
 	has(key: K): boolean;
-}
-
-interface Map<K, V> extends ToString, IsEmpty, MapSet<K, V> {
-	/**
-	 * Returns an array of tuples for all members of this data structure
-	 */
-	entries(): Array<[K, V]>;
-
-	/**
-	 * Returns an array with all of this map's keys
-	 */
-	keys(): Array<K>;
 
 	/**
 	 * Returns the value associated with the given key
@@ -476,66 +445,78 @@ interface Map<K, V> extends ToString, IsEmpty, MapSet<K, V> {
 	get(key: K): V | undefined;
 
 	/**
+	 * Returns an array of tuples for all members of this Map
+	 */
+	entries(): Array<[K, V]>;
+
+	/**
+	 * Returns an array with all of this map's keys
+	 */
+	keys(): Array<K>;
+}
+
+interface Map<K, V> extends ReadonlyMap<K, V> {
+	/**
 	 * Associates a key with a value which can be accessed later by `Map.get`
 	 */
 	set(key: K, value: V): this;
-}
 
-interface MapConstructor {
-	new <K = any, V = any>(entries?: ReadonlyArray<[K, V]> | null): Map<K, V>;
-}
-declare var Map: MapConstructor;
-
-type ReadonlyMap<K, V> = Pick<
-	Map<K, V>,
-	"forEach" | "get" | "has" | "entries" | "keys" | "values" | "size" | "isEmpty" | "toString"
->;
-type WeakMap<K extends object, V> = Pick<Map<K, V>, "delete" | "get" | "has" | "set" | "isEmpty" | "toString">;
-
-interface WeakMapConstructor {
-	new <K extends object = object, V = any>(entries?: ReadonlyArray<[K, V]> | null): WeakMap<K, V>;
-}
-declare var WeakMap: WeakMapConstructor;
-
-interface Set<T> extends ToString, IsEmpty, MapSet<T, T> {
 	/**
-	 * ### [NOT YET MERGED INTO MASTER]
-	 *
-	 * Adds a value to the set
+	 * Deletes the given key from the Map
 	 */
-	add(value: T): this;
+	delete(key: K): boolean;
 
 	/**
-	 * ### [NOT YET MERGED INTO MASTER]
-	 *
+	 * Deletes all members of the Map
+	 */
+	clear(): void;
+}
+
+interface WeakMap<K, V> extends Map<K, V> {}
+
+interface ReadonlySet<T> extends HasToString, HasIsEmpty {
+	/**
+	 * Performs the specified action for each (element / pair of elements) in the set
+	 * @param callbackfn  A function that accepts up to three arguments. forEach calls the callbackfn function one time for each (element / pair of elements) in the array.
+	 */
+	forEach(callbackfn: (value: T, value2: T, self: this) => void): void;
+
+	/**
+	 * Returns the number of elements in the set
+	 */
+	size(): number;
+
+	/**
+	 * Returns an array with all values of this set
+	 */
+	values(): Array<T>;
+
+	/**
+	 * Returns a boolean for whether the given key exists in the set
+	 */
+	has(value: T): boolean;
+
+	/**
 	 * Returns a new set with every element that occurs at least once in either `this` or a given set
 	 */
 	union<U>(set: Set<U>): Set<T | U>;
 
 	/**
-	 * ### [NOT YET MERGED INTO MASTER]
-	 *
 	 * Returns a new set with every element that occurs in both `this` and a given set
 	 */
 	intersect<U>(set: Set<U>): Set<T | U>;
 
 	/**
-	 * ### [NOT YET MERGED INTO MASTER]
-	 *
 	 * Returns a new set which is the result of subtracting a given set from `this`
 	 */
 	difference<U>(set: Set<U>): Set<T | U>;
 
 	/**
-	 * ### [NOT YET MERGED INTO MASTER]
-	 *
 	 * Returns true if `this` and a given set have no elements in common, else false.
 	 */
 	isDisjointWith<U>(set: Set<U>): boolean;
 
 	/**
-	 * ### [NOT YET MERGED INTO MASTER]
-	 *
 	 * Returns a boolean for whether `this` is a subset of a given set.
 	 *
 	 * Note: Every set is a subset of itself, so this will return true for identical sets.
@@ -547,31 +528,37 @@ set1.isSubsetOf(set2) && !set2.isSubsetOf(set1)
 	isSubsetOf<U>(set: Set<U>): boolean;
 }
 
-interface SetConstructor {
-	new <T = any>(values?: ReadonlyArray<T> | null): Set<T>;
-}
-declare const Set: SetConstructor;
+interface Set<T> extends ReadonlySet<T> {
+	/**
+	 * Adds a value to the set
+	 */
+	add(value: T): this;
 
-type ReadonlySet<T> = Pick<
-	Set<T>,
-	| "forEach"
-	| "has"
-	| "values"
-	| "size"
-	| "isEmpty"
-	| "toString"
-	| "union"
-	| "intersect"
-	| "difference"
-	| "isDisjointWith"
-	| "isSubsetOf"
+	/**
+	 * Deletes the given key from the set
+	 */
+	delete(value: T): boolean;
+
+	/**
+	 * Deletes all members of the set
+	 */
+	clear(): void;
+}
+
+interface WeakSet<T> extends Set<T> {}
+
+declare const Array: new <T = any>() => Array<T>;
+
+declare const Map: new <K = any, V = any>(entries?: ReadonlyArray<[K, V]> | null) => Map<K, V>;
+declare const ReadonlyMap: new <K = any, V = any>(entries?: ReadonlyArray<[K, V]> | null) => ReadonlyMap<K, V>;
+declare const WeakMap: new <K extends object = object, V = any>(entries?: ReadonlyArray<[K, V]> | null) => WeakMap<
+	K,
+	V
 >;
-type WeakSet<T> = Pick<Set<T>, "add" | "delete" | "has" | "isEmpty" | "toString">;
 
-interface WeakSetConstructor {
-	new <T extends object = object>(values?: ReadonlyArray<T> | null): WeakSet<T>;
-}
-declare const WeakSet: WeakSetConstructor;
+declare const Set: new <T = any>(values?: ReadonlyArray<T> | null) => Set<T>;
+declare const ReadonlySet: new <T = any>(values?: ReadonlyArray<T> | null) => ReadonlySet<T>;
+declare const WeakSet: new <T extends object = object>(values?: ReadonlyArray<T> | null) => WeakSet<T>;
 
 interface PromiseLike<T> {
 	/**
@@ -644,7 +631,7 @@ interface Promise<T> {
 	isCancelled(): boolean;
 }
 
-interface PromiseConstructor {
+declare const Promise: {
 	/**
 	 * Creates an immediately rejected Promise with the given value.
 	 * @param value The value to reject with.
@@ -687,9 +674,7 @@ interface PromiseConstructor {
 			onCancel: (cancellationHook: () => void) => void,
 		) => void,
 	): Promise<T>;
-}
-
-declare var Promise: PromiseConstructor;
+};
 
 /**
  * Make all properties in T optional
