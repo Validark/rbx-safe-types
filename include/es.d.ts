@@ -1,13 +1,13 @@
 /// <reference no-default-lib="true"/>
 
-interface Boolean {}
-interface IArguments {}
-interface Number {}
-interface Object {}
-interface RegExp {}
-interface Function {}
-interface CallableFunction extends Function {}
-interface NewableFunction extends Function {}
+interface Boolean { }
+interface IArguments { }
+interface Number { }
+interface Object { }
+interface RegExp { }
+interface Function { }
+interface CallableFunction extends Function { }
+interface NewableFunction extends Function { }
 
 /** @rbxts array */
 interface ArrayLike<T> {
@@ -420,7 +420,9 @@ interface Array<T> extends ReadonlyArray<T> {
 	[n: number]: T;
 }
 
-type ArrayConstructor = new <T>() => Array<T>;
+interface ArrayConstructor {
+	new <T>(): Array<T>;
+}
 
 declare const Array: ArrayConstructor;
 
@@ -479,12 +481,16 @@ interface Map<K, V> extends ReadonlyMap<K, V> {
 	clear(): void;
 }
 
-type MapConstructor = new <K = any, V = any>(entries?: ReadonlyArray<[K, V]> | null) => Map<K, V>;
+interface MapConstructor {
+	new <K = any, V = any>(entries?: ReadonlyArray<[K, V]> | null): Map<K, V>;
+}
 declare var Map: MapConstructor;
 
-interface WeakMap<K, V> extends Map<K, V> {}
+interface WeakMap<K, V> extends Map<K, V> { }
 
-type WeakMapConstructor = new <K extends object = object, V = any>(entries?: ReadonlyArray<[K, V]> | null) => WeakMap<K, V>;
+interface WeakMapConstructor {
+	new <K extends object = object, V = any>(entries?: ReadonlyArray<[K, V]> | null): WeakMap<K, V>;
+}
 declare var WeakMap: WeakMapConstructor;
 
 interface ReadonlySet<T> extends HasToString, HasIsEmpty {
@@ -558,12 +564,16 @@ interface Set<T> extends ReadonlySet<T> {
 	clear(): void;
 }
 
-type SetConstructor = new <T = any>(values?: ReadonlyArray<T> | null) => Set<T>;
+interface SetConstructor {
+	new <T = any>(values?: ReadonlyArray<T> | null): Set<T>;
+}
 declare const Set: SetConstructor;
 
-interface WeakSet<T> extends Set<T> {}
+interface WeakSet<T> extends Set<T> { }
 
-type WeakSetConstructor = new <T extends object = object>(values?: ReadonlyArray<T> | null) => WeakSet<T>;
+interface WeakSetConstructor {
+	new <T extends object = object>(values?: ReadonlyArray<T> | null): WeakSet<T>;
+}
 declare const WeakSet: WeakSetConstructor;
 
 interface PromiseLike<T> {
