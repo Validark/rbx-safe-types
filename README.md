@@ -4,7 +4,7 @@ This is a drop-in replacement for rbx-types.
 
 # How to use
 
-To install, run one of the following commands, depending on your operating system:
+To install, run one of the following commands, depending on your operating system. Afterwards you will need to reload the window:
 
 ## Windows
 ```
@@ -16,7 +16,7 @@ npm i rbx-types & npm i rbx-safe-types & CD node_modules & MOVE /Y rbx-safe-type
 npm i rbx-types & npm i rbx-safe-types & cd node_modules & mv rbx-safe-types/include/* rbx-types/include & rm rbx-types/include/manual.d.ts & rm -r rbx-safe-types/include & CD ..
 ```
 
-Due to TypeScript's caching, you might see some definition conflicts for about 30 seconds. Either give it a second or restart VSCode by pressing (Ctrl+Shift+P) and selecting `Reload Window`.
+Restart VSCode by pressing (Ctrl+Shift+P) and selecting `Reload Window`.
 
 # Differences
 Here are the reasons I use rbx-safe-types over rbx-types:
