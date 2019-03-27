@@ -2,9 +2,9 @@
 
 This is a drop-in replacement for rbx-types.
 
-# How to use
+# Installation
 
-To install, run one of the following commands, depending on your operating system. Afterwards you will need to reload the window:
+Run one of the following commands, depending on your operating system. Afterwards you will need to reload the window.
 
 ### Windows
 ```
