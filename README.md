@@ -1,14 +1,22 @@
 # rbx-safe-types
+
 This is a drop-in replacement for rbx-types.
 
 # How to use
-1) Install via the command: `npm install rbx-safe-types`
 
-2) Drag the .d.ts files from this library's include folder to rbx-types' include folder. Overwrite the files in there, since these files are the only ones that should used by the transpiler and your project.
+Run one of the following commands, depending on your operating system:
 
-3) Restart VSCode by pressing (Ctrl+Shift+P) and selecting Reload Window
+## Windows
+```
+npm i rbx-types & npm i rbx-safe-types & CD node_modules & MOVE /Y rbx-safe-types\include\* rbx-types\include & DEL rbx-types\include\manual.d.ts & CD ..
+```
 
-4) Enjoy!
+## MacOS / Any OS with GNU installed
+```
+npm i rbx-types & npm i rbx-safe-types & cd node_modules & mv rbx-safe-types/include/* rbx-types/include & rm rbx-types/include/manual.d.ts & cd ..
+```
+
+Due to TypeScript's caching, you might see some definition conflicts for about 30 seconds. Either give it a second or restart VSCode by pressing (Ctrl+Shift+P) and selecting `Reload Window`.
 
 # Differences
 Here are the reasons I use rbx-safe-types over rbx-types:
@@ -63,7 +71,6 @@ Here are the reasons I use rbx-safe-types over rbx-types:
 		.FindFirstChild("Houses")!;
 
 	// Another alternative is using unioned types:
-
 	interface RemoteEvents {
 		Chatted: RemoteEvent;
 		Attacked: RemoteEvent;
@@ -71,7 +78,7 @@ Here are the reasons I use rbx-safe-types over rbx-types:
 	}
 
 	const remoteFolder = ReplicatedStorage.WaitForChild("Remotes") as Folder & RemoteEvents;
-	remoteFolder.Chatted // exists!
+	print(remoteFolder.Chatted) // exists! Chatted is a RemoteEvent
 	```
 	Consider this code, which rbx-types will improperly handle:
 	```ts
@@ -91,7 +98,6 @@ Here are the reasons I use rbx-safe-types over rbx-types:
 	g(game); // works! returns a string
 	```
 	Any time you have a type which is less specific than the actual instance, you risk running into property-instance name collisions. Thus, rbx-safe-types disallows inferring that accessing non-members are `Instance` types.
-- rbx-safe-types assumes that properties of classes which are some kind of Instance type are possibly undefined unless manually specified. For example, `WeldConstraint.Part0` or `Model.PrimaryPart` could be undefined.
 - rbx-safe-types does not assume that indexing arrays results in defined values.
 - rbx-safe-types pulls documentation from https://developer.roblox.com/api-reference and thus has far more documentation.
 - rbx-safe-types sometimes contains better type information. For example, the fields in [GetFriendsOnline](https://developer.roblox.com/api-reference/function/Player/GetFriendsOnline) which may or may not be undefined can be validated by checking the `LocationType`, which rbx-safe-types has a const enum for.

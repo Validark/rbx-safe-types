@@ -36,6 +36,7 @@ interface CreatableInstancesInternal {
 	Configuration: Configuration;
 	AlignOrientation: AlignOrientation;
 	AlignPosition: AlignPosition;
+	AngularVelocity: AngularVelocity;
 	BallSocketConstraint: BallSocketConstraint;
 	HingeConstraint: HingeConstraint;
 	LineForce: LineForce;
@@ -1679,14 +1680,11 @@ Tags: ReadOnly, NotReplicated */
 
 /** The PlayerGui object is a container that holds a Player's user GUI. If a ScreenGui is a descendant of a PlayerGui, then any GuiObject inside of the ScreenGui will be drawn to the player’s screen. Any LocalScript will run as soon as it is inserted into a PlayerGui.
 
-
 When a player first joins a game, their PlayerGui is automatically inserted into their Player object. When the player’s Player.Character spawns for the first time all of the contents of StarterGui are automatically copied into the player’s PlayerGui. Note that if Players.CharacterAutoLoads is set to false the character will not spawn and StarterGui contents will not be copied until Player:LoadCharacter is called. If StarterGui.ResetPlayerGuiOnSpawn is set to true then every time the player’s character respawns all of the contents of that player’s PlayerGui is cleared and replaced with the contents of StarterGui. */
 interface PlayerGui extends RbxInternalBasePlayerGui {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "PlayerGui";
-	/** Describes the user’s current screen orientation.Describes the user’s current screen orientation.
-
-Tags: ReadOnly, NotReplicated */
+	/** Describes the user’s current screen orientation. */
 	readonly CurrentScreenOrientation: Enum.ScreenOrientation;
 	/** Sets the preferred screen orientation mode for this user, if the user is on a mobile device. */
 	ScreenOrientation: Enum.ScreenOrientation;
@@ -3735,7 +3733,7 @@ Tags: ReadOnly, NotReplicated */
 	Visible: boolean;
 }
 /** The base class for Constraint-based objects. */
-type Constraint = AlignOrientation | AlignPosition | BallSocketConstraint | HingeConstraint | LineForce | RodConstraint | RopeConstraint | SlidingBallConstraint | SpringConstraint | Torque | VectorForce;
+type Constraint = AlignOrientation | AlignPosition | AngularVelocity | BallSocketConstraint | HingeConstraint | LineForce | RodConstraint | RopeConstraint | SlidingBallConstraint | SpringConstraint | Torque | VectorForce;
 
 /** An AlignOrientation is a constraint that applies a torque to make its attachments align. Like other constraints, this has two `Attachment`s. In this case the two attachments are constrained to be oriented in the same direction but not necessarily the same position.
 
@@ -3792,6 +3790,17 @@ interface AlignPosition extends RbxInternalConstraint {
 	Responsiveness: number;
 	/** When set to true, the solver will react as quickly as possible to move the attachments together. When false, the torque is dependent on `AlignPosition/MaxForce`, `AlignPosition/MaxVelocity`, and `AlignPosition/Responsiveness`. */
 	RigidityEnabled: boolean;
+}
+
+interface AngularVelocity extends RbxInternalConstraint {
+	/** The string name of this Instance's most derived class. */
+	readonly ClassName: "AngularVelocity";
+	/** [LACKS DOCUMENTATION] */
+	AngularVelocity: Vector3;
+	/** [LACKS DOCUMENTATION] */
+	MaxTorque: number;
+	/** [LACKS DOCUMENTATION] */
+	RelativeTo: Enum.ActuatorRelativeTo;
 }
 
 /** A BallSocketConstraint constrains its `Attachment` so that they occupy the same position. By default it allows both attachments to freely rotate about all of their axes. If `BallSocketConstraint/LimitsEnabled` is true then the attachments can only rotate in a limited cone. */
@@ -6326,7 +6335,7 @@ For `Enum/ScaleType/Slice`, the `ImageLabel/SliceCenter` property will be reveal
 
 Finally, for `Enum/ScaleType/Tile`, the `ImageLabel/TileSize` property will be revealed in the Properties window. This is for tiled images, where the size of each image tile is determined by the `ImageLabel/TileSize` property. */
 	ScaleType: Enum.ScaleType;
-	/** The SliceCenter property determines the center of a nine-slice image when `ImageLabel/ScaleType` is set to `Enum/ScaleType/Slice`. */
+	/** The SliceCenter property determines the center of a nine-slice image when `ImageLabel/ScaleType` is set to `Enum/ScaleType|Enum.ScaleType.Slice`. */
 	SliceCenter: Rect;
 	/** [LACKS DOCUMENTATION] */
 	SliceScale: number;
@@ -10187,7 +10196,17 @@ In the case that a query fails, this function will throw an error. Therefore, it
 - This method cannot be used to check for **developer products** since they can be purchased multiple times but not owned themselves. Use a `GlobalDataStore` to save when a developer has bought a developer product instead. */
 
 	PlayerOwnsAsset(player: Player, assetId: number): boolean;
-	/** Returns true if the player with the specified *userId*, owns the game pass with the specified *gamePassId*. */
+	/** UserOwnsGamePassAsync returns true if the `Player` with the given `Player/UserId|UserId` owns the game pass with the given **game pass ID** (not to be confused with asset ID).
+
+### Caching Behavior
+
+Results of this function are remembered so that repeated calls will return quicker. This function will always return true if the player owns the game pass upon first entering a server after having purchased the game pass. If the game pass is purchased in-game (through `MarketplaceService/PromptGamePassPurchase|PromptGamePassPurchase`), this function may return false due to the caching behavior. Conversely, should the player delete the game pass from their inventory, this function may return true despite the player not owning the game pass.
+
+### History
+
+Previously, querying player ownership of game passes required the use of the now-deprecated `GamePassService/PlayerHasPass` function. This was changed in April 2018 when [game passes received their own ID system]().
+
+On [Release 350](https://developer.roblox.com/resources/release-note/Release-Note-for-350) (August 2018), this function was changed so that the result is cached. Previously, it made a request every time it was called. */
 	UserOwnsGamePassAsync(userId: number, gamePassId: number): boolean;
 	/** This event fires when a purchase dialogue of a game pass is closed. This fires right as the dialogue closes when the player presses “Cancel” at the prompt, or “OK” at the success/error message.
 
@@ -16394,16 +16413,6 @@ Third-person is the default camera setting.
 
 ![Third Person CameraMode](https://developer.roblox.com/assets/5ade20afbaed3a514c3722c4/CameraMode_ThirdPerson.jpg) */
 	CameraMode: Enum.CameraMode;
-	/** [LACKS DOCUMENTATION] */
-	CharacterJumpHeight: number;
-	/** [LACKS DOCUMENTATION] */
-	CharacterJumpPower: number;
-	/** [LACKS DOCUMENTATION] */
-	CharacterMaxSlopeAngle: number;
-	/** [LACKS DOCUMENTATION] */
-	CharacterUseJumpPower: boolean;
-	/** [LACKS DOCUMENTATION] */
-	CharacterWalkSpeed: number;
 	/** The DevCameraOcclusionMode `StarterPlayer` property sets how the default camera handles objects between the camera and the player.
 
 This is the default property for players joining the game. It can be changed for individual players by settings the `Player/DevComputerOcclusionMode`.
@@ -18219,10 +18228,6 @@ Tags: ReadOnly, NotReplicated */
 	SortOrder: Enum.SortOrder;
 	/** The VerticalAlignment property determines the Y-axis alignment of the laid-out grid of UI elements, much like `TextLabel/TextYAlignment` does with `TextLabel/Text`. */
 	VerticalAlignment: Enum.VerticalAlignment;
-	/** The ApplyLayout method forces sibling UI elements to be re-laid out in case the sorting criteria may have changed (such as when `UIGridStyleLayout/SortOrder` is set to Custom, and the `UIGridStyleLayout/SetCustomSortFunction` behavior changed). Re-layouts automatically happen when UI elements are added/removed, or their `Instance/Name` or `GuiObject/LayoutOrder` change.
-
-The manner in which sibling UI elements are laid out is dependent on the implementation of this abstract class. In other words, a concrete class like `UIListLayout` or `UIGridLayout` is responsible for the actual element positioning. */
-	ApplyLayout(): void;
 }
 /** The base class for grid style UI layouts. */
 type UIGridStyleLayout = UIGridLayout | UIListLayout | UIPageLayout | UITableLayout;
@@ -19936,10 +19941,15 @@ Like all “-Value” objects, this single value is stored in the Value property
 interface NumberValue extends RbxInternalValueBase {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "NumberValue";
-	/** [LACKS DOCUMENTATION] */
+	/** Used to hold a double value. */
 	Value: number;
 }
 
+/** A ObjectValue is an object whose purpose is to store a single reference to another object. If this object is duplicated within studio and the value refers to an object also being copied, then the new ObjectValue will point to the copied object instead of the original. Otherwise, the same value is kept. Copying and pasting this object will clear the value field.
+
+The value of this can be set within studio like other reference-type fields (such as `Modle/PrimaryPart`): click the field within the Properties window, then click the object you wish to set it to within the game view or Explorer window. You can clear the field (set it to `nil`) by clicking the X that appears when you click the field.
+
+Like all “-Value” objects, this single value is stored in the Value property. The Changed event for this (and other objects like it) will fire with the new value being stored in the object, instead of a string representing the property being changed. */
 interface ObjectValue extends RbxInternalValueBase {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "ObjectValue";
@@ -19983,6 +19993,12 @@ interface Visit extends RbxInternalInstance {
 	readonly ClassName: "Visit";
 }
 
+/** WeldConstraints are used to attach two parts together. The constraint makes sure that the parts stay in the same relative position and orientation to one another. This means that if one part moves, the other will move the same amount. Even if the two parts are not touching one another, they can be welded together with a WeldConstraint.
+ *
+ * Roblox handles moving a welded part differently depending on whether the part was moved using its Position or with its CFrame. If a welded part’s Position is updated, the part will move but none of the connected parts will move with it. The weld will recalculate the offset from the other part based on the part’s new position.
+ *
+ * If instead a part’s CFrame is updated, then that part will move and any part welded to that part will also move. These other parts will be moved to make sure they maintain the same offset as when the weld was created.
+*/
 interface WeldConstraint extends RbxInternalInstance {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "WeldConstraint";
