@@ -8,12 +8,12 @@ To install, run one of the following commands, depending on your operating syste
 
 ## Windows
 ```
-npm i rbx-types & npm i rbx-safe-types & CD node_modules\rbx-safe-types & MOVE /Y include\* ..\rbx-types\include & DEL ..\rbx-types\include\manual.d.ts & RMDIR /Q include & CD ..\..
+npm i rbx-types & npm i rbx-safe-types & CD node_modules & MOVE /Y rbx-safe-types\include\* rbx-types\include & DEL rbx-types\include\manual.d.ts & RMDIR /Q rbx-safe-types\include & CD ..
 ```
 
 ## MacOS / Any OS with GNU installed
 ```
-npm i rbx-types & npm i rbx-safe-types & cd node_modules/rbx-safe-types & mv include/* ../rbx-types/include & rm ../rbx-types/include/manual.d.ts & rm -r include & cd ../..
+npm i rbx-types & npm i rbx-safe-types & cd node_modules & mv rbx-safe-types/include/* rbx-types/include & rm rbx-types/include/manual.d.ts & rm -r rbx-safe-types/include & CD ..
 ```
 
 Due to TypeScript's caching, you might see some definition conflicts for about 30 seconds. Either give it a second or restart VSCode by pressing (Ctrl+Shift+P) and selecting `Reload Window`.
@@ -56,7 +56,7 @@ Here are the reasons I use rbx-safe-types over rbx-types:
 	```
 	Basically, in rbx-safe-types a `Script` is `ClassName === "Script"` and in rbx-types it is `IsA("Script")`. In other words, in rbx-types a `Script` is equivalent to rbx-safe-types' `Script | LocalScript`. The same behavior applies to everything in the `InstanceBases` interface.
 
-- rbx-safe-types disallows referencing instances through the dot operator because it's bad practice and can cause name collisions. Disabling random indexing also increases transpiler performance [in cases like this](https://github.com/roblox-ts/roblox-ts/issues/281).
+- rbx-safe-types disallows referencing instances through the dot operator without an explicit definition. This helps avoid name collisions, and can also increases transpiler performance [in cases like this](https://github.com/roblox-ts/roblox-ts/issues/281). There are two alternatives, shown below:
 	```ts
 	const Workspace = game.GetService("Workspace");
 	const ReplicatedStorage = game.GetService("ReplicatedStorage");
@@ -65,20 +65,23 @@ Here are the reasons I use rbx-safe-types over rbx-types:
 	const myPart = Workspace.Maps.Valiant.Houses;
 
 	// safer, won't ever have property conflicts, etc.
-	Workspace
+	const houses = Workspace
 		.FindFirstChild("Maps")!
 		.FindFirstChild("Valiant")!
 		.FindFirstChild("Houses")!;
 
 	// Another alternative is using unioned types:
-	interface RemoteEvents {
+	interface RemotesChildren {
 		Chatted: RemoteEvent;
 		Attacked: RemoteEvent;
-		Usurped: RemoteEvent;
+		Usurped: RemoteEvent & {
+			ShouldReplicate: BoolValue;
+		};
 	}
 
-	const remoteFolder = ReplicatedStorage.WaitForChild("Remotes") as Folder & RemoteEvents;
-	print(remoteFolder.Chatted) // exists! Chatted is a RemoteEvent
+	const remoteFolder = ReplicatedStorage.WaitForChild("Remotes") as Folder & RemotesChildren;
+	print(remoteFolder.Chatted); // exists! Chatted is a RemoteEvent
+	print(remoteFolder.Usurped.ShouldReplicate.Value); // TS knows that .Value is a boolean!
 	```
 	Consider this code, which rbx-types will improperly handle:
 	```ts
