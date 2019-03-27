@@ -6,12 +6,12 @@ This is a drop-in replacement for rbx-types.
 
 To install, run one of the following commands, depending on your operating system. Afterwards you will need to reload the window:
 
-## Windows
+### Windows
 ```
 npm i rbx-types & npm i rbx-safe-types & CD node_modules & MOVE /Y rbx-safe-types\include\* rbx-types\include & DEL rbx-types\include\manual.d.ts & RMDIR /Q rbx-safe-types\include & CD ..
 ```
 
-## MacOS / Any OS with GNU installed
+### MacOS / Any OS with GNU installed
 ```
 npm i rbx-types & npm i rbx-safe-types & cd node_modules & mv rbx-safe-types/include/* rbx-types/include & rm rbx-types/include/manual.d.ts & rm -r rbx-safe-types/include & CD ..
 ```
