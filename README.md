@@ -4,16 +4,16 @@ This is a drop-in replacement for rbx-types.
 
 # How to use
 
-Run one of the following commands, depending on your operating system:
+To install, run one of the following commands, depending on your operating system:
 
 ## Windows
 ```
-npm i rbx-types & npm i rbx-safe-types & CD node_modules & MOVE /Y rbx-safe-types\include\* rbx-types\include & DEL rbx-types\include\manual.d.ts & CD ..
+npm i rbx-types & npm i rbx-safe-types & CD node_modules\rbx-safe-types & MOVE /Y include\* ..\rbx-types\include & DEL ..\rbx-types\include\manual.d.ts & RMDIR /Q include & CD ..\..
 ```
 
 ## MacOS / Any OS with GNU installed
 ```
-npm i rbx-types & npm i rbx-safe-types & cd node_modules & mv rbx-safe-types/include/* rbx-types/include & rm rbx-types/include/manual.d.ts & cd ..
+npm i rbx-types & npm i rbx-safe-types & cd node_modules/rbx-safe-types & mv include/* ../rbx-types/include & rm ../rbx-types/include/manual.d.ts & rm -r include & cd ../..
 ```
 
 Due to TypeScript's caching, you might see some definition conflicts for about 30 seconds. Either give it a second or restart VSCode by pressing (Ctrl+Shift+P) and selecting `Reload Window`.

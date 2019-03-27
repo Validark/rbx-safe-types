@@ -8,6 +8,6 @@ cache
 include/test.ts
 .editorconfig
 .prettierrc.json
-LICENSE
+.prettierignore
 tslint.json
 include/customDefinitions.d.ts
