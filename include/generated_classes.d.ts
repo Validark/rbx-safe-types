@@ -556,7 +556,7 @@ local car = object:FindFirstAncestor("Car")
 ```
 
 For variants of this function that find ancestors of a specific class, please see `Instance/FindFirstAncestorOfClass` and `Instance/FindFirstAncestorWhichIsA`. */
-	FindFirstAncestor<T extends RbxInternalInstance = Instance>(name: string): T | undefined;
+	FindFirstAncestor<T extends Instance = Instance>(name: string): T | undefined;
 	/** Returns the first ancestor of the `Instance` whose `Instance/ClassName` is equal to the given className.
 
 This function works upwards, meaning it starts at the `Instance`'s immediate `Instance/Parent` and works up towards the `DataModel`. If no matching ancestor is found, it returns nil.
@@ -633,7 +633,7 @@ Tip: If you only need to use the result of a FindFirstChild call once, such as g
 ### Performance Note
 
 FindFirstChild takes about 20% longer than using dot operator, and almost 8 times longer than simply storing a reference to an object. Therefore, you should avoid calling FindFirstChild in performance dependent code, such as in tight loops or functions connected to `RunService/Heartbeat`/`RunService/RenderStepped`. **Store the result in a variable,** or consider using `Instance/ChildAdded|ChildAdded` or `Instance/WaitForChild|WaitForChild` to detect when a child of a given name becomes available. */
-	FindFirstChild<T extends RbxInternalInstance = Instance>(name: string, recursive?: boolean): T | undefined;
+	FindFirstChild<T extends Instance = Instance>(name: string, recursive?: boolean): T | undefined;
 	/** Returns the first child of the `Instance` whose `Instance/ClassName|ClassName` is equal to the given className.
 
 If no matching child is found, this function returns nil.
@@ -689,7 +689,7 @@ end
 The children are sorted by the order in which their `Instance/Parent|Parent` property was set to the object.
 
 See also the `Instance/GetDescendants|GetDescendants` function. */
-	GetChildren<T extends RbxInternalInstance = Instance>(): Array<T>;
+	GetChildren<T extends Instance = Instance>(): Array<T>;
 	/** The **GetDescendants** function of an object returns an array that contains all of the descendants of that object. Unlike `Instance/GetChildren`, which only returns the immediate children of an object, GetDescendants will find every child of the object, every child of those children, and so on and so forth.
 
 The arrays returned by GetDescendants are arranged so that parents come earlier than their children. For example, let’s look at the following setup:
@@ -700,13 +700,13 @@ Here we have a `Model` in the `Workspace`. Inside this model is three parts (C, 
 
 ```lua
 local descendants = game.Workspace.Model:GetDescendants()
-
+ 
 -- Loop through all of the descendants of the model and
 -- print out their name
 for index, descendant in pairs(descendants) do
 	print(descendant.Name)
 end
-
+ 
 -- Prints:
 -- C
 -- D
@@ -727,15 +727,17 @@ This function is useful for logging and debugging. You shouldn’t attempt to pa
 `print(object:GetPropertyChangedSignal("Name") == object:GetPropertyChangedSignal("Name")) --&amp;gt; always true`
 
 `ValueBase` objects, such as `IntValue` and `StringValue`, use a modified `Changed` event that fires with the contents of the `Value` property. As such, this method provides a way to detect changes in other properties of those objects. For example, to detect changes in the `Name` property of an `IntValue`, use `IntValue:GetPropertyChangedSignal("Name"):Connect(someFunc)` since the `Changed` event of `IntValue` objects only detect changes on the `Value` property. */
-	GetPropertyChangedSignal(property: {
-		[Key in keyof this]-?: Key extends "GetPropertyChangedSignal"
-		? never
-		: this[Key] extends RBXScriptSignal
-		? never
-		: (() => any) extends this[Key]
-		? never
-		: Key
-	}[keyof this]): RBXScriptSignal;
+	GetPropertyChangedSignal(
+		property: {
+			[Key in keyof this]-?: Key extends "GetPropertyChangedSignal"
+				? never
+				: this[Key] extends RBXScriptSignal
+				? never
+				: (() => any) extends this[Key]
+				? never
+				: Key
+		}[keyof this],
+	): RBXScriptSignal;
 	/** IsA returns true if the `Instance`'s class is **equivalent to** or a **subclass** of a given class. This function is similar to the **instanceof** operators in other languages, and is a form of [type introspection](). To ignore class inheritance, test the `Instance/ClassName|ClassName` property directly instead. For checking native Lua data types (number, string, etc) use the functions `type` and `typeof`.
 
 Most commonly, this function is used to test if an object is some kind of part, such as `Part` or `WedgePart`, which inherits from `BasePart` (an abstract class). For example, if your goal is to change all of a `Player/Character|Character`'s limbs to the same color, you might use `Instance/GetChildren|GetChildren` to iterate over the children, then use IsA to filter non-`BasePart` objects which lack the `BrickColor` property:
@@ -836,8 +838,8 @@ const ship = Workspace.WaitForChild("Ship")
 	 *
 	 * - WaitForChild is less efficient than Instance:FindFirstChild or the dot operator. Therefore it should only be used when the developer is not sure if the object has replicated to the client. Generally this is only the first time the object is accessed
 	 */
-	WaitForChild<T extends RbxInternalInstance = Instance>(childName: string): T;
-	WaitForChild<T extends RbxInternalInstance = Instance>(childName: string, timeOut: number): T | undefined;
+	WaitForChild<T extends Instance = Instance>(childName: string): T;
+	WaitForChild<T extends Instance = Instance>(childName: string, timeOut: number): T | undefined;
 	/** Fires when the `Instance/Parent` property of the object or one of its ancestors is changed.
 
 This event includes two parameters, *child* and *parent*. *Child* refers to the `Instance` whose `Instance/Parent` was actually changed. *Parent* refers to this `Instance`'s new `Instance/Parent`.
@@ -852,7 +854,7 @@ object.AncestryChanged:Connect(function(_, parent)
 end)
 ``` */
 	readonly AncestryChanged: RBXScriptSignal<(child: Instance, parent: Instance) => void>;
-	/** If you want to detect changes of a single property only, you should use `Instance/GetPropertyChangedSignal` instead!
+	/** If you want to detect changes of a single property only, you should use `Instance/GetPropertyChangedSignal` instead! 
 
 The Changed event fires right after most properties change on objects. It is possible to find the present value of a changed property by using `object[property]`. To get the value of a property before it changes, you must have stored the value of the property before it changed.
 
@@ -911,7 +913,7 @@ The example below should help clarify how DescendantRemoving fires when there ar
     2. On **ModelA**, with **PartA** then **FireA**.
     3. On **PartA** with **FireA**.
 
-
+    
 
 
 
@@ -1397,7 +1399,7 @@ The Backpack can be accessed from both the client and the server.
 ```lua
 -- Accessing Backpack from a Server Script:
 game.Players.PlayerName.Backpack
-
+ 
 -- Accessing Backpack from a LocalScript:
 game.Players.LocalPlayer.Backpack
 ``` */
@@ -1934,7 +1936,7 @@ Sets up a bindable gateway connection between the CoreGui topbar’s chat button
 ```lua
 -- Create the Bindable objects
 local ChatConnections = {}
-
+ 
 local function AddObjects(bindableClass,targetName,...)
 	local target = ChatConnections[targetName]
 	if not target then
@@ -1949,7 +1951,7 @@ local function AddObjects(bindableClass,targetName,...)
 		target[name] = signal
 	end
 end
-
+ 
 AddObjects("BindableEvent","ChatWindow",
 	---------------------------
 	-- Fired from the CoreGui
@@ -1960,32 +1962,32 @@ AddObjects("BindableEvent","ChatWindow",
 	"TopbarEnabledChanged", -- Fired when the visibility of the Topbar is changed.
 	"SpecialKeyPressed", -- Fired when the reserved ChatHotkey is pressed.
 	"CoreGuiEnabled", -- Fired when a user changes the SetCoreGuiEnabled state of the Chat Gui.
-
+ 
 	---------------------------
 	-- Fired to the CoreGui
 	---------------------------
 	"ChatBarFocusChanged",
 		-- ^ Fire this with 'true' when you want to assure the CoreGui that the ChatBar is being focused on.
-
-	"VisibilityStateChanged",
+ 
+	"VisibilityStateChanged", 
 		-- ^ Fire this with 'true' when the user shows or hides the chat.
-
+ 
 	"MessagesChanged",
 		-- ^ Fire this with a number to change the number of messages that have been recorded by the chat window.
 		--   If the CoreGui thinks the chat window isn't visible, it will display the recorded difference between
 		--   the number of messages that was displayed when it was visible, and the number you supply.
-
-	"MessagePosted"
-		-- ^ Fire this to make the player directly chat under Roblox's C++ API.
+ 
+	"MessagePosted" 
+		-- ^ Fire this to make the player directly chat under Roblox's C++ API. 
 		--	 This will fire the LocalPlayer's Chatted event.
 		--   Please only fire this on the player's behalf. If you attempt to spoof a player's chat
 		--   to get them in trouble, you could face serious moderation action.
 )
-
+ 
 AddObjects("BindableFunction","ChatWindow",
 	"IsFocused" -- This will be invoked by the CoreGui when it wants to check if the chat window is active.
 )
-
+ 
 -- The following events are fired if the user calls StarterGui:SetCore(string name, Variant data)
 -- Note that you can only hook onto these ones specifically.
 AddObjects("BindableEvent","SetCore",
@@ -1994,7 +1996,7 @@ AddObjects("BindableEvent","SetCore",
 	"ChatWindowSize",
 	"ChatBarDisabled"
 )
-
+ 
 -- The following functions are invoked if the user calls StarterGui:GetCore(string name)
 -- Note that you can only hook onto these ones specifically.
 AddObjects("BindableFunction","GetCore",
@@ -2002,12 +2004,12 @@ AddObjects("BindableFunction","GetCore",
 	"ChatWindowSize", -- Should return a UDim2 representing the size of the chat window.
 	"ChatBarDisabled" -- Should return true if the chat bar is currently disabled.
 )
-
+ 
 -- Connect ChatConnections to the CoreGui.
 local StarterGui = game:GetService("StarterGui")
 local tries = 0
 local maxAttempts = 10
-
+ 
 while (tries  0.5)
 	ChatConnections.ChatWindow.VisibilityStateChanged:Fire(isVisible)
 	if not isVisible then
@@ -2414,7 +2416,7 @@ while true do
 	for i = 1, 0, -0.01 do
 		RunService.RenderStepped:Wait()
 		beam:SetTextureOffset(i)
-	end
+	end	
 end
 ```
 
@@ -2607,7 +2609,7 @@ interface BodyVelocity extends RbxInternalBodyMover {
 	readonly ClassName: "BodyVelocity";
 	/** The MaxForce property determines the limit on the amount of force that may be applied on each axis in reaching the goal `BodyVelocity/Velocity|Velocity`. If a part isn’t moving, consider increasing this value (also check that it is not `BasePart/Anchored|Anchored` or attached to any anchored parts). */
 	MaxForce: Vector3;
-	/** Note: This property is ignored if PGS is enabled via Workspace.PGSPhysicsSolverEnabled, which is enabled by default.
+	/** Note: This property is ignored if PGS is enabled via Workspace.PGSPhysicsSolverEnabled, which is enabled by default. 
 
 The P property determines how much [power]() is used while applying force in order to reach the goal `BodyVelocity/Velocity|Velocity`. The higher this value, the more power will be used and the faster it will be used.
 
@@ -2842,7 +2844,7 @@ In these cases, you should update Focus every frame, using `RunService/BindToRen
 
 Focus has no bearing on the positioning or orientation of the `Camera` (see `Camera/CFrame|Camera.CFrame` for this). */
 	Focus: CFrame;
-	/** Un-linking the camera from a VR user's head motions can cause motion sickness. This property should only be set to false after extensive testing.
+	/** Un-linking the camera from a VR user's head motions can cause motion sickness. This property should only be set to false after extensive testing. 
 
 Toggles whether the `Camera` will automatically track the head motion of a player using a VR device.
 
@@ -2922,7 +2924,7 @@ This function will check all `BasePart|BaseParts` and `Terrain` in the `Workspac
 
 Note, as this function requires an *ignoreList* to run, you should pass an empty table when none is required. */
 	GetLargestCutoffDistance(ignoreList: Array<Instance>): number;
-	/** This function is broken and should not be used
+	/** This function is broken and should not be used 
 
 This function returns the current ‘pan’ speed of the `Camera`.
 
@@ -2986,7 +2988,7 @@ local function getActualRoll()
 end
 ``` */
 	GetRoll(): number;
-	/** This function is broken and should not be used
+	/** This function is broken and should not be used 
 
 This function returns the current ‘tilt’ speed of the `Camera`.
 
@@ -3073,7 +3075,7 @@ When the \*‘EdgeBump’ `Enum/CameraPanMode` is used, swipe to pan is disabled
 
 SetCameraPan mode has no effect on PC / Mac users. */
 	SetCameraPanMode(mode?: Enum.CameraPanMode): void;
-	/** This function is outdated and no longer considered best practice.
+	/** This function is outdated and no longer considered best practice. 
 
 This function sets the current roll, in radians, of the `Camera`. The roll is applied after the `Camera/CFrame` and represents the rotation around the `Camera|Camera’s` Z-axis.
 
@@ -3297,10 +3299,10 @@ This content ID is different to the website URL of the pants. The content ID can
 ```lua
 local webURL = "https://www.roblox.com/catalog/1804739/Jeans"
 local assetId = tonumber(string.match(webURL, "%d+") or 0) -- extract the number
-local success, model = pcall(function()
-	return game:GetService("InsertService"):LoadAsset(assetId)
+local success, model = pcall(function() 
+	return game:GetService("InsertService"):LoadAsset(assetId) 
 end)
-if success then
+if success then 
 	model.Parent = workspace
 end
 ```
@@ -3322,10 +3324,10 @@ This content ID is different to the website URL of the shirt. The content ID can
 ```lua
 local webURL = "https://www.roblox.com/catalog/1804747/White-Shirt"
 local assetId = tonumber(string.match(webURL, "%d+") or 0) -- extract the number
-local success, model = pcall(function()
-	return game:GetService("InsertService"):LoadAsset(assetId)
+local success, model = pcall(function() 
+	return game:GetService("InsertService"):LoadAsset(assetId) 
 end)
-if success then
+if success then 
 	model.Parent = workspace
 end
 ```
@@ -3369,10 +3371,10 @@ This content ID is different to the website URL of the T-shirt. The content ID c
 ```lua
 local webURL = "https://www.roblox.com/catalog/2591161/Sword-Fight-on-the-Heights-Ring-of-Fire-T-Shirt"
 local assetId = tonumber(string.match(webURL, "%d+") or 0) -- extract the number
-local success, model = pcall(function()
-	return game:GetService("InsertService"):LoadAsset(assetId)
+local success, model = pcall(function() 
+	return game:GetService("InsertService"):LoadAsset(assetId) 
 end)
-if success then
+if success then 
 	model.Parent = workspace
 end
 ``` */
@@ -3582,7 +3584,7 @@ See also `CollectionService/GetInstanceAddedSignal`, which returns an event that
 If you want to detect all objects with a tag, both present and future, use this method to iterate over objects while also making a connection to a signal returned by `CollectionService/GetinstanceAddedSignal`.
 
 This method does not guarantee any ordering of the returned objects. Additionally, it is possible that objects can have the given tag assigned to them, but not be a descendant of the `DataModel`, i.e. its parent is nil. This method will not return such objects. */
-	GetTagged<T extends RbxInternalInstance = Instance>(tag: string): Array<T>;
+	GetTagged<T extends Instance = Instance>(tag: string): Array<T>;
 	/** GetTags is given an object and returns a table of strings, which are the tags applied to the given object.
 
 ```lua
@@ -4145,7 +4147,7 @@ When the KeyCode is used, it will fire the [Button1Down]( "Button1Down") event u
 -  You should only use the following \`Enum/UserInputType\` with the *userInputTypeForActivation* parameter, as the others will not do anything: -  *Keyboard*
     - *Gamepad1* through *Gamepad8*
 
-
+    
 
 
 
@@ -5374,9 +5376,9 @@ See the `Articles/Data store|Data Stores` article for an in-depth guide on data 
 	RemoveAsync<T = unknown>(key: string): T | undefined;
 	/** Sets the value of the key. This overwrites any existing data stored in the key.
 
- If the previous value of the key is important, use GlobalDataStore/UpdateAsync|UpdateAsync() instead. Using GlobalDataStore/GetAsync|GetAsync() to retrieve a value and then setting the key with GlobalDataStore/SetAsync|SetAsync() is risky because GlobalDataStore/GetAsync|GetAsync() sometimes returns cached data and other game servers may have modified the key.
+ If the previous value of the key is important, use GlobalDataStore/UpdateAsync|UpdateAsync() instead. Using GlobalDataStore/GetAsync|GetAsync() to retrieve a value and then setting the key with GlobalDataStore/SetAsync|SetAsync() is risky because GlobalDataStore/GetAsync|GetAsync() sometimes returns cached data and other game servers may have modified the key. 
 
- Any string being stored in a data store must be valid Articles/Lua Libraries/utf8|UTF-8. In UTF-8, values greater than 127 are used exclusively for encoding multi-byte codepoints, so a single byte greater than 127 will not be valid UTF-8 and the GlobalDataStore/SetAsync|SetAsync() attempt will fail.
+ Any string being stored in a data store must be valid Articles/Lua Libraries/utf8|UTF-8. In UTF-8, values greater than 127 are used exclusively for encoding multi-byte codepoints, so a single byte greater than 127 will not be valid UTF-8 and the GlobalDataStore/SetAsync|SetAsync() attempt will fail. 
 
 If this function throws an error, the `Articles/Datastore Errors|error message` will describe the problem. Note that there are also `Articles/Datastore Errors|limits` that apply to this function.
 
@@ -5393,11 +5395,11 @@ The second parameter is a function which you need to provide. The function takes
 
 The value returned by this function is the new value, returned once the altered data is properly saved.
 
- In cases where another game server updated the key in the short timespan between retrieving the key's current value and setting the key's value, GlobalDataStore/UpdateAsync|UpdateAsync() will call the function again to ensure that no data is overwritten. The function will be called as many times as needed until the data is saved.
+ In cases where another game server updated the key in the short timespan between retrieving the key's current value and setting the key's value, GlobalDataStore/UpdateAsync|UpdateAsync() will call the function again to ensure that no data is overwritten. The function will be called as many times as needed until the data is saved. 
 
- The function you define as the second parameter of GlobalDataStore/UpdateAsync|UpdateAsync() cannot yield, so do not include calls like wait().
+ The function you define as the second parameter of GlobalDataStore/UpdateAsync|UpdateAsync() cannot yield, so do not include calls like wait(). 
 
- Any string being stored in a data store must be valid Articles/Lua Libraries/utf8|UTF-8. In UTF-8, values greater than 127 are used exclusively for encoding multi-byte codepoints, so a single byte greater than 127 will not be valid UTF-8 and the GlobalDataStore/UpdateAsync|UpdateAsync() attempt will fail.
+ Any string being stored in a data store must be valid Articles/Lua Libraries/utf8|UTF-8. In UTF-8, values greater than 127 are used exclusively for encoding multi-byte codepoints, so a single byte greater than 127 will not be valid UTF-8 and the GlobalDataStore/UpdateAsync|UpdateAsync() attempt will fail. 
 
 If this function throws an error, the `Articles/Datastore Errors|error message` will describe the problem. Note that there are also `Articles/Datastore Errors|limits` that apply to this function.
 
@@ -5907,8 +5909,8 @@ local mouse = game.Players.LocalPlayer:GetMouse()
 function getPosition(X, Y)
 	local gui_X = CustomScrollingFrame.AbsolutePosition.X
 	local gui_Y = CustomScrollingFrame.AbsolutePosition.Y
-
-
+	
+	
 	local pos = Vector2.new(math.abs(X - gui_X), math.abs(Y - gui_Y - 36))
 	print(pos)
 end
@@ -6820,7 +6822,7 @@ pluginGui:BindToClose(function()
     confirmButton.Activated:Connect(function()
         -- close the gui
         pluginGui.Enabled = false
-
+    
         -- remove confirm button
         confirmButton:Destroy()
     end)
@@ -7488,7 +7490,7 @@ In this example all of the NPC characters have their DisplayDistanceType set to 
 - When the Humanoid is not standing on a floor, the value of this property will be set to *Air*. - This occurs because Enum properties cannot have an empty value.
     - This can cause some confusion if a part has its material is set to Air, though in practice, parts are not supposed to use that material in the first place.
 
-
+    
 
 - The Humanoid’s character model must be able to collide with the floor, or else it will not be detected. - You cannot test if the Humanoid is swimming with this property. You should instead use the Humanoid’s GetState function. */
 	readonly FloorMaterial: Enum.Material;
@@ -8576,8 +8578,8 @@ The best way to explain it is to show a visual of the array returned:
 	TotalCount = 21; -- Always 21.
 	Results = {
 		-- All parameters here are psuedo. They can vary depending on the asset.
-		[1] = {
-			Name = "Asset Name";
+		[1] = {	
+			Name = "Asset Name"; 
 			AssetId = 0000000;
 			AssetVersionId = 0000000;
 			CreatorName = "Roblox";
@@ -8605,7 +8607,7 @@ The best way to explain it is to show a visual of the array returned:
 	TotalCount = 21, -- Always 21.
 	Results = {
 		-- All parameters here are psuedo. They can vary depending on the asset.
-		[1] = {
+		[1] = {	
 			Name = "Asset Name",
 			AssetId = 0000000,
 			AssetVersionId = 0000000,
@@ -9157,7 +9159,7 @@ interface SpotLight extends RbxInternalLight {
 
 /** A SurfaceLight is a light source that emits illumination of a specified `Light/Color` and `Light/Brightness` from a `SurfaceLight/Face` for a specified `SurfaceLight/Range`.
 
-In order for a SurfaceLight to provide illumination, it must be the direct child of a `BasePart` or `Attachment` (the part or attachment itself must be a descendant of the Workspace). If a SurfaceLight is parented to a part, then the light will emanate from the part’s selected face(s). If parented to an attachment SurfaceLight is equivalent to a `SpotLight`.
+In order for a SurfaceLight to provide illumination, it must be the direct child of a `BasePart` or `Attachment` (the part or attachment itself must be a descendant of the Workspace). If a SurfaceLight is parented to a part, then the light will emanate from the part’s selected face(s). If parented to an attachment SurfaceLight is equivalent to a `SpotLight`. 
 
 
 
@@ -10002,7 +10004,7 @@ local MarketplaceService = game:GetService("MarketplaceService")
 
 local productInfo = MarketplaceService:GetProductInfo(PRODUCT_ID, Enum.InfoType.Product)
 
-print("Product ID " .. PRODUCT_ID .. " name: " .. productInfo.Name)
+print("Product ID " .. PRODUCT_ID .. " name: " .. productInfo.Name) 
 
 if productInfo.Description then
 	print("Description: " .. productInfo.Description)
@@ -10103,9 +10105,9 @@ end)
 
 It’s important to carefully examine the information passed to the callback via the **receipt info table** and properly process the receipt. See the code sample below for a model of how to create a receipt handling callback.
 
- Care and caution are highly recommended in implementing this callback as small mistakes run the risk of failed sales.
+ Care and caution are highly recommended in implementing this callback as small mistakes run the risk of failed sales. 
 
- As with all callbacks, this function should be set once and only once by a single Script. If you're selling multiple products in your game, this callback must handle receipts for all of them.
+ As with all callbacks, this function should be set once and only once by a single Script. If you're selling multiple products in your game, this callback must handle receipts for all of them. 
 
 ### Receipt Info Table
 
@@ -10364,10 +10366,10 @@ This property can be set to any `Instance` or nil, for example:
 
 ```lua
 local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+local player = Players.LocalPlayer 
 local mouse = player:GetMouse()
 mouse.TargetFilter = workspace.Model
-
+ 
 -- Now, when the player hovers the cursor over the model, mouse.Target will be some object
 -- behind workspace.Model, if there is one.
 ```
@@ -11435,7 +11437,7 @@ The function’s return value verifies whether or not you can call `BasePart/Set
 	CanSetNetworkOwnership(): LuaTuple<[boolean, string | undefined]>;
 	/** Returns a table of parts connected to the the object by any kind of rigid joint.
 
-If *recursive* is true this function will return all of the parts in the assembly rigidly connected to the BasePart.
+If *recursive* is true this function will return all of the parts in the assembly rigidly connected to the BasePart. 
 
 ### Rigid Joints
 
@@ -11499,7 +11501,7 @@ When playerInstance is nil, the server will be the owner instead of a player.Set
 
 See the `Articles/in game solid modeling|In-Game Solid Modeling` article for more information.
 
- The original parts remain unchanged following a successful subtract operation. In most cases, you should destroy all of the original parts and parent the returned UnionOperation to the same place as the calling BasePart.
+ The original parts remain unchanged following a successful subtract operation. In most cases, you should destroy all of the original parts and parent the returned UnionOperation to the same place as the calling BasePart. 
 
 ### Potential Errors
 
@@ -11522,9 +11524,9 @@ This function raises an error under the following conditions:
 
 See the `Articles/in game solid modeling|In-Game Solid Modeling` article for more information.
 
- Note that if a NegateOperation is provided, it will also be unioned additively. For subtraction, use BasePart/SubtractAsync|SubtractAsync().
+ Note that if a NegateOperation is provided, it will also be unioned additively. For subtraction, use BasePart/SubtractAsync|SubtractAsync(). 
 
- The original parts remain unchanged following a successful union operation. In most cases, you should destroy all of the original parts and parent the returned UnionOperation to the same place as the calling BasePart.
+ The original parts remain unchanged following a successful union operation. In most cases, you should destroy all of the original parts and parent the returned UnionOperation to the same place as the calling BasePart. 
 
 ### Potential Errors
 
@@ -11742,7 +11744,7 @@ interface SpawnLocation extends RbxInternalDerivesFromPart {
 	readonly ClassName: "SpawnLocation";
 	/** Allows a `Player` to join the team by touching the `SpawnLocation`. When set to true, if a `Player` character comes into contact with the `SpawnLocation`, the player’s `Player/TeamColor` will be set to `SpawnLocation/TeamColor`. `Player/Neutral` will also be set to `SpawnLocation/Neutral` upon contact, meaning a player can also become neutral by touching a spawn location.
 
- This will not function when SpawnLocation/Enabled is set to false.
+ This will not function when SpawnLocation/Enabled is set to false. 
 
 ### Making Checkpoints
 
@@ -12165,7 +12167,7 @@ This property can be read by scripts, but can only be set by plugins, the comman
 - Developers should also use the `Debris` service to clean up parts that are no longer needed, but have not fallen off the map
 - This property is clamped between -50,000 and 50,000. This is because `BasePart`s do not simulate or render properly at a great distance from the origin due to floating point inaccuracies */
 	readonly FallenPartsDestroyHeight: number;
-	/** Warning! Experimental Mode has been discontinued, meaning this property will no longer take effect.
+	/** Warning! Experimental Mode has been discontinued, meaning this property will no longer take effect. 
 
 Determines whether changes made from the client will replicate to the server or not. When this property is disabled, the game is in ‘Experimental Mode’.
 
@@ -12542,7 +12544,7 @@ Developers interested in seeing how this function is used in the Roblox Studio s
 As `Workspace/PGSPhysicsSolverEnabled` cannot be accessed by scripts, the PGSIsEnabled function allows developers to tell which physics solver the game is using.
 
 ```lua
-print(workspace:PGSIsEnabled()) -- true = PGS solver enabled
+print(workspace:PGSIsEnabled()) -- true = PGS solver enabled 
 print(workspace:PGSIsEnabled()) -- false = Legacy solver enabled
 ```
 
@@ -13113,7 +13115,7 @@ When \`Workspace/PGSPhysicsSolverEnabled\` is set to false, the contact points a
 
 When \`Workspace/PGSPhysicsSolverEnabled\` is set to true, the contact points are always colored RED
 
-, and the length of the arrow will always be 1 stud.
+, and the length of the arrow will always be 1 stud. 
 
 There are no special conditions tracked, because the PGS solver does not keep specific lookup tables for the states listed in the Spring Solver.
 
@@ -14077,7 +14079,7 @@ interface PointsService extends RbxInternalInstance {
 When a player is awarded points successfully the below example would print the userId and their new point balance. If, for example, the Roblox account was awarded thirty points (and had none to begin with)
 
 > User: 1 has now earned 30 (+30) points in the current game, now making
->
+> 
 >  their total balance
 
 would be printed.
@@ -14143,7 +14145,7 @@ The way in which a joint will interpolate between two `Pose`s during animation p
     - **Out** \- Happens at the time of the next pose
     - **InOut** \- Happens at the midpoint between poses
 
-
+    
 
 - **Elastic** \- Springs back and overshoots the target in an elastic manner
 - **Cubic** \- Cubic interpolation, speed changes as target nears
@@ -14817,7 +14819,7 @@ local RunService = game:GetService("RunService")
 local success, message = pcall(function() RunService:UnbindFromRenderStep("drawImage") end)
 if success then
     print("Success: Function unbound!")
-else
+else 
     print("An error occurred: "..message)
 end
 ``` */
@@ -15011,13 +15013,13 @@ This ID can be found in the top right corner of the [game explorer]() in Roblox 
 - `DataModel/JobId`, which is a unique identifier for the server game instance running
 - `TeleportService`, which is a service that can be used to transport `Player|Players` between games */
 	readonly GameId: number;
-	/** This property is broken and should not be used.
+	/** This property is broken and should not be used. 
 
 This property historically described the `Enum/GearGenreSetting` of the `Articles/Place|place`, reflecting the gear permissions configured in the place settings. These settings determine what gear could be added to a `Player|Player's` `StarterGear`.
 
 This property, along with `DataModel/Genre`, no longer functions correctly and attempting to read it may throw an error. */
 	readonly GearGenreSetting: Enum.GearGenreSetting;
-	/** This property is broken and should not be used.
+	/** This property is broken and should not be used. 
 
 This property historically described the `Enum/Genre` of the `Articles/Place|place` as set on the Roblox website.
 
@@ -15141,7 +15143,7 @@ You are advised to use `RunService/IsStudio` to verify the current session is no
 
 - `PluginGui/BindToClose`, which is used to bind a function to a `PluginGui` close button and should not be confused with this function */
 	BindToClose(callback: Function): void;
-	/** Currently this function only returns the correct value on the client
+	/** Currently this function only returns the correct value on the client 
 
 This function returns whether gear of the given `Enum/GeareType` is permitted to be added to `Player|Players’` `StarterGear|StarterGears`. For example:
 
@@ -15909,7 +15911,7 @@ Increasing this value exaggerates the impact of the Doppler effect, whereas decr
 
 ```lua
 local SoundService = game:GetService("SoundService")
-SoundService.DopplerScale = 1 -- default
+SoundService.DopplerScale = 1 -- default 
 SoundService.DopplerScale = 2 -- exaggerated Doppler effect
 SoundService.DopplerEffect = 0.5 -- subdued Doppler effect
 ```
@@ -17383,7 +17385,7 @@ Tags: ReadOnly, NotReplicated */
 	readonly WarnCount: number;
 	/** If condition is true, prints "Check passed: ", followed by description to the output, in blue text. Otherwise, prints "Check failed: ", again, followed by description, but in red text. */
 	Check(condition: boolean, description: string, source?: Instance, line?: number): void;
-	/** Prints "Test checkpoint:
+	/** Prints "Test checkpoint: 
 
 ", followed by text
 
@@ -17411,11 +17413,11 @@ If this is called inside of a script running inside of the TestService, this wil
 
  is true
 
-, prints Warning passed:
+, prints Warning passed: 
 
 , followed by description
 
-, to the output, in blue text. Otherwise, prints Warning:
+, to the output, in blue text. Otherwise, prints Warning: 
 
 , followed by description
 
@@ -18834,7 +18836,7 @@ The mouse button checked depends on the `Enum/UserInputType` value passed to the
 
 ```lua
 local UserInputService = game:GetService("UserInputService")
-
+    
 local pressed = UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)
 ```
 

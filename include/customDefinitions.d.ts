@@ -85,7 +85,7 @@ interface ClickDetector extends RbxInternalInstance {
 interface CollectionService extends RbxInternalInstance {
 	GetInstanceAddedSignal(tag: string): RBXScriptSignal<(instance: Instance) => void>;
 	GetInstanceRemovedSignal(tag: string): RBXScriptSignal<(instance: Instance) => void>;
-	GetTagged<T extends RbxInternalInstance = Instance>(tag: string): Array<T>;
+	GetTagged<T extends Instance = Instance>(tag: string): Array<T>;
 	GetTags(instance: Instance): Array<string>;
 }
 
@@ -241,10 +241,10 @@ interface InsertService extends RbxInternalInstance {
 
 interface RbxInternalInstance {
 	Clone(): this;
-	GetChildren<T extends RbxInternalInstance = Instance>(): Array<T>;
+	GetChildren<T extends Instance = Instance>(): Array<T>;
 	GetDescendants(): Array<Instance>;
-	FindFirstAncestor<T extends RbxInternalInstance = Instance>(name: string): T | undefined;
-	FindFirstChild<T extends RbxInternalInstance = Instance>(name: string, recursive?: boolean): T | undefined;
+	FindFirstAncestor<T extends Instance = Instance>(name: string): T | undefined;
+	FindFirstChild<T extends Instance = Instance>(name: string, recursive?: boolean): T | undefined;
 	/** Returns the child of the Instance with the given name. If the child does not exist, it will yield the current thread until it does.
 	 *
 	 * If the timeOut parameter is specified, this function will return nil and time out after timeOut seconds elapsing without the child being found.
@@ -270,8 +270,8 @@ const ship = Workspace.WaitForChild("Ship")
 	 *
 	 * - WaitForChild is less efficient than Instance:FindFirstChild or the dot operator. Therefore it should only be used when the developer is not sure if the object has replicated to the client. Generally this is only the first time the object is accessed
 	 */
-	WaitForChild<T extends RbxInternalInstance = Instance>(childName: string): T;
-	WaitForChild<T extends RbxInternalInstance = Instance>(childName: string, timeOut: number): T | undefined;
+	WaitForChild<T extends Instance = Instance>(childName: string): T;
+	WaitForChild<T extends Instance = Instance>(childName: string, timeOut: number): T | undefined;
 	IsA<T extends keyof InstanceBases>(className: T): this is InstanceBases[T];
 	IsA(className: string): boolean;
 	FindFirstChildWhichIsA<T extends keyof InstanceBases>(
@@ -285,15 +285,17 @@ const ship = Workspace.WaitForChild("Ship")
 	FindFirstAncestorWhichIsA(className: string): InstanceBases[keyof InstanceBases] | undefined;
 	FindFirstChildOfClass<T extends keyof Instances>(className: T): Instances[T] | undefined;
 	FindFirstChildOfClass(className: string): Instance | undefined;
-	GetPropertyChangedSignal(property: {
-		[Key in keyof this]-?: Key extends "GetPropertyChangedSignal"
-		? never
-		: this[Key] extends RBXScriptSignal
-		? never
-		: (() => any) extends this[Key]
-		? never
-		: Key
-	}[keyof this]): RBXScriptSignal;
+	GetPropertyChangedSignal(
+		property: {
+			[Key in keyof this]-?: Key extends "GetPropertyChangedSignal"
+				? never
+				: this[Key] extends RBXScriptSignal
+				? never
+				: (() => any) extends this[Key]
+				? never
+				: Key
+		}[keyof this],
+	): RBXScriptSignal;
 }
 
 interface RbxInternalJointInstance extends RbxInternalInstance {

@@ -681,7 +681,7 @@ export class ClassGenerator extends Generator {
 			});
 
 			for (const rbxMember of rbxClass.Members) {
-				const rbxMemberName = rbxMember.Name.replace(/\s+/g, "-");
+				const rbxMemberName = rbxMember.Name.replace(/\s+/g, "-").replace(/[\(\)]/g, "");
 				if (this.shouldGenerateMember(rbxClass, rbxMember)) {
 					const memberType = rbxMember.MemberType.toLowerCase();
 					const link = `https://developer.roblox.com/api-reference/${memberType}/${rbxClassName}/${rbxMemberName}`;
