@@ -311,7 +311,14 @@ function getDescriptionFromHtml(rawData: string, link: string) {
 					.replace(/\s+\]/g, "]")
 					.replace(/#+/g, a => (a.length < 3 ? "###" : a))
 					.replace(/\*\//g, "*")
-					.replace(/```(?!lua)[^]+?```/g, a => "```lua" + a.slice(3))
+					.replace(/```[^]+?```/g, a => {
+						const b = a.slice(3);
+						if (b.substr(0, 3) === "lua") {
+							return a;
+						} else {
+							return "```lua" + b;
+						}
+					})
 					// .replace(/```((?!lua).+?```)/g, (_, b) => "```lua" + b)
 					.trim()
 			);
@@ -366,7 +373,7 @@ export class ClassGenerator extends Generator {
 					documentations.push(documentation);
 				});
 
-			this.write(documentations.join("\n\t"));
+			this.write(documentations.join("\n\t").trim());
 			const written = signatures.length > 0;
 			if (written) {
 				this.write(signatures.join("\n\t"));
@@ -502,7 +509,7 @@ export class ClassGenerator extends Generator {
 			descriptions.push(`/** ${desc} */`);
 		}
 
-		const description = descriptions.join("\n\t");
+		const description = descriptions.join("\n\t").trim();
 		if (description && !hasSubclasses) this.write(description);
 
 		this.write(`interface ${interfaceName} ${extendsStr}{${isEmpty ? "}" : ""}`);
