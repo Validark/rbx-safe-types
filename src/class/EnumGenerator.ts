@@ -71,10 +71,11 @@ export class EnumGenerator extends Generator {
 		}
 
 		this.write(``);
+		const lastLine = `> = T | T[stringOnly extends true ? "Name" : "Name" | "Value"];`;
 		this.write(
 			`declare type CastsToEnum<T extends ${"\n\t"}| Enum.${enumTypeNames.join(
 				`${"\n\t"}| Enum.`,
-			)}${"\n"}> = T | T["Name" | "Value"];`,
+			)},${"\n"}stringOnly extends true | false = false${"\n"}${lastLine}`,
 		);
 	}
 }

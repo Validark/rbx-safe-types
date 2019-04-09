@@ -4,16 +4,18 @@ This is a drop-in replacement for rbx-types.
 
 # Installation
 
-Run one of the following commands, depending on your operating system. Afterwards you will need to reload the window.
+Make sure you have the latest version of TypeScript installed by simply running `npm i -g typescript`.
+
+Run one of the following commands in the directory of your project. Afterwards you will need to reload the window. See the proper command for your system:
 
 ### Windows
 ```
-npm i rbx-safe-types & CD node_modules & MOVE /Y rbx-safe-types\include\* rbx-types\include & DEL rbx-types\include\manual.d.ts & RMDIR /Q rbx-safe-types\include & CD ..
+npm i rbx-safe-types & CD node_modules & MOVE /Y rbx-safe-types\include\* rbx-types\include & DEL rbx-types\include\manual.d.ts & RMDIR /Q rbx-safe-types\include & CD .. & echo Installed rbx-safe-types!
 ```
 
 ### MacOS / Any OS with GNU installed
 ```
-npm i rbx-safe-types & cd node_modules & mv rbx-safe-types/include/* rbx-types/include & rm rbx-types/include/manual.d.ts & rm -r rbx-safe-types/include & CD ..
+npm i rbx-safe-types & cd node_modules & mv rbx-safe-types/include/* rbx-types/include & rm rbx-types/include/manual.d.ts & rm -r rbx-safe-types/include & CD .. & echo Installed rbx-safe-types!
 ```
 
 Restart VSCode by pressing (Ctrl+Shift+P) and selecting `Reload Window`.
@@ -103,7 +105,12 @@ Here are the reasons I use rbx-safe-types over rbx-types:
 	Any time you have a type which is less specific than the actual instance, you risk running into property-instance name collisions. Thus, rbx-safe-types disallows inferring that accessing non-members are `Instance` types.
 - rbx-safe-types does not assume that indexing arrays results in defined values.
 - rbx-safe-types pulls documentation from https://developer.roblox.com/api-reference and thus has far more documentation.
-- rbx-safe-types sometimes contains better type information. For example, the fields in [GetFriendsOnline](https://developer.roblox.com/api-reference/function/Player/GetFriendsOnline) which may or may not be undefined can be validated by checking the `LocationType`, which rbx-safe-types has a const enum for.
+- rbx-safe-types sometimes contains better type information about APIs that return dictionaries. For example, the fields in [GetFriendsOnline](https://developer.roblox.com/api-reference/function/Player/GetFriendsOnline) which may or may not be undefined can be validated by checking the `LocationType`, which rbx-safe-types has a const enum for.
+- rbx-safe-types is more knowledgable about BrickColor values
+- rbx-safe-types has "real" Roblox Enum object support, meaning one can access `EnumItem.Value`, `EnumItem.Name`, and `EnumItem.EnumType`, as well as `Enum.GetEnums()` and `EnumType.GetEnumItems()`. `EnumItem.Value` is recommended for those concerned with efficiency, and `EnumItem.Name` is obviously better for readability and TypeScript's suggestion prompts.
+	- This allows rbx-safe-types to add `CastsToEnum<EnumType | EnumItem>`, so that TS code can pass strings/numbers into Roblox functions which require Enums. At the moment, we are waiting on a TS update which allow us to permit this behavior on property setting.
+	- Goal: At some point I would like to have an optimization built-in to the transpiler to fold `Enum.EnumType.EnumItem.Value` into a constant.
+	- Caveat: As a side effect of TypeScript's type system, if working exclusively with the Enum Objects themselves, you may have to `return error("")` on an extra branch because TS considers any object that looks like a duck to be a duck. Thus, Enums are not considered immutable, but their `Value` and `Name` properties are, because strings and numbers are each immutable.
 - rbx-safe-types doesn't have a bunch of internal members of Instances which look like: `_210: never`
 - rbx-safe-types removes 99% of the internal `Rbx_` classes. Those that remain now carry the prefix `RbxInternal` instead to avoid confusion for users.
 - rbx-safe-types has more dank documentation:

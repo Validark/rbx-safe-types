@@ -110,12 +110,18 @@ function safePropType(valueType: string | undefined | null) {
 	return valueType;
 }
 
-function safeValueType(valueType: ApiValueType) {
+function safeValueType(valueType: ApiValueType, canImplicitlyConvertEnum: boolean = false) {
 	const mappedType = VALUE_TYPE_MAP[valueType.Name];
 	if (mappedType !== undefined) {
 		return mappedType;
 	} else if (valueType.Category === "Enum") {
-		return `Enum.${valueType.Name}`;
+		let str = `Enum.${valueType.Name}`;
+
+		if (canImplicitlyConvertEnum) {
+			str = `CastsToEnum<${str}>`;
+		}
+
+		return str;
 	} else {
 		return valueType.Name;
 	}
@@ -218,9 +224,9 @@ function generateArgs(params: Array<ApiParameter>) {
 	let optional = false;
 	for (let i = 0; i < params.length; i++) {
 		const param = params[i];
-		const paramType = safeValueType(param.Type);
+		const paramType = safeValueType(param.Type, true);
 		optional = optional || param.Default !== undefined || paramType === "any";
-		args.push(`${safeArgName(paramNames[i])}${optional ? "?" : ""}: ${safeValueType(param.Type)}`);
+		args.push(`${safeArgName(paramNames[i])}${optional ? "?" : ""}: ${paramType}`);
 	}
 	return args.join(", ");
 }
