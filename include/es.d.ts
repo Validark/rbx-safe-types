@@ -563,14 +563,14 @@ interface Set<T> extends ReadonlySet<T> {
 	add(value: T): this;
 
 	/**
-	 * Deletes the given key from the set
+	 * Deletes the given key from the set.
 	 *
 	 * Returns a boolean indicating whether or not a value was removed.
 	 */
 	delete(value: T): boolean;
 
 	/**
-	 * Deletes all members of the set
+	 * Deletes all members of the set.
 	 */
 	clear(): void;
 }
