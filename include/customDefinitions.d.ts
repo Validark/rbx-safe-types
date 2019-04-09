@@ -382,6 +382,8 @@ interface PhysicsService extends RbxInternalInstance {
 }
 
 interface Player extends RbxInternalInstance {
+	readonly Name: string;
+	readonly UserId: number;
 	ReplicationFocus: BasePart | undefined;
 	readonly CharacterAdded: RBXScriptSignal<(character: Model) => void>;
 	readonly CharacterAppearanceLoaded: RBXScriptSignal<(character: Model) => void>;
