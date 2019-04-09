@@ -38,16 +38,24 @@ interface RbxInternalBasePart extends RbxInternalInstance {
 	GetJoints(): Array<Constraint | JointInstance>;
 	GetTouchingParts(): Array<BasePart>;
 	SetNetworkOwner(playerInstance?: Player): void;
-	SubtractAsync(parts: Array<BasePart>, collisionfidelity?: Enum.CollisionFidelity): UnionOperation;
-	UnionAsync(parts: Array<BasePart>, collisionfidelity?: Enum.CollisionFidelity): UnionOperation;
+	SubtractAsync(parts: Array<BasePart>, collisionfidelity?: CastsToEnum<Enum.CollisionFidelity>): UnionOperation;
+	UnionAsync(parts: Array<BasePart>, collisionfidelity?: CastsToEnum<Enum.CollisionFidelity>): UnionOperation;
 }
 
 interface Attachment extends RbxInternalInstance {
 	WorldCFrame: CFrame;
 }
 
+interface TextService extends RbxInternalInstance {
+	FilterStringAsync(
+		stringToFilter: string,
+		fromUserId: number,
+		textContext?: CastsToEnum<Enum.TextFilterContext>,
+	): TextFilterResult | undefined;
+}
+
 interface BillboardGui extends RbxInternalLayerCollector {
-	Adornee: BasePart | Attachment | undefined;
+	Adornee: PVInstance | Attachment | undefined;
 	PlayerToHideFrom: Player | undefined;
 }
 
@@ -70,7 +78,7 @@ interface Camera extends RbxInternalInstance {
 
 interface Chat extends RbxInternalInstance {
 	readonly Chatted: RBXScriptSignal<(part: BasePart, message: string, color: Enum.ChatColor) => void>;
-	Chat(partOrCharacter: BasePart | Model, message: string, color?: Enum.ChatColor): void;
+	Chat(partOrCharacter: BasePart | Model, message: string, color?: CastsToEnum<Enum.ChatColor>): void;
 	FilterStringAsync(stringToFilter: string, playerFrom: Player, playerTo: Player): string;
 	FilterStringForBroadcast(stringToFilter: string, playerFrom: Player): string;
 }
@@ -190,10 +198,13 @@ interface GuiService extends RbxInternalInstance {
 }
 
 interface _HapticService extends RbxInternalInstance {
-	GetMotor(inputType: Enum.UserInputType, vibrationMotor: Enum.VibrationMotor): LuaTuple<[number]>;
+	GetMotor(
+		inputType: CastsToEnum<Enum.UserInputType>,
+		vibrationMotor: CastsToEnum<Enum.VibrationMotor>,
+	): LuaTuple<[number]>;
 	SetMotor(
-		inputType: Enum.UserInputType,
-		vibrationMotor: Enum.VibrationMotor,
+		inputType: CastsToEnum<Enum.UserInputType>,
+		vibrationMotor: CastsToEnum<Enum.VibrationMotor>,
 		...vibrationValues: Array<number>
 	): void;
 }
@@ -205,7 +216,7 @@ interface HttpService extends RbxInternalInstance {
 	PostAsync(
 		url: string,
 		data: string,
-		content_type?: Enum.HttpContentType,
+		content_type?: CastsToEnum<Enum.HttpContentType>,
 		compress?: boolean,
 		headers?: HttpHeaders,
 	): string;
@@ -285,17 +296,7 @@ const ship = Workspace.WaitForChild("Ship")
 	FindFirstAncestorWhichIsA(className: string): InstanceBases[keyof InstanceBases] | undefined;
 	FindFirstChildOfClass<T extends keyof Instances>(className: T): Instances[T] | undefined;
 	FindFirstChildOfClass(className: string): Instance | undefined;
-	GetPropertyChangedSignal(
-		property: {
-			[Key in keyof this]-?: Key extends "GetPropertyChangedSignal"
-				? never
-				: this[Key] extends RBXScriptSignal
-				? never
-				: (() => any) extends this[Key]
-				? never
-				: Key
-		}[keyof this],
-	): RBXScriptSignal;
+	GetPropertyChangedSignal<T extends GetProperties<this>>(property: T): RBXScriptSignal;
 }
 
 interface RbxInternalJointInstance extends RbxInternalInstance {
@@ -362,17 +363,22 @@ interface MarketplaceService extends RbxInternalInstance {
 		(player: Player, gamePassId: number, wasPurchased: boolean) => void
 	>;
 	readonly PromptPurchaseFinished: RBXScriptSignal<(player: Player, assetId: number, isPurchased: boolean) => void>;
-	GetProductInfo(assetId: number, infoType: Enum.InfoType.Asset): AssetProductInfo;
-	GetProductInfo(assetId: number, infoType: Enum.InfoType.Product): DeveloperProductInfo;
-	GetProductInfo(assetId: number, infoType: Enum.InfoType.GamePass): AssetProductInfo;
+	GetProductInfo(assetId: number, infoType: CastsToEnum<Enum.InfoType.Asset>): AssetProductInfo;
+	GetProductInfo(assetId: number, infoType: CastsToEnum<Enum.InfoType.Product>): DeveloperProductInfo;
+	GetProductInfo(assetId: number, infoType: CastsToEnum<Enum.InfoType.GamePass>): AssetProductInfo;
 	PromptGamePassPurchase(player: Player, gamePassId: number): void;
 	PromptProductPurchase(
 		player: Player,
 		productId: number,
 		equipIfPurchased?: boolean,
-		currencyType?: Enum.CurrencyType,
+		currencyType?: CastsToEnum<Enum.CurrencyType>,
 	): void;
-	PromptPurchase(player: Player, assetId: number, equipIfPurchased?: boolean, currencyType?: Enum.CurrencyType): void;
+	PromptPurchase(
+		player: Player,
+		assetId: number,
+		equipIfPurchased?: boolean,
+		currencyType?: CastsToEnum<Enum.CurrencyType>,
+	): void;
 	PlayerOwnsAsset(player: Player, assetId: number): boolean;
 }
 
@@ -411,6 +417,15 @@ interface Player extends RbxInternalInstance {
 	LoadCharacterWithHumanoidDescription(humanoidDescription: HumanoidDescription): void;
 }
 
+/** #### Related methods:
+ * - Humanoid.ApplyDescription()
+ * - Humanoid.GetAppliedDescription()
+ * - Player.LoadCharacterWithHumanoidDescription()
+ * - Players.GetHumanoidDescriptionFromOutfitId()
+ * - Players.GetHumanoidDescriptionFromUserId()
+ */
+interface HumanoidDescription extends RbxInternalInstance {}
+
 interface Players extends RbxInternalInstance {
 	/** @rbxts client */
 	readonly LocalPlayer: Player;
@@ -431,8 +446,8 @@ interface Players extends RbxInternalInstance {
 
 	GetUserThumbnailAsync(
 		userId: number,
-		thumbnailType: Enum.ThumbnailType,
-		thumbnailSize: Enum.ThumbnailSize,
+		thumbnailType: CastsToEnum<Enum.ThumbnailType>,
+		thumbnailSize: CastsToEnum<Enum.ThumbnailSize>,
 	): LuaTuple<[string, boolean]>;
 }
 
@@ -467,10 +482,10 @@ interface SoundService extends RbxInternalInstance {
 		| [Enum.ListenerType.CFrame, CFrame]
 		| [Enum.ListenerType.ObjectCFrame, BasePart]
 		| [Enum.ListenerType.ObjectPosition, BasePart];
-	SetListener(listenerType: Enum.ListenerType.Camera): void;
-	SetListener(listenerType: Enum.ListenerType.CFrame, cframe: CFrame): void;
-	SetListener(listenerType: Enum.ListenerType.ObjectCFrame, basePart: BasePart): void;
-	SetListener(listenerType: Enum.ListenerType.ObjectPosition, basePart: BasePart): void;
+	SetListener(listenerType: CastsToEnum<Enum.ListenerType.Camera>): void;
+	SetListener(listenerType: CastsToEnum<Enum.ListenerType.CFrame>, cframe: CFrame): void;
+	SetListener(listenerType: CastsToEnum<Enum.ListenerType.ObjectCFrame>, basePart: BasePart): void;
+	SetListener(listenerType: CastsToEnum<Enum.ListenerType.ObjectPosition>, basePart: BasePart): void;
 }
 
 /** @server */
@@ -513,9 +528,9 @@ interface StarterGui extends RbxInternalBasePlayerGui {
 	SetCore(parameterName: "PromptBlockPlayer", player: Player): void;
 	SetCore(parameterName: "PromptUnblockPlayer", player: Player): void;
 	SetCore(parameterName: "SetAvatarContextMenuEnabled", enabled: boolean): void;
-	SetCore(parameterName: "AddAvatarContextMenuOption", option: Enum.AvatarContextMenuOption): void;
+	SetCore(parameterName: "AddAvatarContextMenuOption", option: CastsToEnum<Enum.AvatarContextMenuOption>): void;
 	SetCore(parameterName: "AddAvatarContextMenuOption", option: [string, BindableFunction]): void;
-	SetCore(parameterName: "RemoveAvatarContextMenuOption", option: Enum.AvatarContextMenuOption): void;
+	SetCore(parameterName: "RemoveAvatarContextMenuOption", option: CastsToEnum<Enum.AvatarContextMenuOption>): void;
 	SetCore(parameterName: "RemoveAvatarContextMenuOption", option: [string, BindableFunction]): void;
 	SetCore(
 		parameterName: "CoreGuiChatConnections",
@@ -571,7 +586,7 @@ interface Terrain extends RbxInternalBasePart {
 	WriteVoxels(
 		region: Region3,
 		resolution: number,
-		materials: Array<Array<Array<Enum.Material>>>,
+		materials: Array<Array<Array<CastsToEnum<Enum.Material>>>>,
 		occupancy: Array<Array<Array<number>>>,
 	): void;
 }
@@ -594,11 +609,11 @@ interface UserInputService {
 	readonly InputEnded: RBXScriptSignal<(input: InputObject, gameProcessedEvent: boolean) => void>;
 	GetConnectedGamepads(): Array<Enum.UserInputType>;
 	GetDeviceRotation(): LuaTuple<[InputObject, CFrame]>;
-	GetGamepadState(gamepadNum: Enum.UserInputType): Array<InputObject>;
+	GetGamepadState(gamepadNum: CastsToEnum<Enum.UserInputType>): Array<InputObject>;
 	GetKeysPressed(): Array<InputObject>;
 	GetMouseButtonsPressed(): Array<InputObject>;
 	GetNavigationGamepads(): Array<Enum.UserInputType>;
-	GetSupportedGamepadKeyCodes(gamepadNum: Enum.UserInputType): Array<Enum.KeyCode>;
+	GetSupportedGamepadKeyCodes(gamepadNum: CastsToEnum<Enum.UserInputType>): Array<Enum.KeyCode>;
 }
 
 interface Workspace extends RbxInternalDerivesFromModel {

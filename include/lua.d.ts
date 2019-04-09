@@ -73,7 +73,7 @@ declare function pcall<T extends Array<any>, U>(
 /** B Calls the function func with the given arguments in protected mode. This means that any error inside func is not propagated; instead, pcall catches the error and returns a status code. Its first result is the status code (a boolean), which is true if the call succeeds without errors. In such case, pcall also returns all results from the call, after this first result. In case of any error, pcall returns false plus the error message. */
 declare function pcall<T extends Array<any>, U>(
 	func: (...args: T) => U,
-	...args: T,
+	...args: T
 ): LuaTuple<
 	U extends [infer A]
 		? [true, A] | [false, string]
@@ -112,7 +112,7 @@ interface LuaMetatable<T> {
 }
 
 /** Sets the metatable for the given table. If setTo is nil, the metatable of the given table is removed. If the original metatable has a "__metatable" field, this will raise an error. This function returns the table t, which was passed to the function. */
-declare function setmetatable<T extends object>(object: T, metatable: LuaMetatable<T>): object;
+declare function setmetatable<T extends object>(object: T, metatable: LuaMetatable<T>): T;
 
 interface LuaDateTable {
 	year: number;

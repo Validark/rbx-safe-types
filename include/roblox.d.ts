@@ -7,6 +7,16 @@
 
 // ROBLOX API
 
+type GetProperties<T> = {
+	[Key in keyof T]-?: Key extends "GetPropertyChangedSignal"
+		? never
+		: T[Key] extends RBXScriptSignal
+		? never
+		: (() => any) extends T[Key]
+		? never
+		: Key
+}[keyof T];
+
 type FunctionArguments<T> = T extends (...args: infer U) => void ? U : [];
 
 type Callback = (...args: Array<any>) => void;
@@ -225,7 +235,9 @@ interface DeveloperProductInfo extends ProductInfo {
 interface AgentParameters {
 	/** Humanoid radius. Used to determine the minimum separation from obstacles. */
 	AgentRadius?: number;
-	/** Humanoid height. Empty space smaller than this value, like the space under stairs, will be marked as non-traversable. */
+	/** Humanoid height.
+	 * Empty space smaller than this value, like the space under stairs, will be marked as non-traversable.
+	 */
 	AgentHeight?: number;
 }
 
@@ -258,26 +270,92 @@ interface FriendOnlineInfoFields {
 	LocationType: FriendLocationType;
 }
 
+/** A dictionary of an id and name containing information about what type an asset is */
+type AssetType =
+	| { id: 1; name: "Image" }
+	| { id: 2; name: "TeeShirt" }
+	| { id: 3; name: "Audio" }
+	| { id: 4; name: "Mesh" }
+	| { id: 5; name: "Lua" }
+	| { id: 8; name: "Hat" }
+	| { id: 9; name: "Place" }
+	| { id: 10; name: "Model" }
+	| { id: 11; name: "Shirt" }
+	| { id: 12; name: "Pants" }
+	| { id: 13; name: "Decal" }
+	| { id: 17; name: "Head" }
+	| { id: 18; name: "Face" }
+	| { id: 19; name: "Gear" }
+	| { id: 21; name: "Badge" }
+	| { id: 24; name: "Animation" }
+	| { id: 27; name: "Torso" }
+	| { id: 28; name: "RightArm" }
+	| { id: 29; name: "LeftArm" }
+	| { id: 30; name: "LeftLeg" }
+	| { id: 31; name: "RightLeg" }
+	| { id: 32; name: "Package" }
+	| { id: 34; name: "GamePass" }
+	| { id: 38; name: "Plugin" }
+	| { id: 40; name: "MeshPart" }
+	| { id: 41; name: "HairAccessory" }
+	| { id: 42; name: "FaceAccessory" }
+	| { id: 43; name: "NeckAccessory" }
+	| { id: 44; name: "ShoulderAccessory" }
+	| { id: 45; name: "FrontAccessory" }
+	| { id: 46; name: "BackAccessory" }
+	| { id: 47; name: "WaistAccessory" }
+	| { id: 48; name: "ClimbAnimation" }
+	| { id: 49; name: "DeathAnimation" }
+	| { id: 50; name: "FallAnimation" }
+	| { id: 51; name: "IdleAnimation" }
+	| { id: 52; name: "JumpAnimation" }
+	| { id: 53; name: "RunAnimation" }
+	| { id: 54; name: "SwimAnimation" }
+	| { id: 55; name: "WalkAnimation" }
+	| { id: 56; name: "PoseAnimation" }
+	| { id: 57; name: "EarAccessory" }
+	| { id: 58; name: "EyeAccessory" };
+
+/** Information about a player's avatar in dictionary form */
 interface CharacterAppearanceInfo {
+	/** Describes the BrickColor values for each limb */
 	bodyColors: {
+		/** The BrickColor value of the leftArm */
 		leftArmColorId: number;
+		/** The BrickColor value of the torso */
 		torsoColorId: number;
+		/** The BrickColor value of the rightArm */
 		rightArmColorId: number;
+		/** The BrickColor value of the head */
 		headColorId: number;
+		/** The BrickColor value of the leftLeg */
 		leftLegColorId: number;
+		/** The BrickColor value of the rightLeg */
 		rightLegColorId: number;
 	};
+
+	/** The assets currently equipped by the Player (hats, body parts, etc, excluding gear) */
 	assets: Array<{
+		/** The asset ID of the equipped asset */
 		id: number;
-		assetType: {
-			name: string;
-			id: number;
-		};
+
+		/** A table with `name` and `id` fields, each describing the kind of asset equipped ("Hat", "Face", etc.) */
+		assetType: AssetType;
+
+		/** The name of the equipped asset */
 		name: string;
 	}>;
+
+	/** Describes whether default pants are applied */
 	defaultPantsApplied: boolean;
+
+	/** Describes whether default shirt are applied */
 	defaultShirtApplied: boolean;
-	playerAvatarType: string;
+
+	/** What kind of avatar it is */
+	playerAvatarType: "R6" | "R15";
+
+	/** A dictionary of scaling properties */
 	scales: {
 		bodyType: number;
 		head: number;
@@ -402,12 +480,7 @@ interface Axes {
 	/** Whether the front face is included */
 	readonly Front: boolean;
 }
-interface AxesConstructor {
-	/**
-	 * Creates a new Axes using list of axes and/or faces. NormalIds (faces) are converted to the corresponding axes.
-	 */
-	new (...axes: Array<Enum.Axis | Enum.NormalId>): Axes;
-}
+type AxesConstructor = new (...axes: Array<Enum.Axis | Enum.NormalId>) => Axes;
 declare const Axes: AxesConstructor;
 
 interface BrickColor<
@@ -638,7 +711,9 @@ interface CFrame {
 	/** Returns a Vector3 rotated from World to Object space. Equivalent to `[(CFrame:inverse() - CFrame:inverse().p) * v3]` */
 	vectorToObjectSpace(v3: Vector3): Vector3;
 	/** Returns the values: x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22, where R00-R22 represent the 3x3 rotation matrix of the CFrame, and xyz represent the position of the CFrame. */
-	components(): LuaTuple<[number, number, number, number, number, number, number, number, number, number, number, number]>;
+	components(): LuaTuple<
+		[number, number, number, number, number, number, number, number, number, number, number, number]
+	>;
 	/** Returns approximate angles that could be used to generate CFrame, if angles were applied in Z, Y, X order */
 	toEulerAnglesXYZ(): LuaTuple<[number, number, number]>;
 	/** Returns approximate angles that could be used to generate CFrame, if angles were applied in Z, X, Y order */
@@ -725,9 +800,7 @@ interface ColorSequenceKeypoint {
 	readonly Time: number;
 	readonly Value: Color3;
 }
-interface ColorSequenceKeypointConstructor {
-	new (time: number, color: Color3): ColorSequenceKeypoint;
-}
+type ColorSequenceKeypointConstructor = new (time: number, color: Color3) => ColorSequenceKeypoint;
 declare const ColorSequenceKeypoint: ColorSequenceKeypointConstructor;
 
 // DockWidgetPluginGuiInfo
@@ -740,8 +813,7 @@ interface DockWidgetPluginGuiInfo {
 	readonly MinWidth: number;
 	readonly MinHeight: number;
 }
-interface DockWidgetPluginGuiInfoConstructor {
-	new (
+type DockWidgetPluginGuiInfoConstructor = new (
 		initDockState?: Enum.InitialDockState,
 		initEnabled?: boolean,
 		overrideEnabledRestore?: boolean,
@@ -749,8 +821,7 @@ interface DockWidgetPluginGuiInfoConstructor {
 		floatYSize?: number,
 		minWidth?: number,
 		minHeight?: number,
-	): DockWidgetPluginGuiInfo;
-}
+	) => DockWidgetPluginGuiInfo;
 declare const DockWidgetPluginGuiInfo: DockWidgetPluginGuiInfoConstructor;
 
 // Faces
@@ -762,9 +833,7 @@ interface Faces {
 	readonly Right: boolean;
 	readonly Left: boolean;
 }
-interface FacesConstructor {
-	new (...ids: Array<Enum.NormalId>): Faces;
-}
+type FacesConstructor = new (...ids: Array<Enum.NormalId>) => Faces;
 declare const Faces: FacesConstructor;
 
 // NumberRange
@@ -805,9 +874,7 @@ interface PathWaypoint {
 	readonly Action: Enum.PathWaypointAction;
 	readonly Position: Vector3;
 }
-interface PathWaypointConstructor {
-	new (position: Vector3, action: Enum.PathWaypointAction): PathWaypoint;
-}
+type PathWaypointConstructor = new (position: Vector3, action: Enum.PathWaypointAction) => PathWaypoint;
 declare const PathWaypoint: PathWaypointConstructor;
 
 // PhysicalProperties
@@ -852,9 +919,7 @@ interface Ray {
 	ClosestPoint(point: Vector3): Vector3;
 	Distance(point: Vector3): number;
 }
-interface RayConstructor {
-	new (origin: Vector3, direction: Vector3): Ray;
-}
+type RayConstructor = new (origin: Vector3, direction: Vector3) => Ray;
 declare const Ray: RayConstructor;
 
 // Rect
@@ -876,9 +941,7 @@ interface Region3 {
 	readonly Size: Vector3;
 	ExpandToGrid(resolution: number): Region3;
 }
-interface Region3Constructor {
-	new (min: Vector3, max: Vector3): Region3;
-}
+type Region3Constructor = new (min: Vector3, max: Vector3) => Region3;
 declare const Region3: Region3Constructor;
 
 // Region3int16
@@ -886,9 +949,7 @@ interface Region3int16 {
 	readonly Min: Vector3int16;
 	readonly Max: Vector3int16;
 }
-interface Region3int16Constructor {
-	new (min: Vector3int16, max: Vector3int16): Region3int16;
-}
+type Region3int16Constructor = new (min: Vector3int16, max: Vector3int16) => Region3int16;
 declare const Region3int16: Region3int16Constructor;
 
 // TweenInfo
@@ -900,16 +961,14 @@ interface TweenInfo {
 	readonly Reverses: boolean;
 	readonly DelayTime: number;
 }
-interface TweenInfoConstructor {
-	new (
+type TweenInfoConstructor = new (
 		time?: number,
 		easingStyle?: Enum.EasingStyle,
 		easingDirection?: Enum.EasingDirection,
 		repeatCount?: number,
 		reverses?: boolean,
 		delayTime?: number,
-	): TweenInfo;
-}
+	) => TweenInfo;
 declare const TweenInfo: TweenInfoConstructor;
 
 // UDim
@@ -917,9 +976,7 @@ interface UDim {
 	readonly Scale: number;
 	readonly Offset: number;
 }
-interface UDimConstructor {
-	new (scale: number, offset: number): UDim;
-}
+type UDimConstructor = new (scale: number, offset: number) => UDim;
 declare const UDim: UDimConstructor;
 
 // UDim2
@@ -947,9 +1004,7 @@ interface Vector2 {
 	Lerp(goal: Vector2, alpha: number): Vector2;
 	Cross(other: Vector2): Vector2;
 }
-interface Vector2Constructor {
-	new (x?: number, y?: number): Vector2;
-}
+type Vector2Constructor = new (x?: number, y?: number) => Vector2;
 declare const Vector2: Vector2Constructor;
 
 // Vector2int16
@@ -957,9 +1012,7 @@ interface Vector2int16 {
 	readonly X: number;
 	readonly Y: number;
 }
-interface Vector2int16Constructor {
-	new (x?: number, y?: number): Vector2int16;
-}
+type Vector2int16Constructor = new (x?: number, y?: number) => Vector2int16;
 declare const Vector2int16: Vector2int16Constructor;
 
 // Vector3
@@ -987,9 +1040,7 @@ interface Vector3int16 {
 	readonly Y: number;
 	readonly Z: number;
 }
-interface Vector3int16Constructor {
-	new (x?: number, y?: number, z?: number): Vector3;
-}
+type Vector3int16Constructor = new (x?: number, y?: number, z?: number) => Vector3;
 declare const Vector3int16: Vector3int16Constructor;
 
 // unusable internal studio classes

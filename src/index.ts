@@ -40,10 +40,10 @@ const REFLECTION_METADATA_URL = BASE_URL + "ReflectionMetadata.xml";
 	await new EnumGenerator(targetDir, "generated_enums.d.ts", reflectionMetadata).generate(api.Enums);
 	console.log(`\tDone! (${enumTimer.get()}ms)`);
 
-	const classTimer = new Timer();
-	console.log("\tGenerating classes..");
-	await new ClassGenerator(targetDir, "generated_classes.d.ts", reflectionMetadata).generate(api.Classes);
-	console.log(`\tDone! (${classTimer.get()}ms)`);
+	// const classTimer = new Timer();
+	// console.log("\tGenerating classes..");
+	// await new ClassGenerator(targetDir, "generated_classes.d.ts", reflectionMetadata).generate(api.Classes);
+	// console.log(`\tDone! (${classTimer.get()}ms)`);
 
 	console.log(`Done! (${totalTimer.get()}ms)`);
 })();
