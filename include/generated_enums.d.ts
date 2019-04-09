@@ -7,8 +7,48 @@
 // GENERATED ROBLOX ENUMS
 
 declare namespace Enum {
-	export const ActionType: Enum_ActionType;
-	export  type ActionType = Enum_ActionType["Nothing"] | Enum_ActionType["Pause"] | Enum_ActionType["Lose"] | Enum_ActionType["Draw"] | Enum_ActionType["Win"]
+	export namespace ActionType {
+		export interface Nothing {
+			Name: "Nothing";
+			Value: 0;
+			EnumType: Enum_ActionType;
+		}
+
+		export const Nothing: Nothing;
+
+		export interface Pause {
+			Name: "Pause";
+			Value: 1;
+			EnumType: Enum_ActionType;
+		}
+
+		export const Pause: Pause;
+
+		export interface Lose {
+			Name: "Lose";
+			Value: 2;
+			EnumType: Enum_ActionType;
+		}
+
+		export const Lose: Lose;
+
+		export interface Draw {
+			Name: "Draw";
+			Value: 3;
+			EnumType: Enum_ActionType;
+		}
+
+		export const Draw: Draw;
+
+		export interface Win {
+			Name: "Win";
+			Value: 4;
+			EnumType: Enum_ActionType;
+		}
+
+		export const Win: Win;
+	}
+	export type ActionType = ActionType.Nothing | ActionType.Pause | ActionType.Lose | ActionType.Draw | ActionType.Win;
 
 	export namespace ActuatorRelativeTo {
 		export interface Attachment0 {
@@ -34,8 +74,6 @@ declare namespace Enum {
 		}
 
 		export const World: World;
-
-		export function GetEnumItems(): Array<ActuatorRelativeTo>;
 	}
 	export type ActuatorRelativeTo =
 		| ActuatorRelativeTo.Attachment0
@@ -66,8 +104,6 @@ declare namespace Enum {
 		}
 
 		export const Servo: Servo;
-
-		export function GetEnumItems(): Array<ActuatorType>;
 	}
 	export type ActuatorType = ActuatorType.None | ActuatorType.Motor | ActuatorType.Servo;
 
@@ -87,8 +123,6 @@ declare namespace Enum {
 		}
 
 		export const Perpendicular: Perpendicular;
-
-		export function GetEnumItems(): Array<AlignType>;
 	}
 	export type AlignType = AlignType.Parallel | AlignType.Perpendicular;
 
@@ -124,8 +158,6 @@ declare namespace Enum {
 		}
 
 		export const Core: Core;
-
-		export function GetEnumItems(): Array<AnimationPriority>;
 	}
 	export type AnimationPriority =
 		| AnimationPriority.Idle
@@ -221,8 +253,6 @@ declare namespace Enum {
 		}
 
 		export const AvatarEditorPageLoaded: AvatarEditorPageLoaded;
-
-		export function GetEnumItems(): Array<AppShellActionType>;
 	}
 	export type AppShellActionType =
 		| AppShellActionType.None
@@ -253,8 +283,6 @@ declare namespace Enum {
 		}
 
 		export const ScaleWithParentSize: ScaleWithParentSize;
-
-		export function GetEnumItems(): Array<AspectType>;
 	}
 	export type AspectType = AspectType.FitWithinMaxSize | AspectType.ScaleWithParentSize;
 
@@ -602,8 +630,6 @@ declare namespace Enum {
 		}
 
 		export const EyeAccessory: EyeAccessory;
-
-		export function GetEnumItems(): Array<AssetType>;
 	}
 	export type AssetType =
 		| AssetType.Image
@@ -674,8 +700,6 @@ declare namespace Enum {
 		}
 
 		export const LegacyImplicit: LegacyImplicit;
-
-		export function GetEnumItems(): Array<AutoJointsMode>;
 	}
 	export type AutoJointsMode = AutoJointsMode.Default | AutoJointsMode.Explicit | AutoJointsMode.LegacyImplicit;
 
@@ -703,8 +727,6 @@ declare namespace Enum {
 		}
 
 		export const Emote: Emote;
-
-		export function GetEnumItems(): Array<AvatarContextMenuOption>;
 	}
 	export type AvatarContextMenuOption =
 		| AvatarContextMenuOption.Friend
@@ -727,8 +749,6 @@ declare namespace Enum {
 		}
 
 		export const ArtistIntent: ArtistIntent;
-
-		export function GetEnumItems(): Array<AvatarJointPositionType>;
 	}
 	export type AvatarJointPositionType = AvatarJointPositionType.Fixed | AvatarJointPositionType.ArtistIntent;
 
@@ -756,8 +776,6 @@ declare namespace Enum {
 		}
 
 		export const Z: Z;
-
-		export function GetEnumItems(): Array<Axis>;
 	}
 	export type Axis = Axis.X | Axis.Y | Axis.Z;
 
@@ -801,8 +819,6 @@ declare namespace Enum {
 		}
 
 		export const Hammer: Hammer;
-
-		export function GetEnumItems(): Array<BinType>;
 	}
 	export type BinType = BinType.Script | BinType.GameTool | BinType.Grab | BinType.Clone | BinType.Hammer;
 
@@ -854,8 +870,6 @@ declare namespace Enum {
 		}
 
 		export const RightLeg: RightLeg;
-
-		export function GetEnumItems(): Array<BodyPart>;
 	}
 	export type BodyPart =
 		| BodyPart.Head
@@ -1001,8 +1015,6 @@ declare namespace Enum {
 		}
 
 		export const Unknown: Unknown;
-
-		export function GetEnumItems(): Array<BodyPartR15>;
 	}
 	export type BodyPartR15 =
 		| BodyPartR15.Head
@@ -1039,8 +1051,6 @@ declare namespace Enum {
 		}
 
 		export const Dismount: Dismount;
-
-		export function GetEnumItems(): Array<Button>;
 	}
 	export type Button = Button.Jump | Button.Dismount;
 
@@ -1092,8 +1102,6 @@ declare namespace Enum {
 		}
 
 		export const RobloxRoundDropdownButton: RobloxRoundDropdownButton;
-
-		export function GetEnumItems(): Array<ButtonStyle>;
 	}
 	export type ButtonStyle =
 		| ButtonStyle.Custom
@@ -1119,8 +1127,6 @@ declare namespace Enum {
 		}
 
 		export const LockFirstPerson: LockFirstPerson;
-
-		export function GetEnumItems(): Array<CameraMode>;
 	}
 	export type CameraMode = CameraMode.Classic | CameraMode.LockFirstPerson;
 
@@ -1140,8 +1146,6 @@ declare namespace Enum {
 		}
 
 		export const EdgeBump: EdgeBump;
-
-		export function GetEnumItems(): Array<CameraPanMode>;
 	}
 	export type CameraPanMode = CameraPanMode.Classic | CameraPanMode.EdgeBump;
 
@@ -1209,8 +1213,6 @@ declare namespace Enum {
 		}
 
 		export const Orbital: Orbital;
-
-		export function GetEnumItems(): Array<CameraType>;
 	}
 	export type CameraType =
 		| CameraType.Fixed
@@ -1262,8 +1264,6 @@ declare namespace Enum {
 		}
 
 		export const HorizontalWedge: HorizontalWedge;
-
-		export function GetEnumItems(): Array<CellBlock>;
 	}
 	export type CellBlock =
 		| CellBlock.Solid
@@ -1416,8 +1416,6 @@ declare namespace Enum {
 		}
 
 		export const Water: Water;
-
-		export function GetEnumItems(): Array<CellMaterial>;
 	}
 	export type CellMaterial =
 		| CellMaterial.Empty
@@ -1471,8 +1469,6 @@ declare namespace Enum {
 		}
 
 		export const NegX: NegX;
-
-		export function GetEnumItems(): Array<CellOrientation>;
 	}
 	export type CellOrientation = CellOrientation.NegZ | CellOrientation.X | CellOrientation.Z | CellOrientation.NegX;
 
@@ -1508,8 +1504,6 @@ declare namespace Enum {
 		}
 
 		export const QuitDialog: QuitDialog;
-
-		export function GetEnumItems(): Array<CenterDialogType>;
 	}
 	export type CenterDialogType =
 		| CenterDialogType.UnsolicitedDialog
@@ -1549,8 +1543,6 @@ declare namespace Enum {
 		}
 
 		export const OnServerReceivingMessage: OnServerReceivingMessage;
-
-		export function GetEnumItems(): Array<ChatCallbackType>;
 	}
 	export type ChatCallbackType =
 		| ChatCallbackType.OnCreatingChatWindow
@@ -1590,8 +1582,6 @@ declare namespace Enum {
 		}
 
 		export const White: White;
-
-		export function GetEnumItems(): Array<ChatColor>;
 	}
 	export type ChatColor = ChatColor.Blue | ChatColor.Green | ChatColor.Red | ChatColor.White;
 
@@ -1611,8 +1601,6 @@ declare namespace Enum {
 		}
 
 		export const TextAndMenu: TextAndMenu;
-
-		export function GetEnumItems(): Array<ChatMode>;
 	}
 	export type ChatMode = ChatMode.Menu | ChatMode.TextAndMenu;
 
@@ -1640,8 +1628,6 @@ declare namespace Enum {
 		}
 
 		export const Friends: Friends;
-
-		export function GetEnumItems(): Array<ChatPrivacyMode>;
 	}
 	export type ChatPrivacyMode = ChatPrivacyMode.AllUsers | ChatPrivacyMode.NoOne | ChatPrivacyMode.Friends;
 
@@ -1669,8 +1655,6 @@ declare namespace Enum {
 		}
 
 		export const ClassicAndBubble: ClassicAndBubble;
-
-		export function GetEnumItems(): Array<ChatStyle>;
 	}
 	export type ChatStyle = ChatStyle.Classic | ChatStyle.Bubble | ChatStyle.ClassicAndBubble;
 
@@ -1698,8 +1682,6 @@ declare namespace Enum {
 		}
 
 		export const Box: Box;
-
-		export function GetEnumItems(): Array<CollisionFidelity>;
 	}
 	export type CollisionFidelity = CollisionFidelity.Default | CollisionFidelity.Hull | CollisionFidelity.Box;
 
@@ -1735,8 +1717,6 @@ declare namespace Enum {
 		}
 
 		export const Orbital: Orbital;
-
-		export function GetEnumItems(): Array<ComputerCameraMovementMode>;
 	}
 	export type ComputerCameraMovementMode =
 		| ComputerCameraMovementMode.Default
@@ -1768,8 +1748,6 @@ declare namespace Enum {
 		}
 
 		export const ClickToMove: ClickToMove;
-
-		export function GetEnumItems(): Array<ComputerMovementMode>;
 	}
 	export type ComputerMovementMode =
 		| ComputerMovementMode.Default
@@ -2168,8 +2146,6 @@ declare namespace Enum {
 		}
 
 		export const TeleportIsTeleporting: TeleportIsTeleporting;
-
-		export function GetEnumItems(): Array<ConnectionError>;
 	}
 	export type ConnectionError =
 		| ConnectionError.OK
@@ -2238,8 +2214,6 @@ declare namespace Enum {
 		}
 
 		export const Disconnected: Disconnected;
-
-		export function GetEnumItems(): Array<ConnectionState>;
 	}
 	export type ConnectionState = ConnectionState.Connected | ConnectionState.Disconnected;
 
@@ -2275,8 +2249,6 @@ declare namespace Enum {
 		}
 
 		export const High: High;
-
-		export function GetEnumItems(): Array<ContextActionPriority>;
 	}
 	export type ContextActionPriority =
 		| ContextActionPriority.Low
@@ -2300,8 +2272,6 @@ declare namespace Enum {
 		}
 
 		export const Sink: Sink;
-
-		export function GetEnumItems(): Array<ContextActionResult>;
 	}
 	export type ContextActionResult = ContextActionResult.Pass | ContextActionResult.Sink;
 
@@ -2321,8 +2291,6 @@ declare namespace Enum {
 		}
 
 		export const Classic: Classic;
-
-		export function GetEnumItems(): Array<ControlMode>;
 	}
 	export type ControlMode = ControlMode.MouseLockSwitch | ControlMode.Classic;
 
@@ -2374,8 +2342,6 @@ declare namespace Enum {
 		}
 
 		export const EmotesMenu: EmotesMenu;
-
-		export function GetEnumItems(): Array<CoreGuiType>;
 	}
 	export type CoreGuiType =
 		| CoreGuiType.PlayerList
@@ -2401,8 +2367,6 @@ declare namespace Enum {
 		}
 
 		export const Group: Group;
-
-		export function GetEnumItems(): Array<CreatorType>;
 	}
 	export type CreatorType = CreatorType.User | CreatorType.Group;
 
@@ -2430,8 +2394,6 @@ declare namespace Enum {
 		}
 
 		export const Tix: Tix;
-
-		export function GetEnumItems(): Array<CurrencyType>;
 	}
 	export type CurrencyType = CurrencyType.Default | CurrencyType.Robux | CurrencyType.Tix;
 
@@ -2459,8 +2421,6 @@ declare namespace Enum {
 		}
 
 		export const Classic: Classic;
-
-		export function GetEnumItems(): Array<CustomCameraMode>;
 	}
 	export type CustomCameraMode = CustomCameraMode.Default | CustomCameraMode.Follow | CustomCameraMode.Classic;
 
@@ -2480,8 +2440,6 @@ declare namespace Enum {
 		}
 
 		export const Client: Client;
-
-		export function GetEnumItems(): Array<DEPRECATED_DebuggerDataModelPreference>;
 	}
 	export type DEPRECATED_DebuggerDataModelPreference =
 		| DEPRECATED_DebuggerDataModelPreference.Server
@@ -2535,8 +2493,6 @@ declare namespace Enum {
 		}
 
 		export const OnUpdate: OnUpdate;
-
-		export function GetEnumItems(): Array<DataStoreRequestType>;
 	}
 	export type DataStoreRequestType =
 		| DataStoreRequestType.GetAsync
@@ -2562,8 +2518,6 @@ declare namespace Enum {
 		}
 
 		export const Invisicam: Invisicam;
-
-		export function GetEnumItems(): Array<DevCameraOcclusionMode>;
 	}
 	export type DevCameraOcclusionMode = DevCameraOcclusionMode.Zoom | DevCameraOcclusionMode.Invisicam;
 
@@ -2599,8 +2553,6 @@ declare namespace Enum {
 		}
 
 		export const Orbital: Orbital;
-
-		export function GetEnumItems(): Array<DevComputerCameraMovementMode>;
 	}
 	export type DevComputerCameraMovementMode =
 		| DevComputerCameraMovementMode.UserChoice
@@ -2640,8 +2592,6 @@ declare namespace Enum {
 		}
 
 		export const Scriptable: Scriptable;
-
-		export function GetEnumItems(): Array<DevComputerMovementMode>;
 	}
 	export type DevComputerMovementMode =
 		| DevComputerMovementMode.UserChoice
@@ -2681,8 +2631,6 @@ declare namespace Enum {
 		}
 
 		export const Orbital: Orbital;
-
-		export function GetEnumItems(): Array<DevTouchCameraMovementMode>;
 	}
 	export type DevTouchCameraMovementMode =
 		| DevTouchCameraMovementMode.UserChoice
@@ -2746,8 +2694,6 @@ declare namespace Enum {
 		}
 
 		export const DynamicThumbstick: DynamicThumbstick;
-
-		export function GetEnumItems(): Array<DevTouchMovementMode>;
 	}
 	export type DevTouchMovementMode =
 		| DevTouchMovementMode.UserChoice
@@ -2934,8 +2880,6 @@ declare namespace Enum {
 		}
 
 		export const Navigation: Navigation;
-
-		export function GetEnumItems(): Array<DeveloperMemoryTag>;
 	}
 	export type DeveloperMemoryTag =
 		| DeveloperMemoryTag.Internal
@@ -2993,8 +2937,6 @@ declare namespace Enum {
 		}
 
 		export const Phone: Phone;
-
-		export function GetEnumItems(): Array<DeviceType>;
 	}
 	export type DeviceType = DeviceType.Unknown | DeviceType.Desktop | DeviceType.Tablet | DeviceType.Phone;
 
@@ -3014,8 +2956,6 @@ declare namespace Enum {
 		}
 
 		export const MultiplePlayers: MultiplePlayers;
-
-		export function GetEnumItems(): Array<DialogBehaviorType>;
 	}
 	export type DialogBehaviorType = DialogBehaviorType.SinglePlayer | DialogBehaviorType.MultiplePlayers;
 
@@ -3043,8 +2983,6 @@ declare namespace Enum {
 		}
 
 		export const Shop: Shop;
-
-		export function GetEnumItems(): Array<DialogPurpose>;
 	}
 	export type DialogPurpose = DialogPurpose.Quest | DialogPurpose.Help | DialogPurpose.Shop;
 
@@ -3072,8 +3010,6 @@ declare namespace Enum {
 		}
 
 		export const Enemy: Enemy;
-
-		export function GetEnumItems(): Array<DialogTone>;
 	}
 	export type DialogTone = DialogTone.Neutral | DialogTone.Friendly | DialogTone.Enemy;
 
@@ -3093,8 +3029,6 @@ declare namespace Enum {
 		}
 
 		export const Height: Height;
-
-		export function GetEnumItems(): Array<DominantAxis>;
 	}
 	export type DominantAxis = DominantAxis.Width | DominantAxis.Height;
 
@@ -3122,8 +3056,6 @@ declare namespace Enum {
 		}
 
 		export const InOut: InOut;
-
-		export function GetEnumItems(): Array<EasingDirection>;
 	}
 	export type EasingDirection = EasingDirection.In | EasingDirection.Out | EasingDirection.InOut;
 
@@ -3191,8 +3123,6 @@ declare namespace Enum {
 		}
 
 		export const Elastic: Elastic;
-
-		export function GetEnumItems(): Array<EasingStyle>;
 	}
 	export type EasingStyle =
 		| EasingStyle.Linear
@@ -3228,8 +3158,6 @@ declare namespace Enum {
 		}
 
 		export const Never: Never;
-
-		export function GetEnumItems(): Array<ElasticBehavior>;
 	}
 	export type ElasticBehavior = ElasticBehavior.WhenScrollable | ElasticBehavior.Always | ElasticBehavior.Never;
 
@@ -3289,8 +3217,6 @@ declare namespace Enum {
 		}
 
 		export const Skip16: Skip16;
-
-		export function GetEnumItems(): Array<EnviromentalPhysicsThrottle>;
 	}
 	export type EnviromentalPhysicsThrottle =
 		| EnviromentalPhysicsThrottle.DefaultAuto
@@ -3325,8 +3251,6 @@ declare namespace Enum {
 		}
 
 		export const Report: Report;
-
-		export function GetEnumItems(): Array<ErrorReporting>;
 	}
 	export type ErrorReporting = ErrorReporting.DontReport | ErrorReporting.Prompt | ErrorReporting.Report;
 
@@ -3354,8 +3278,6 @@ declare namespace Enum {
 		}
 
 		export const CratersAndDebris: CratersAndDebris;
-
-		export function GetEnumItems(): Array<ExplosionType>;
 	}
 	export type ExplosionType = ExplosionType.NoCraters | ExplosionType.Craters | ExplosionType.CratersAndDebris;
 
@@ -3375,8 +3297,6 @@ declare namespace Enum {
 		}
 
 		export const Vertical: Vertical;
-
-		export function GetEnumItems(): Array<FillDirection>;
 	}
 	export type FillDirection = FillDirection.Horizontal | FillDirection.Vertical;
 
@@ -3396,8 +3316,6 @@ declare namespace Enum {
 		}
 
 		export const Accepted: Accepted;
-
-		export function GetEnumItems(): Array<FilterResult>;
 	}
 	export type FilterResult = FilterResult.Rejected | FilterResult.Accepted;
 
@@ -3569,8 +3487,6 @@ declare namespace Enum {
 		}
 
 		export const GothamBlack: GothamBlack;
-
-		export function GetEnumItems(): Array<Font>;
 	}
 	export type Font =
 		| Font.Legacy
@@ -3715,8 +3631,6 @@ declare namespace Enum {
 		}
 
 		export const Size96: Size96;
-
-		export function GetEnumItems(): Array<FontSize>;
 	}
 	export type FontSize =
 		| FontSize.Size8
@@ -3767,8 +3681,6 @@ declare namespace Enum {
 		}
 
 		export const Custom: Custom;
-
-		export function GetEnumItems(): Array<FormFactor>;
 	}
 	export type FormFactor = FormFactor.Symmetric | FormFactor.Brick | FormFactor.Plate | FormFactor.Custom;
 
@@ -3828,8 +3740,6 @@ declare namespace Enum {
 		}
 
 		export const DropShadow: DropShadow;
-
-		export function GetEnumItems(): Array<FrameStyle>;
 	}
 	export type FrameStyle =
 		| FrameStyle.Custom
@@ -3864,8 +3774,6 @@ declare namespace Enum {
 		}
 
 		export const Off: Off;
-
-		export function GetEnumItems(): Array<FramerateManagerMode>;
 	}
 	export type FramerateManagerMode =
 		| FramerateManagerMode.Automatic
@@ -3904,8 +3812,6 @@ declare namespace Enum {
 		}
 
 		export const Deny: Deny;
-
-		export function GetEnumItems(): Array<FriendRequestEvent>;
 	}
 	export type FriendRequestEvent =
 		| FriendRequestEvent.Issue
@@ -3953,8 +3859,6 @@ declare namespace Enum {
 		}
 
 		export const FriendRequestReceived: FriendRequestReceived;
-
-		export function GetEnumItems(): Array<FriendStatus>;
 	}
 	export type FriendStatus =
 		| FriendStatus.Unknown
@@ -3987,8 +3891,6 @@ declare namespace Enum {
 		}
 
 		export const Error: Error;
-
-		export function GetEnumItems(): Array<FunctionalTestResult>;
 	}
 	export type FunctionalTestResult =
 		| FunctionalTestResult.Passed
@@ -4019,8 +3921,6 @@ declare namespace Enum {
 		}
 
 		export const PlayerChoice: PlayerChoice;
-
-		export function GetEnumItems(): Array<GameAvatarType>;
 	}
 	export type GameAvatarType = GameAvatarType.R6 | GameAvatarType.R15 | GameAvatarType.PlayerChoice;
 
@@ -4040,8 +3940,6 @@ declare namespace Enum {
 		}
 
 		export const MatchingGenreOnly: MatchingGenreOnly;
-
-		export function GetEnumItems(): Array<GearGenreSetting>;
 	}
 	export type GearGenreSetting = GearGenreSetting.AllGenres | GearGenreSetting.MatchingGenreOnly;
 
@@ -4117,8 +4015,6 @@ declare namespace Enum {
 		}
 
 		export const Transport: Transport;
-
-		export function GetEnumItems(): Array<GearType>;
 	}
 	export type GearType =
 		| GearType.MeleeWeapons
@@ -4243,8 +4139,6 @@ declare namespace Enum {
 		}
 
 		export const Tutorial: Tutorial;
-
-		export function GetEnumItems(): Array<Genre>;
 	}
 	export type Genre =
 		| Genre.All
@@ -4318,8 +4212,6 @@ declare namespace Enum {
 		}
 
 		export const NoGraphics: NoGraphics;
-
-		export function GetEnumItems(): Array<GraphicsMode>;
 	}
 	export type GraphicsMode =
 		| GraphicsMode.Automatic
@@ -4346,8 +4238,6 @@ declare namespace Enum {
 		}
 
 		export const Movement: Movement;
-
-		export function GetEnumItems(): Array<HandlesStyle>;
 	}
 	export type HandlesStyle = HandlesStyle.Resize | HandlesStyle.Movement;
 
@@ -4375,8 +4265,6 @@ declare namespace Enum {
 		}
 
 		export const Right: Right;
-
-		export function GetEnumItems(): Array<HorizontalAlignment>;
 	}
 	export type HorizontalAlignment = HorizontalAlignment.Center | HorizontalAlignment.Left | HorizontalAlignment.Right;
 
@@ -4420,8 +4308,6 @@ declare namespace Enum {
 		}
 
 		export const VeryFast: VeryFast;
-
-		export function GetEnumItems(): Array<HoverAnimateSpeed>;
 	}
 	export type HoverAnimateSpeed =
 		| HoverAnimateSpeed.VerySlow
@@ -4470,8 +4356,6 @@ declare namespace Enum {
 		}
 
 		export const InternalRedirectRefresh: InternalRedirectRefresh;
-
-		export function GetEnumItems(): Array<HttpCachePolicy>;
 	}
 	export type HttpCachePolicy =
 		| HttpCachePolicy.None
@@ -4520,8 +4404,6 @@ declare namespace Enum {
 		}
 
 		export const TextXml: TextXml;
-
-		export function GetEnumItems(): Array<HttpContentType>;
 	}
 	export type HttpContentType =
 		| HttpContentType.ApplicationJson
@@ -4626,8 +4508,6 @@ declare namespace Enum {
 		}
 
 		export const Unknown: Unknown;
-
-		export function GetEnumItems(): Array<HttpError>;
 	}
 	export type HttpError =
 		| HttpError.OK
@@ -4699,8 +4579,6 @@ declare namespace Enum {
 		}
 
 		export const Localization: Localization;
-
-		export function GetEnumItems(): Array<HttpRequestType>;
 	}
 	export type HttpRequestType =
 		| HttpRequestType.Default
@@ -4727,8 +4605,6 @@ declare namespace Enum {
 		}
 
 		export const InnerBox: InnerBox;
-
-		export function GetEnumItems(): Array<HumanoidCollisionType>;
 	}
 	export type HumanoidCollisionType = HumanoidCollisionType.OuterBox | HumanoidCollisionType.InnerBox;
 
@@ -4756,8 +4632,6 @@ declare namespace Enum {
 		}
 
 		export const None: None;
-
-		export function GetEnumItems(): Array<HumanoidDisplayDistanceType>;
 	}
 	export type HumanoidDisplayDistanceType =
 		| HumanoidDisplayDistanceType.Viewer
@@ -4788,8 +4662,6 @@ declare namespace Enum {
 		}
 
 		export const AlwaysOff: AlwaysOff;
-
-		export function GetEnumItems(): Array<HumanoidHealthDisplayType>;
 	}
 	export type HumanoidHealthDisplayType =
 		| HumanoidHealthDisplayType.DisplayWhenDamaged
@@ -4812,8 +4684,6 @@ declare namespace Enum {
 		}
 
 		export const R15: R15;
-
-		export function GetEnumItems(): Array<HumanoidRigType>;
 	}
 	export type HumanoidRigType = HumanoidRigType.R6 | HumanoidRigType.R15;
 
@@ -4953,8 +4823,6 @@ declare namespace Enum {
 		}
 
 		export const None: None;
-
-		export function GetEnumItems(): Array<HumanoidStateType>;
 	}
 	export type HumanoidStateType =
 		| HumanoidStateType.FallingDown
@@ -4999,8 +4867,6 @@ declare namespace Enum {
 		}
 
 		export const Center: Center;
-
-		export function GetEnumItems(): Array<InOut>;
 	}
 	export type InOut = InOut.Edge | InOut.Inset | InOut.Center;
 
@@ -5028,8 +4894,6 @@ declare namespace Enum {
 		}
 
 		export const GamePass: GamePass;
-
-		export function GetEnumItems(): Array<InfoType>;
 	}
 	export type InfoType = InfoType.Asset | InfoType.Product | InfoType.GamePass;
 
@@ -5073,8 +4937,6 @@ declare namespace Enum {
 		}
 
 		export const Float: Float;
-
-		export function GetEnumItems(): Array<InitialDockState>;
 	}
 	export type InitialDockState =
 		| InitialDockState.Top
@@ -5107,8 +4969,6 @@ declare namespace Enum {
 		}
 
 		export const Sin: Sin;
-
-		export function GetEnumItems(): Array<InputType>;
 	}
 	export type InputType = InputType.NoInput | InputType.Constant | InputType.Sin;
 
@@ -5136,8 +4996,6 @@ declare namespace Enum {
 		}
 
 		export const None: None;
-
-		export function GetEnumItems(): Array<JointCreationMode>;
 	}
 	export type JointCreationMode = JointCreationMode.All | JointCreationMode.Surface | JointCreationMode.None;
 
@@ -5197,8 +5055,6 @@ declare namespace Enum {
 		}
 
 		export const Snap: Snap;
-
-		export function GetEnumItems(): Array<JointType>;
 	}
 	export type JointType =
 		| JointType.None
@@ -7241,8 +7097,6 @@ declare namespace Enum {
 		}
 
 		export const Thumbstick2: Thumbstick2;
-
-		export function GetEnumItems(): Array<KeyCode>;
 	}
 	export type KeyCode =
 		| KeyCode.Unknown
@@ -7516,8 +7370,6 @@ declare namespace Enum {
 		}
 
 		export const Exclude: Exclude;
-
-		export function GetEnumItems(): Array<KeywordFilterType>;
 	}
 	export type KeywordFilterType = KeywordFilterType.Include | KeywordFilterType.Exclude;
 
@@ -7529,8 +7381,6 @@ declare namespace Enum {
 		}
 
 		export const Default: Default;
-
-		export function GetEnumItems(): Array<Language>;
 	}
 	export type Language = Language.Default;
 
@@ -7558,8 +7408,6 @@ declare namespace Enum {
 		}
 
 		export const Right: Right;
-
-		export function GetEnumItems(): Array<LeftRight>;
 	}
 	export type LeftRight = LeftRight.Left | LeftRight.Center | LeftRight.Right;
 
@@ -7587,8 +7435,6 @@ declare namespace Enum {
 		}
 
 		export const Low: Low;
-
-		export function GetEnumItems(): Array<LevelOfDetailSetting>;
 	}
 	export type LevelOfDetailSetting =
 		| LevelOfDetailSetting.High
@@ -7651,8 +7497,6 @@ declare namespace Enum {
 		}
 
 		export const Unknown: Unknown;
-
-		export function GetEnumItems(): Array<Limb>;
 	}
 	export type Limb =
 		| Limb.Head
@@ -7679,8 +7523,6 @@ declare namespace Enum {
 		}
 
 		export const Vertical: Vertical;
-
-		export function GetEnumItems(): Array<ListDisplayMode>;
 	}
 	export type ListDisplayMode = ListDisplayMode.Horizontal | ListDisplayMode.Vertical;
 
@@ -7716,8 +7558,6 @@ declare namespace Enum {
 		}
 
 		export const ObjectCFrame: ObjectCFrame;
-
-		export function GetEnumItems(): Array<ListenerType>;
 	}
 	export type ListenerType =
 		| ListenerType.Camera
@@ -8021,8 +7861,6 @@ declare namespace Enum {
 		}
 
 		export const ForceField: ForceField;
-
-		export function GetEnumItems(): Array<Material>;
 	}
 	export type Material =
 		| Material.Plastic
@@ -8095,8 +7933,6 @@ declare namespace Enum {
 		}
 
 		export const OutrageousBuildersClub: OutrageousBuildersClub;
-
-		export function GetEnumItems(): Array<MembershipType>;
 	}
 	export type MembershipType =
 		| MembershipType.None
@@ -8200,8 +8036,6 @@ declare namespace Enum {
 		}
 
 		export const FileMesh: FileMesh;
-
-		export function GetEnumItems(): Array<MeshType>;
 	}
 	export type MeshType =
 		| MeshType.Head
@@ -8249,8 +8083,6 @@ declare namespace Enum {
 		}
 
 		export const MessageError: MessageError;
-
-		export function GetEnumItems(): Array<MessageType>;
 	}
 	export type MessageType =
 		| MessageType.MessageOutput
@@ -8282,8 +8114,6 @@ declare namespace Enum {
 		}
 
 		export const LockCurrentPosition: LockCurrentPosition;
-
-		export function GetEnumItems(): Array<MouseBehavior>;
 	}
 	export type MouseBehavior = MouseBehavior.Default | MouseBehavior.LockCenter | MouseBehavior.LockCurrentPosition;
 
@@ -8327,8 +8157,6 @@ declare namespace Enum {
 		}
 
 		export const AirFree: AirFree;
-
-		export function GetEnumItems(): Array<MoveState>;
 	}
 	export type MoveState =
 		| MoveState.Stopped
@@ -8361,8 +8189,6 @@ declare namespace Enum {
 		}
 
 		export const NoOcclusion: NoOcclusion;
-
-		export function GetEnumItems(): Array<NameOcclusion>;
 	}
 	export type NameOcclusion = NameOcclusion.OccludeAll | NameOcclusion.EnemyOcclusion | NameOcclusion.NoOcclusion;
 
@@ -8390,8 +8216,6 @@ declare namespace Enum {
 		}
 
 		export const OnContact: OnContact;
-
-		export function GetEnumItems(): Array<NetworkOwnership>;
 	}
 	export type NetworkOwnership = NetworkOwnership.Automatic | NetworkOwnership.Manual | NetworkOwnership.OnContact;
 
@@ -8443,8 +8267,6 @@ declare namespace Enum {
 		}
 
 		export const Left: Left;
-
-		export function GetEnumItems(): Array<NormalId>;
 	}
 	export type NormalId =
 		| NormalId.Top
@@ -8470,8 +8292,6 @@ declare namespace Enum {
 		}
 
 		export const Vertical: Vertical;
-
-		export function GetEnumItems(): Array<OutputLayoutMode>;
 	}
 	export type OutputLayoutMode = OutputLayoutMode.Horizontal | OutputLayoutMode.Vertical;
 
@@ -8499,8 +8319,6 @@ declare namespace Enum {
 		}
 
 		export const ForceHide: ForceHide;
-
-		export function GetEnumItems(): Array<OverrideMouseIconBehavior>;
 	}
 	export type OverrideMouseIconBehavior =
 		| OverrideMouseIconBehavior.None
@@ -8539,8 +8357,6 @@ declare namespace Enum {
 		}
 
 		export const LOW_PRIORITY: LOW_PRIORITY;
-
-		export function GetEnumItems(): Array<PacketPriority>;
 	}
 	export type PacketPriority =
 		| PacketPriority.IMMEDIATE_PRIORITY
@@ -8572,8 +8388,6 @@ declare namespace Enum {
 		}
 
 		export const Cylinder: Cylinder;
-
-		export function GetEnumItems(): Array<PartType>;
 	}
 	export type PartType = PartType.Ball | PartType.Block | PartType.Cylinder;
 
@@ -8625,8 +8439,6 @@ declare namespace Enum {
 		}
 
 		export const NoPath: NoPath;
-
-		export function GetEnumItems(): Array<PathStatus>;
 	}
 	export type PathStatus =
 		| PathStatus.Success
@@ -8652,8 +8464,6 @@ declare namespace Enum {
 		}
 
 		export const Jump: Jump;
-
-		export function GetEnumItems(): Array<PathWaypointAction>;
 	}
 	export type PathWaypointAction = PathWaypointAction.Walk | PathWaypointAction.Jump;
 
@@ -8697,8 +8507,6 @@ declare namespace Enum {
 		}
 
 		export const Roblox: Roblox;
-
-		export function GetEnumItems(): Array<PermissionLevelShown>;
 	}
 	export type PermissionLevelShown =
 		| PermissionLevelShown.Game
@@ -8867,8 +8675,6 @@ declare namespace Enum {
 		}
 
 		export const None: None;
-
-		export function GetEnumItems(): Array<Platform>;
 	}
 	export type Platform =
 		| Platform.Windows
@@ -8940,8 +8746,6 @@ declare namespace Enum {
 		}
 
 		export const Cancelled: Cancelled;
-
-		export function GetEnumItems(): Array<PlaybackState>;
 	}
 	export type PlaybackState =
 		| PlaybackState.Begin
@@ -8991,8 +8795,6 @@ declare namespace Enum {
 		}
 
 		export const CharacterJump: CharacterJump;
-
-		export function GetEnumItems(): Array<PlayerActions>;
 	}
 	export type PlayerActions =
 		| PlayerActions.CharacterForward
@@ -9025,8 +8827,6 @@ declare namespace Enum {
 		}
 
 		export const Whisper: Whisper;
-
-		export function GetEnumItems(): Array<PlayerChatType>;
 	}
 	export type PlayerChatType = PlayerChatType.All | PlayerChatType.Team | PlayerChatType.Whisper;
 
@@ -9054,8 +8854,6 @@ declare namespace Enum {
 		}
 
 		export const In: In;
-
-		export function GetEnumItems(): Array<PoseEasingDirection>;
 	}
 	export type PoseEasingDirection = PoseEasingDirection.Out | PoseEasingDirection.InOut | PoseEasingDirection.In;
 
@@ -9099,8 +8897,6 @@ declare namespace Enum {
 		}
 
 		export const Bounce: Bounce;
-
-		export function GetEnumItems(): Array<PoseEasingStyle>;
 	}
 	export type PoseEasingStyle =
 		| PoseEasingStyle.Linear
@@ -9149,8 +8945,6 @@ declare namespace Enum {
 		}
 
 		export const Banned: Banned;
-
-		export function GetEnumItems(): Array<PrivilegeType>;
 	}
 	export type PrivilegeType =
 		| PrivilegeType.Owner
@@ -9175,8 +8969,6 @@ declare namespace Enum {
 		}
 
 		export const PurchaseGranted: PurchaseGranted;
-
-		export function GetEnumItems(): Array<ProductPurchaseDecision>;
 	}
 	export type ProductPurchaseDecision =
 		| ProductPurchaseDecision.NotProcessedYet
@@ -9358,8 +9150,6 @@ declare namespace Enum {
 		}
 
 		export const Level21: Level21;
-
-		export function GetEnumItems(): Array<QualityLevel>;
 	}
 	export type QualityLevel =
 		| QualityLevel.Automatic
@@ -9401,8 +9191,6 @@ declare namespace Enum {
 		}
 
 		export const InnerBox: InnerBox;
-
-		export function GetEnumItems(): Array<R15CollisionType>;
 	}
 	export type R15CollisionType = R15CollisionType.OuterBox | R15CollisionType.InnerBox;
 
@@ -9422,8 +9210,6 @@ declare namespace Enum {
 		}
 
 		export const Precise: Precise;
-
-		export function GetEnumItems(): Array<RenderFidelity>;
 	}
 	export type RenderFidelity = RenderFidelity.Automatic | RenderFidelity.Precise;
 
@@ -9467,8 +9253,6 @@ declare namespace Enum {
 		}
 
 		export const Last: Last;
-
-		export function GetEnumItems(): Array<RenderPriority>;
 	}
 	export type RenderPriority =
 		| RenderPriority.First
@@ -9493,8 +9277,6 @@ declare namespace Enum {
 		}
 
 		export const diff: diff;
-
-		export function GetEnumItems(): Array<RenderingTestComparisonMethod>;
 	}
 	export type RenderingTestComparisonMethod = RenderingTestComparisonMethod.psnr | RenderingTestComparisonMethod.diff;
 
@@ -9690,8 +9472,6 @@ declare namespace Enum {
 		}
 
 		export const UnderWater: UnderWater;
-
-		export function GetEnumItems(): Array<ReverbType>;
 	}
 	export type ReverbType =
 		| ReverbType.NoReverb
@@ -9799,8 +9579,6 @@ declare namespace Enum {
 		}
 
 		export const None: None;
-
-		export function GetEnumItems(): Array<RibbonTool>;
 	}
 	export type RibbonTool =
 		| RibbonTool.Select
@@ -9846,8 +9624,6 @@ declare namespace Enum {
 		}
 
 		export const LinearSquare: LinearSquare;
-
-		export function GetEnumItems(): Array<RollOffMode>;
 	}
 	export type RollOffMode =
 		| RollOffMode.Inverse
@@ -9871,8 +9647,6 @@ declare namespace Enum {
 		}
 
 		export const CameraRelative: CameraRelative;
-
-		export function GetEnumItems(): Array<RotationType>;
 	}
 	export type RotationType = RotationType.MovementRelative | RotationType.CameraRelative;
 
@@ -9900,8 +9674,6 @@ declare namespace Enum {
 		}
 
 		export const Hybrid: Hybrid;
-
-		export function GetEnumItems(): Array<RuntimeUndoBehavior>;
 	}
 	export type RuntimeUndoBehavior =
 		| RuntimeUndoBehavior.Aggregate
@@ -9932,8 +9704,6 @@ declare namespace Enum {
 		}
 
 		export const SaveGame: SaveGame;
-
-		export function GetEnumItems(): Array<SaveFilter>;
 	}
 	export type SaveFilter = SaveFilter.SaveAll | SaveFilter.SaveWorld | SaveFilter.SaveGame;
 
@@ -10025,8 +9795,6 @@ declare namespace Enum {
 		}
 
 		export const QualityLevel10: QualityLevel10;
-
-		export function GetEnumItems(): Array<SavedQualitySetting>;
 	}
 	export type SavedQualitySetting =
 		| SavedQualitySetting.Automatic
@@ -10081,8 +9849,6 @@ declare namespace Enum {
 		}
 
 		export const Crop: Crop;
-
-		export function GetEnumItems(): Array<ScaleType>;
 	}
 	export type ScaleType = ScaleType.Stretch | ScaleType.Slice | ScaleType.Tile | ScaleType.Fit | ScaleType.Crop;
 
@@ -10126,8 +9892,6 @@ declare namespace Enum {
 		}
 
 		export const Sensor: Sensor;
-
-		export function GetEnumItems(): Array<ScreenOrientation>;
 	}
 	export type ScreenOrientation =
 		| ScreenOrientation.LandscapeLeft
@@ -10160,8 +9924,6 @@ declare namespace Enum {
 		}
 
 		export const Always: Always;
-
-		export function GetEnumItems(): Array<ScrollBarInset>;
 	}
 	export type ScrollBarInset = ScrollBarInset.None | ScrollBarInset.ScrollBar | ScrollBarInset.Always;
 
@@ -10189,8 +9951,6 @@ declare namespace Enum {
 		}
 
 		export const XY: XY;
-
-		export function GetEnumItems(): Array<ScrollingDirection>;
 	}
 	export type ScrollingDirection = ScrollingDirection.X | ScrollingDirection.Y | ScrollingDirection.XY;
 
@@ -10218,8 +9978,6 @@ declare namespace Enum {
 		}
 
 		export const OnlineGame: OnlineGame;
-
-		export function GetEnumItems(): Array<ServerAudioBehavior>;
 	}
 	export type ServerAudioBehavior =
 		| ServerAudioBehavior.Enabled
@@ -10250,8 +10008,6 @@ declare namespace Enum {
 		}
 
 		export const RelativeYY: RelativeYY;
-
-		export function GetEnumItems(): Array<SizeConstraint>;
 	}
 	export type SizeConstraint = SizeConstraint.RelativeXY | SizeConstraint.RelativeXX | SizeConstraint.RelativeYY;
 
@@ -10279,8 +10035,6 @@ declare namespace Enum {
 		}
 
 		export const Custom: Custom;
-
-		export function GetEnumItems(): Array<SortOrder>;
 	}
 	export type SortOrder = SortOrder.LayoutOrder | SortOrder.Name | SortOrder.Custom;
 
@@ -10404,8 +10158,6 @@ declare namespace Enum {
 		}
 
 		export const Victory: Victory;
-
-		export function GetEnumItems(): Array<SoundType>;
 	}
 	export type SoundType =
 		| SoundType.NoSound
@@ -10472,8 +10224,6 @@ declare namespace Enum {
 		}
 
 		export const ChatHotkey: ChatHotkey;
-
-		export function GetEnumItems(): Array<SpecialKey>;
 	}
 	export type SpecialKey =
 		| SpecialKey.Insert
@@ -10515,8 +10265,6 @@ declare namespace Enum {
 		}
 
 		export const BottomRight: BottomRight;
-
-		export function GetEnumItems(): Array<StartCorner>;
 	}
 	export type StartCorner =
 		| StartCorner.TopLeft
@@ -10540,8 +10288,6 @@ declare namespace Enum {
 		}
 
 		export const Confusion: Confusion;
-
-		export function GetEnumItems(): Array<Status>;
 	}
 	export type Status = Status.Poison | Status.Confusion;
 
@@ -11217,8 +10963,6 @@ declare namespace Enum {
 		}
 
 		export const StatusBar: StatusBar;
-
-		export function GetEnumItems(): Array<StudioStyleGuideColor>;
 	}
 	export type StudioStyleGuideColor =
 		| StudioStyleGuideColor.MainBackground
@@ -11346,8 +11090,6 @@ declare namespace Enum {
 		}
 
 		export const Hover: Hover;
-
-		export function GetEnumItems(): Array<StudioStyleGuideModifier>;
 	}
 	export type StudioStyleGuideModifier =
 		| StudioStyleGuideModifier.Default
@@ -11380,8 +11122,6 @@ declare namespace Enum {
 		}
 
 		export const NoSupports: NoSupports;
-
-		export function GetEnumItems(): Array<Style>;
 	}
 	export type Style = Style.AlternatingSupports | Style.BridgeStyleSupports | Style.NoSupports;
 
@@ -11417,8 +11157,6 @@ declare namespace Enum {
 		}
 
 		export const Motor: Motor;
-
-		export function GetEnumItems(): Array<SurfaceConstraint>;
 	}
 	export type SurfaceConstraint =
 		| SurfaceConstraint.None
@@ -11506,8 +11244,6 @@ declare namespace Enum {
 		}
 
 		export const SmoothNoOutlines: SmoothNoOutlines;
-
-		export function GetEnumItems(): Array<SurfaceType>;
 	}
 	export type SurfaceType =
 		| SurfaceType.Smooth
@@ -11561,8 +11297,6 @@ declare namespace Enum {
 		}
 
 		export const None: None;
-
-		export function GetEnumItems(): Array<SwipeDirection>;
 	}
 	export type SwipeDirection =
 		| SwipeDirection.Right
@@ -11587,8 +11321,6 @@ declare namespace Enum {
 		}
 
 		export const ColumnMajor: ColumnMajor;
-
-		export function GetEnumItems(): Array<TableMajorAxis>;
 	}
 	export type TableMajorAxis = TableMajorAxis.RowMajor | TableMajorAxis.ColumnMajor;
 
@@ -11616,8 +11348,6 @@ declare namespace Enum {
 		}
 
 		export const Compatibility: Compatibility;
-
-		export function GetEnumItems(): Array<Technology>;
 	}
 	export type Technology = Technology.Legacy | Technology.Voxel | Technology.Compatibility;
 
@@ -11685,8 +11415,6 @@ declare namespace Enum {
 		}
 
 		export const IsTeleporting: IsTeleporting;
-
-		export function GetEnumItems(): Array<TeleportResult>;
 	}
 	export type TeleportResult =
 		| TeleportResult.Success
@@ -11738,8 +11466,6 @@ declare namespace Enum {
 		}
 
 		export const InProgress: InProgress;
-
-		export function GetEnumItems(): Array<TeleportState>;
 	}
 	export type TeleportState =
 		| TeleportState.RequestedFromServer
@@ -11772,8 +11498,6 @@ declare namespace Enum {
 		}
 
 		export const ToReservedServer: ToReservedServer;
-
-		export function GetEnumItems(): Array<TeleportType>;
 	}
 	export type TeleportType = TeleportType.ToPlace | TeleportType.ToInstance | TeleportType.ToReservedServer;
 
@@ -11793,8 +11517,6 @@ declare namespace Enum {
 		}
 
 		export const PrivateChat: PrivateChat;
-
-		export function GetEnumItems(): Array<TextFilterContext>;
 	}
 	export type TextFilterContext = TextFilterContext.PublicChat | TextFilterContext.PrivateChat;
 
@@ -11814,8 +11536,6 @@ declare namespace Enum {
 		}
 
 		export const AtEnd: AtEnd;
-
-		export function GetEnumItems(): Array<TextTruncate>;
 	}
 	export type TextTruncate = TextTruncate.None | TextTruncate.AtEnd;
 
@@ -11843,8 +11563,6 @@ declare namespace Enum {
 		}
 
 		export const Right: Right;
-
-		export function GetEnumItems(): Array<TextXAlignment>;
 	}
 	export type TextXAlignment = TextXAlignment.Left | TextXAlignment.Center | TextXAlignment.Right;
 
@@ -11872,8 +11590,6 @@ declare namespace Enum {
 		}
 
 		export const Bottom: Bottom;
-
-		export function GetEnumItems(): Array<TextYAlignment>;
 	}
 	export type TextYAlignment = TextYAlignment.Top | TextYAlignment.Center | TextYAlignment.Bottom;
 
@@ -11901,8 +11617,6 @@ declare namespace Enum {
 		}
 
 		export const Static: Static;
-
-		export function GetEnumItems(): Array<TextureMode>;
 	}
 	export type TextureMode = TextureMode.Stretch | TextureMode.Wrap | TextureMode.Static;
 
@@ -11938,8 +11652,6 @@ declare namespace Enum {
 		}
 
 		export const HumanoidOrphaned: HumanoidOrphaned;
-
-		export function GetEnumItems(): Array<TextureQueryType>;
 	}
 	export type TextureQueryType =
 		| TextureQueryType.NonHumanoid
@@ -12035,8 +11747,6 @@ declare namespace Enum {
 		}
 
 		export const Threads16: Threads16;
-
-		export function GetEnumItems(): Array<ThreadPoolConfig>;
 	}
 	export type ThreadPoolConfig =
 		| ThreadPoolConfig.Auto
@@ -12075,8 +11785,6 @@ declare namespace Enum {
 		}
 
 		export const Default: Default;
-
-		export function GetEnumItems(): Array<ThrottlingPriority>;
 	}
 	export type ThrottlingPriority =
 		| ThrottlingPriority.Extreme
@@ -12139,8 +11847,6 @@ declare namespace Enum {
 		}
 
 		export const Size352x352: Size352x352;
-
-		export function GetEnumItems(): Array<ThumbnailSize>;
 	}
 	export type ThumbnailSize =
 		| ThumbnailSize.Size48x48
@@ -12175,8 +11881,6 @@ declare namespace Enum {
 		}
 
 		export const AvatarThumbnail: AvatarThumbnail;
-
-		export function GetEnumItems(): Array<ThumbnailType>;
 	}
 	export type ThumbnailType = ThumbnailType.HeadShot | ThumbnailType.AvatarBust | ThumbnailType.AvatarThumbnail;
 
@@ -12204,8 +11908,6 @@ declare namespace Enum {
 		}
 
 		export const Precise: Precise;
-
-		export function GetEnumItems(): Array<TickCountSampleMethod>;
 	}
 	export type TickCountSampleMethod =
 		| TickCountSampleMethod.Fast
@@ -12236,8 +11938,6 @@ declare namespace Enum {
 		}
 
 		export const Bottom: Bottom;
-
-		export function GetEnumItems(): Array<TopBottom>;
 	}
 	export type TopBottom = TopBottom.Top | TopBottom.Center | TopBottom.Bottom;
 
@@ -12273,8 +11973,6 @@ declare namespace Enum {
 		}
 
 		export const Orbital: Orbital;
-
-		export function GetEnumItems(): Array<TouchCameraMovementMode>;
 	}
 	export type TouchCameraMovementMode =
 		| TouchCameraMovementMode.Default
@@ -12330,8 +12028,6 @@ declare namespace Enum {
 		}
 
 		export const DynamicThumbstick: DynamicThumbstick;
-
-		export function GetEnumItems(): Array<TouchMovementMode>;
 	}
 	export type TouchMovementMode =
 		| TouchMovementMode.Default
@@ -12357,8 +12053,6 @@ declare namespace Enum {
 		}
 
 		export const Completed: Completed;
-
-		export function GetEnumItems(): Array<TweenStatus>;
 	}
 	export type TweenStatus = TweenStatus.Canceled | TweenStatus.Completed;
 
@@ -12378,8 +12072,6 @@ declare namespace Enum {
 		}
 
 		export const Dark: Dark;
-
-		export function GetEnumItems(): Array<UITheme>;
 	}
 	export type UITheme = UITheme.Light | UITheme.Dark;
 
@@ -12399,8 +12091,6 @@ declare namespace Enum {
 		}
 
 		export const UiMessageInfo: UiMessageInfo;
-
-		export function GetEnumItems(): Array<UiMessageType>;
 	}
 	export type UiMessageType = UiMessageType.UiMessageError | UiMessageType.UiMessageInfo;
 
@@ -12428,8 +12118,6 @@ declare namespace Enum {
 		}
 
 		export const Always: Always;
-
-		export function GetEnumItems(): Array<UploadSetting>;
 	}
 	export type UploadSetting = UploadSetting.Never | UploadSetting.Ask | UploadSetting.Always;
 
@@ -12457,8 +12145,6 @@ declare namespace Enum {
 		}
 
 		export const RightHand: RightHand;
-
-		export function GetEnumItems(): Array<UserCFrame>;
 	}
 	export type UserCFrame = UserCFrame.Head | UserCFrame.LeftHand | UserCFrame.RightHand;
 
@@ -12502,8 +12188,6 @@ declare namespace Enum {
 		}
 
 		export const None: None;
-
-		export function GetEnumItems(): Array<UserInputState>;
 	}
 	export type UserInputState =
 		| UserInputState.Begin
@@ -12680,8 +12364,6 @@ declare namespace Enum {
 		}
 
 		export const None: None;
-
-		export function GetEnumItems(): Array<UserInputType>;
 	}
 	export type UserInputType =
 		| UserInputType.MouseButton1
@@ -12722,8 +12404,6 @@ declare namespace Enum {
 		}
 
 		export const Right: Right;
-
-		export function GetEnumItems(): Array<VRTouchpad>;
 	}
 	export type VRTouchpad = VRTouchpad.Left | VRTouchpad.Right;
 
@@ -12751,8 +12431,6 @@ declare namespace Enum {
 		}
 
 		export const ABXY: ABXY;
-
-		export function GetEnumItems(): Array<VRTouchpadMode>;
 	}
 	export type VRTouchpadMode = VRTouchpadMode.Touch | VRTouchpadMode.VirtualThumbstick | VRTouchpadMode.ABXY;
 
@@ -12780,8 +12458,6 @@ declare namespace Enum {
 		}
 
 		export const Bottom: Bottom;
-
-		export function GetEnumItems(): Array<VerticalAlignment>;
 	}
 	export type VerticalAlignment = VerticalAlignment.Center | VerticalAlignment.Top | VerticalAlignment.Bottom;
 
@@ -12801,8 +12477,6 @@ declare namespace Enum {
 		}
 
 		export const Right: Right;
-
-		export function GetEnumItems(): Array<VerticalScrollBarPosition>;
 	}
 	export type VerticalScrollBarPosition = VerticalScrollBarPosition.Left | VerticalScrollBarPosition.Right;
 
@@ -12854,8 +12528,6 @@ declare namespace Enum {
 		}
 
 		export const RightHand: RightHand;
-
-		export function GetEnumItems(): Array<VibrationMotor>;
 	}
 	export type VibrationMotor =
 		| VibrationMotor.Large
@@ -12889,8 +12561,6 @@ declare namespace Enum {
 		}
 
 		export const HighResolution: HighResolution;
-
-		export function GetEnumItems(): Array<VideoQualitySettings>;
 	}
 	export type VideoQualitySettings =
 		| VideoQualitySettings.LowResolution
@@ -12921,8 +12591,6 @@ declare namespace Enum {
 		}
 
 		export const None: None;
-
-		export function GetEnumItems(): Array<VirtualInputMode>;
 	}
 	export type VirtualInputMode = VirtualInputMode.Recording | VirtualInputMode.Playing | VirtualInputMode.None;
 
@@ -12974,8 +12642,6 @@ declare namespace Enum {
 		}
 
 		export const Z: Z;
-
-		export function GetEnumItems(): Array<WaterDirection>;
 	}
 	export type WaterDirection =
 		| WaterDirection.NegX
@@ -13025,8 +12691,6 @@ declare namespace Enum {
 		}
 
 		export const Max: Max;
-
-		export function GetEnumItems(): Array<WaterForce>;
 	}
 	export type WaterForce =
 		| WaterForce.None
@@ -13051,252 +12715,33 @@ declare namespace Enum {
 		}
 
 		export const Sibling: Sibling;
-
-		export function GetEnumItems(): Array<ZIndexBehavior>;
 	}
 	export type ZIndexBehavior = ZIndexBehavior.Global | ZIndexBehavior.Sibling;
-
-	export function GetEnums(): Array<
-		| Enum_ActionType
-		| Enum_ActuatorRelativeTo
-		| Enum_ActuatorType
-		| Enum_AlignType
-		| Enum_AnimationPriority
-		| Enum_AppShellActionType
-		| Enum_AspectType
-		| Enum_AssetType
-		| Enum_AutoJointsMode
-		| Enum_AvatarContextMenuOption
-		| Enum_AvatarJointPositionType
-		| Enum_Axis
-		| Enum_BinType
-		| Enum_BodyPart
-		| Enum_BodyPartR15
-		| Enum_Button
-		| Enum_ButtonStyle
-		| Enum_CameraMode
-		| Enum_CameraPanMode
-		| Enum_CameraType
-		| Enum_CellBlock
-		| Enum_CellMaterial
-		| Enum_CellOrientation
-		| Enum_CenterDialogType
-		| Enum_ChatCallbackType
-		| Enum_ChatColor
-		| Enum_ChatMode
-		| Enum_ChatPrivacyMode
-		| Enum_ChatStyle
-		| Enum_CollisionFidelity
-		| Enum_ComputerCameraMovementMode
-		| Enum_ComputerMovementMode
-		| Enum_ConnectionError
-		| Enum_ConnectionState
-		| Enum_ContextActionPriority
-		| Enum_ContextActionResult
-		| Enum_ControlMode
-		| Enum_CoreGuiType
-		| Enum_CreatorType
-		| Enum_CurrencyType
-		| Enum_CustomCameraMode
-		| Enum_DEPRECATED_DebuggerDataModelPreference
-		| Enum_DataStoreRequestType
-		| Enum_DevCameraOcclusionMode
-		| Enum_DevComputerCameraMovementMode
-		| Enum_DevComputerMovementMode
-		| Enum_DevTouchCameraMovementMode
-		| Enum_DevTouchMovementMode
-		| Enum_DeveloperMemoryTag
-		| Enum_DeviceType
-		| Enum_DialogBehaviorType
-		| Enum_DialogPurpose
-		| Enum_DialogTone
-		| Enum_DominantAxis
-		| Enum_EasingDirection
-		| Enum_EasingStyle
-		| Enum_ElasticBehavior
-		| Enum_EnviromentalPhysicsThrottle
-		| Enum_ErrorReporting
-		| Enum_ExplosionType
-		| Enum_FillDirection
-		| Enum_FilterResult
-		| Enum_Font
-		| Enum_FontSize
-		| Enum_FormFactor
-		| Enum_FrameStyle
-		| Enum_FramerateManagerMode
-		| Enum_FriendRequestEvent
-		| Enum_FriendStatus
-		| Enum_FunctionalTestResult
-		| Enum_GameAvatarType
-		| Enum_GearGenreSetting
-		| Enum_GearType
-		| Enum_Genre
-		| Enum_GraphicsMode
-		| Enum_HandlesStyle
-		| Enum_HorizontalAlignment
-		| Enum_HoverAnimateSpeed
-		| Enum_HttpCachePolicy
-		| Enum_HttpContentType
-		| Enum_HttpError
-		| Enum_HttpRequestType
-		| Enum_HumanoidCollisionType
-		| Enum_HumanoidDisplayDistanceType
-		| Enum_HumanoidHealthDisplayType
-		| Enum_HumanoidRigType
-		| Enum_HumanoidStateType
-		| Enum_InOut
-		| Enum_InfoType
-		| Enum_InitialDockState
-		| Enum_InputType
-		| Enum_JointCreationMode
-		| Enum_JointType
-		| Enum_KeyCode
-		| Enum_KeywordFilterType
-		| Enum_Language
-		| Enum_LeftRight
-		| Enum_LevelOfDetailSetting
-		| Enum_Limb
-		| Enum_ListDisplayMode
-		| Enum_ListenerType
-		| Enum_Material
-		| Enum_MembershipType
-		| Enum_MeshType
-		| Enum_MessageType
-		| Enum_MouseBehavior
-		| Enum_MoveState
-		| Enum_NameOcclusion
-		| Enum_NetworkOwnership
-		| Enum_NormalId
-		| Enum_OutputLayoutMode
-		| Enum_OverrideMouseIconBehavior
-		| Enum_PacketPriority
-		| Enum_PartType
-		| Enum_PathStatus
-		| Enum_PathWaypointAction
-		| Enum_PermissionLevelShown
-		| Enum_Platform
-		| Enum_PlaybackState
-		| Enum_PlayerActions
-		| Enum_PlayerChatType
-		| Enum_PoseEasingDirection
-		| Enum_PoseEasingStyle
-		| Enum_PrivilegeType
-		| Enum_ProductPurchaseDecision
-		| Enum_QualityLevel
-		| Enum_R15CollisionType
-		| Enum_RenderFidelity
-		| Enum_RenderPriority
-		| Enum_RenderingTestComparisonMethod
-		| Enum_ReverbType
-		| Enum_RibbonTool
-		| Enum_RollOffMode
-		| Enum_RotationType
-		| Enum_RuntimeUndoBehavior
-		| Enum_SaveFilter
-		| Enum_SavedQualitySetting
-		| Enum_ScaleType
-		| Enum_ScreenOrientation
-		| Enum_ScrollBarInset
-		| Enum_ScrollingDirection
-		| Enum_ServerAudioBehavior
-		| Enum_SizeConstraint
-		| Enum_SortOrder
-		| Enum_SoundType
-		| Enum_SpecialKey
-		| Enum_StartCorner
-		| Enum_Status
-		| Enum_StudioStyleGuideColor
-		| Enum_StudioStyleGuideModifier
-		| Enum_Style
-		| Enum_SurfaceConstraint
-		| Enum_SurfaceType
-		| Enum_SwipeDirection
-		| Enum_TableMajorAxis
-		| Enum_Technology
-		| Enum_TeleportResult
-		| Enum_TeleportState
-		| Enum_TeleportType
-		| Enum_TextFilterContext
-		| Enum_TextTruncate
-		| Enum_TextXAlignment
-		| Enum_TextYAlignment
-		| Enum_TextureMode
-		| Enum_TextureQueryType
-		| Enum_ThreadPoolConfig
-		| Enum_ThrottlingPriority
-		| Enum_ThumbnailSize
-		| Enum_ThumbnailType
-		| Enum_TickCountSampleMethod
-		| Enum_TopBottom
-		| Enum_TouchCameraMovementMode
-		| Enum_TouchMovementMode
-		| Enum_TweenStatus
-		| Enum_UITheme
-		| Enum_UiMessageType
-		| Enum_UploadSetting
-		| Enum_UserCFrame
-		| Enum_UserInputState
-		| Enum_UserInputType
-		| Enum_VRTouchpad
-		| Enum_VRTouchpadMode
-		| Enum_VerticalAlignment
-		| Enum_VerticalScrollBarPosition
-		| Enum_VibrationMotor
-		| Enum_VideoQualitySettings
-		| Enum_VirtualInputMode
-		| Enum_WaterDirection
-		| Enum_WaterForce
-		| Enum_ZIndexBehavior
-	>;
 }
 
 interface Enum_ActionType {
-	readonly Nothing: {
-		Name: "Nothing";
-		Value: 0;
-		EnumType: Enum_ActionType;
-	};
-	readonly Pause: {
-		Name: "Pause";
-		Value: 1;
-		EnumType: Enum_ActionType;
-	};
-	readonly Lose: {
-		Name: "Lose";
-		Value: 2;
-		EnumType: Enum_ActionType;
-	};
-	readonly Draw: {
-		Name: "Draw";
-		Value: 3;
-		EnumType: Enum_ActionType;
-	};
-	readonly Win: {
-		Name: "Win";
-		Value: 4;
-		EnumType: Enum_ActionType;
-	};
-	GetEnumItems(): Array<Enum.ActionType>;
+	Nothing: Enum.ActionType.Nothing;
+	Pause: Enum.ActionType.Pause;
+	Lose: Enum.ActionType.Lose;
+	Draw: Enum.ActionType.Draw;
+	Win: Enum.ActionType.Win;
 }
 
 interface Enum_ActuatorRelativeTo {
 	Attachment0: Enum.ActuatorRelativeTo.Attachment0;
 	Attachment1: Enum.ActuatorRelativeTo.Attachment1;
 	World: Enum.ActuatorRelativeTo.World;
-	GetEnumItems(): Array<Enum.ActuatorRelativeTo>;
 }
 
 interface Enum_ActuatorType {
 	None: Enum.ActuatorType.None;
 	Motor: Enum.ActuatorType.Motor;
 	Servo: Enum.ActuatorType.Servo;
-	GetEnumItems(): Array<Enum.ActuatorType>;
 }
 
 interface Enum_AlignType {
 	Parallel: Enum.AlignType.Parallel;
 	Perpendicular: Enum.AlignType.Perpendicular;
-	GetEnumItems(): Array<Enum.AlignType>;
 }
 
 interface Enum_AnimationPriority {
@@ -13304,7 +12749,6 @@ interface Enum_AnimationPriority {
 	Movement: Enum.AnimationPriority.Movement;
 	Action: Enum.AnimationPriority.Action;
 	Core: Enum.AnimationPriority.Core;
-	GetEnumItems(): Array<Enum.AnimationPriority>;
 }
 
 interface Enum_AppShellActionType {
@@ -13319,13 +12763,11 @@ interface Enum_AppShellActionType {
 	GamePageLoaded: Enum.AppShellActionType.GamePageLoaded;
 	HomePageLoaded: Enum.AppShellActionType.HomePageLoaded;
 	AvatarEditorPageLoaded: Enum.AppShellActionType.AvatarEditorPageLoaded;
-	GetEnumItems(): Array<Enum.AppShellActionType>;
 }
 
 interface Enum_AspectType {
 	FitWithinMaxSize: Enum.AspectType.FitWithinMaxSize;
 	ScaleWithParentSize: Enum.AspectType.ScaleWithParentSize;
-	GetEnumItems(): Array<Enum.AspectType>;
 }
 
 interface Enum_AssetType {
@@ -13372,34 +12814,29 @@ interface Enum_AssetType {
 	PoseAnimation: Enum.AssetType.PoseAnimation;
 	EarAccessory: Enum.AssetType.EarAccessory;
 	EyeAccessory: Enum.AssetType.EyeAccessory;
-	GetEnumItems(): Array<Enum.AssetType>;
 }
 
 interface Enum_AutoJointsMode {
 	Default: Enum.AutoJointsMode.Default;
 	Explicit: Enum.AutoJointsMode.Explicit;
 	LegacyImplicit: Enum.AutoJointsMode.LegacyImplicit;
-	GetEnumItems(): Array<Enum.AutoJointsMode>;
 }
 
 interface Enum_AvatarContextMenuOption {
 	Friend: Enum.AvatarContextMenuOption.Friend;
 	Chat: Enum.AvatarContextMenuOption.Chat;
 	Emote: Enum.AvatarContextMenuOption.Emote;
-	GetEnumItems(): Array<Enum.AvatarContextMenuOption>;
 }
 
 interface Enum_AvatarJointPositionType {
 	Fixed: Enum.AvatarJointPositionType.Fixed;
 	ArtistIntent: Enum.AvatarJointPositionType.ArtistIntent;
-	GetEnumItems(): Array<Enum.AvatarJointPositionType>;
 }
 
 interface Enum_Axis {
 	X: Enum.Axis.X;
 	Y: Enum.Axis.Y;
 	Z: Enum.Axis.Z;
-	GetEnumItems(): Array<Enum.Axis>;
 }
 
 interface Enum_BinType {
@@ -13408,7 +12845,6 @@ interface Enum_BinType {
 	Grab: Enum.BinType.Grab;
 	Clone: Enum.BinType.Clone;
 	Hammer: Enum.BinType.Hammer;
-	GetEnumItems(): Array<Enum.BinType>;
 }
 
 interface Enum_BodyPart {
@@ -13418,7 +12854,6 @@ interface Enum_BodyPart {
 	RightArm: Enum.BodyPart.RightArm;
 	LeftLeg: Enum.BodyPart.LeftLeg;
 	RightLeg: Enum.BodyPart.RightLeg;
-	GetEnumItems(): Array<Enum.BodyPart>;
 }
 
 interface Enum_BodyPartR15 {
@@ -13439,13 +12874,11 @@ interface Enum_BodyPartR15 {
 	RightUpperArm: Enum.BodyPartR15.RightUpperArm;
 	RootPart: Enum.BodyPartR15.RootPart;
 	Unknown: Enum.BodyPartR15.Unknown;
-	GetEnumItems(): Array<Enum.BodyPartR15>;
 }
 
 interface Enum_Button {
 	Jump: Enum.Button.Jump;
 	Dismount: Enum.Button.Dismount;
-	GetEnumItems(): Array<Enum.Button>;
 }
 
 interface Enum_ButtonStyle {
@@ -13455,19 +12888,16 @@ interface Enum_ButtonStyle {
 	RobloxRoundButton: Enum.ButtonStyle.RobloxRoundButton;
 	RobloxRoundDefaultButton: Enum.ButtonStyle.RobloxRoundDefaultButton;
 	RobloxRoundDropdownButton: Enum.ButtonStyle.RobloxRoundDropdownButton;
-	GetEnumItems(): Array<Enum.ButtonStyle>;
 }
 
 interface Enum_CameraMode {
 	Classic: Enum.CameraMode.Classic;
 	LockFirstPerson: Enum.CameraMode.LockFirstPerson;
-	GetEnumItems(): Array<Enum.CameraMode>;
 }
 
 interface Enum_CameraPanMode {
 	Classic: Enum.CameraPanMode.Classic;
 	EdgeBump: Enum.CameraPanMode.EdgeBump;
-	GetEnumItems(): Array<Enum.CameraPanMode>;
 }
 
 interface Enum_CameraType {
@@ -13479,7 +12909,6 @@ interface Enum_CameraType {
 	Custom: Enum.CameraType.Custom;
 	Scriptable: Enum.CameraType.Scriptable;
 	Orbital: Enum.CameraType.Orbital;
-	GetEnumItems(): Array<Enum.CameraType>;
 }
 
 interface Enum_CellBlock {
@@ -13488,7 +12917,6 @@ interface Enum_CellBlock {
 	CornerWedge: Enum.CellBlock.CornerWedge;
 	InverseCornerWedge: Enum.CellBlock.InverseCornerWedge;
 	HorizontalWedge: Enum.CellBlock.HorizontalWedge;
-	GetEnumItems(): Array<Enum.CellBlock>;
 }
 
 interface Enum_CellMaterial {
@@ -13510,7 +12938,6 @@ interface Enum_CellMaterial {
 	RedPlastic: Enum.CellMaterial.RedPlastic;
 	BluePlastic: Enum.CellMaterial.BluePlastic;
 	Water: Enum.CellMaterial.Water;
-	GetEnumItems(): Array<Enum.CellMaterial>;
 }
 
 interface Enum_CellOrientation {
@@ -13518,7 +12945,6 @@ interface Enum_CellOrientation {
 	X: Enum.CellOrientation.X;
 	Z: Enum.CellOrientation.Z;
 	NegX: Enum.CellOrientation.NegX;
-	GetEnumItems(): Array<Enum.CellOrientation>;
 }
 
 interface Enum_CenterDialogType {
@@ -13526,7 +12952,6 @@ interface Enum_CenterDialogType {
 	PlayerInitiatedDialog: Enum.CenterDialogType.PlayerInitiatedDialog;
 	ModalDialog: Enum.CenterDialogType.ModalDialog;
 	QuitDialog: Enum.CenterDialogType.QuitDialog;
-	GetEnumItems(): Array<Enum.CenterDialogType>;
 }
 
 interface Enum_ChatCallbackType {
@@ -13534,7 +12959,6 @@ interface Enum_ChatCallbackType {
 	OnClientSendingMessage: Enum.ChatCallbackType.OnClientSendingMessage;
 	OnClientFormattingMessage: Enum.ChatCallbackType.OnClientFormattingMessage;
 	OnServerReceivingMessage: Enum.ChatCallbackType.OnServerReceivingMessage;
-	GetEnumItems(): Array<Enum.ChatCallbackType>;
 }
 
 interface Enum_ChatColor {
@@ -13542,34 +12966,29 @@ interface Enum_ChatColor {
 	Green: Enum.ChatColor.Green;
 	Red: Enum.ChatColor.Red;
 	White: Enum.ChatColor.White;
-	GetEnumItems(): Array<Enum.ChatColor>;
 }
 
 interface Enum_ChatMode {
 	Menu: Enum.ChatMode.Menu;
 	TextAndMenu: Enum.ChatMode.TextAndMenu;
-	GetEnumItems(): Array<Enum.ChatMode>;
 }
 
 interface Enum_ChatPrivacyMode {
 	AllUsers: Enum.ChatPrivacyMode.AllUsers;
 	NoOne: Enum.ChatPrivacyMode.NoOne;
 	Friends: Enum.ChatPrivacyMode.Friends;
-	GetEnumItems(): Array<Enum.ChatPrivacyMode>;
 }
 
 interface Enum_ChatStyle {
 	Classic: Enum.ChatStyle.Classic;
 	Bubble: Enum.ChatStyle.Bubble;
 	ClassicAndBubble: Enum.ChatStyle.ClassicAndBubble;
-	GetEnumItems(): Array<Enum.ChatStyle>;
 }
 
 interface Enum_CollisionFidelity {
 	Default: Enum.CollisionFidelity.Default;
 	Hull: Enum.CollisionFidelity.Hull;
 	Box: Enum.CollisionFidelity.Box;
-	GetEnumItems(): Array<Enum.CollisionFidelity>;
 }
 
 interface Enum_ComputerCameraMovementMode {
@@ -13577,14 +12996,12 @@ interface Enum_ComputerCameraMovementMode {
 	Follow: Enum.ComputerCameraMovementMode.Follow;
 	Classic: Enum.ComputerCameraMovementMode.Classic;
 	Orbital: Enum.ComputerCameraMovementMode.Orbital;
-	GetEnumItems(): Array<Enum.ComputerCameraMovementMode>;
 }
 
 interface Enum_ComputerMovementMode {
 	Default: Enum.ComputerMovementMode.Default;
 	KeyboardMouse: Enum.ComputerMovementMode.KeyboardMouse;
 	ClickToMove: Enum.ComputerMovementMode.ClickToMove;
-	GetEnumItems(): Array<Enum.ComputerMovementMode>;
 }
 
 interface Enum_ConnectionError {
@@ -13637,13 +13054,11 @@ interface Enum_ConnectionError {
 	TeleportUnauthorized: Enum.ConnectionError.TeleportUnauthorized;
 	TeleportFlooded: Enum.ConnectionError.TeleportFlooded;
 	TeleportIsTeleporting: Enum.ConnectionError.TeleportIsTeleporting;
-	GetEnumItems(): Array<Enum.ConnectionError>;
 }
 
 interface Enum_ConnectionState {
 	Connected: Enum.ConnectionState.Connected;
 	Disconnected: Enum.ConnectionState.Disconnected;
-	GetEnumItems(): Array<Enum.ConnectionState>;
 }
 
 interface Enum_ContextActionPriority {
@@ -13651,19 +13066,16 @@ interface Enum_ContextActionPriority {
 	Medium: Enum.ContextActionPriority.Medium;
 	Default: Enum.ContextActionPriority.Default;
 	High: Enum.ContextActionPriority.High;
-	GetEnumItems(): Array<Enum.ContextActionPriority>;
 }
 
 interface Enum_ContextActionResult {
 	Pass: Enum.ContextActionResult.Pass;
 	Sink: Enum.ContextActionResult.Sink;
-	GetEnumItems(): Array<Enum.ContextActionResult>;
 }
 
 interface Enum_ControlMode {
 	MouseLockSwitch: Enum.ControlMode.MouseLockSwitch;
 	Classic: Enum.ControlMode.Classic;
-	GetEnumItems(): Array<Enum.ControlMode>;
 }
 
 interface Enum_CoreGuiType {
@@ -13673,33 +13085,28 @@ interface Enum_CoreGuiType {
 	Chat: Enum.CoreGuiType.Chat;
 	All: Enum.CoreGuiType.All;
 	EmotesMenu: Enum.CoreGuiType.EmotesMenu;
-	GetEnumItems(): Array<Enum.CoreGuiType>;
 }
 
 interface Enum_CreatorType {
 	User: Enum.CreatorType.User;
 	Group: Enum.CreatorType.Group;
-	GetEnumItems(): Array<Enum.CreatorType>;
 }
 
 interface Enum_CurrencyType {
 	Default: Enum.CurrencyType.Default;
 	Robux: Enum.CurrencyType.Robux;
 	Tix: Enum.CurrencyType.Tix;
-	GetEnumItems(): Array<Enum.CurrencyType>;
 }
 
 interface Enum_CustomCameraMode {
 	Default: Enum.CustomCameraMode.Default;
 	Follow: Enum.CustomCameraMode.Follow;
 	Classic: Enum.CustomCameraMode.Classic;
-	GetEnumItems(): Array<Enum.CustomCameraMode>;
 }
 
 interface Enum_DEPRECATED_DebuggerDataModelPreference {
 	Server: Enum.DEPRECATED_DebuggerDataModelPreference.Server;
 	Client: Enum.DEPRECATED_DebuggerDataModelPreference.Client;
-	GetEnumItems(): Array<Enum.DEPRECATED_DebuggerDataModelPreference>;
 }
 
 interface Enum_DataStoreRequestType {
@@ -13709,13 +13116,11 @@ interface Enum_DataStoreRequestType {
 	GetSortedAsync: Enum.DataStoreRequestType.GetSortedAsync;
 	SetIncrementSortedAsync: Enum.DataStoreRequestType.SetIncrementSortedAsync;
 	OnUpdate: Enum.DataStoreRequestType.OnUpdate;
-	GetEnumItems(): Array<Enum.DataStoreRequestType>;
 }
 
 interface Enum_DevCameraOcclusionMode {
 	Zoom: Enum.DevCameraOcclusionMode.Zoom;
 	Invisicam: Enum.DevCameraOcclusionMode.Invisicam;
-	GetEnumItems(): Array<Enum.DevCameraOcclusionMode>;
 }
 
 interface Enum_DevComputerCameraMovementMode {
@@ -13723,7 +13128,6 @@ interface Enum_DevComputerCameraMovementMode {
 	Classic: Enum.DevComputerCameraMovementMode.Classic;
 	Follow: Enum.DevComputerCameraMovementMode.Follow;
 	Orbital: Enum.DevComputerCameraMovementMode.Orbital;
-	GetEnumItems(): Array<Enum.DevComputerCameraMovementMode>;
 }
 
 interface Enum_DevComputerMovementMode {
@@ -13731,7 +13135,6 @@ interface Enum_DevComputerMovementMode {
 	KeyboardMouse: Enum.DevComputerMovementMode.KeyboardMouse;
 	ClickToMove: Enum.DevComputerMovementMode.ClickToMove;
 	Scriptable: Enum.DevComputerMovementMode.Scriptable;
-	GetEnumItems(): Array<Enum.DevComputerMovementMode>;
 }
 
 interface Enum_DevTouchCameraMovementMode {
@@ -13739,7 +13142,6 @@ interface Enum_DevTouchCameraMovementMode {
 	Classic: Enum.DevTouchCameraMovementMode.Classic;
 	Follow: Enum.DevTouchCameraMovementMode.Follow;
 	Orbital: Enum.DevTouchCameraMovementMode.Orbital;
-	GetEnumItems(): Array<Enum.DevTouchCameraMovementMode>;
 }
 
 interface Enum_DevTouchMovementMode {
@@ -13750,7 +13152,6 @@ interface Enum_DevTouchMovementMode {
 	ClickToMove: Enum.DevTouchMovementMode.ClickToMove;
 	Scriptable: Enum.DevTouchMovementMode.Scriptable;
 	DynamicThumbstick: Enum.DevTouchMovementMode.DynamicThumbstick;
-	GetEnumItems(): Array<Enum.DevTouchMovementMode>;
 }
 
 interface Enum_DeveloperMemoryTag {
@@ -13776,7 +13177,6 @@ interface Enum_DeveloperMemoryTag {
 	Gui: Enum.DeveloperMemoryTag.Gui;
 	Animation: Enum.DeveloperMemoryTag.Animation;
 	Navigation: Enum.DeveloperMemoryTag.Navigation;
-	GetEnumItems(): Array<Enum.DeveloperMemoryTag>;
 }
 
 interface Enum_DeviceType {
@@ -13784,40 +13184,34 @@ interface Enum_DeviceType {
 	Desktop: Enum.DeviceType.Desktop;
 	Tablet: Enum.DeviceType.Tablet;
 	Phone: Enum.DeviceType.Phone;
-	GetEnumItems(): Array<Enum.DeviceType>;
 }
 
 interface Enum_DialogBehaviorType {
 	SinglePlayer: Enum.DialogBehaviorType.SinglePlayer;
 	MultiplePlayers: Enum.DialogBehaviorType.MultiplePlayers;
-	GetEnumItems(): Array<Enum.DialogBehaviorType>;
 }
 
 interface Enum_DialogPurpose {
 	Quest: Enum.DialogPurpose.Quest;
 	Help: Enum.DialogPurpose.Help;
 	Shop: Enum.DialogPurpose.Shop;
-	GetEnumItems(): Array<Enum.DialogPurpose>;
 }
 
 interface Enum_DialogTone {
 	Neutral: Enum.DialogTone.Neutral;
 	Friendly: Enum.DialogTone.Friendly;
 	Enemy: Enum.DialogTone.Enemy;
-	GetEnumItems(): Array<Enum.DialogTone>;
 }
 
 interface Enum_DominantAxis {
 	Width: Enum.DominantAxis.Width;
 	Height: Enum.DominantAxis.Height;
-	GetEnumItems(): Array<Enum.DominantAxis>;
 }
 
 interface Enum_EasingDirection {
 	In: Enum.EasingDirection.In;
 	Out: Enum.EasingDirection.Out;
 	InOut: Enum.EasingDirection.InOut;
-	GetEnumItems(): Array<Enum.EasingDirection>;
 }
 
 interface Enum_EasingStyle {
@@ -13829,14 +13223,12 @@ interface Enum_EasingStyle {
 	Quint: Enum.EasingStyle.Quint;
 	Bounce: Enum.EasingStyle.Bounce;
 	Elastic: Enum.EasingStyle.Elastic;
-	GetEnumItems(): Array<Enum.EasingStyle>;
 }
 
 interface Enum_ElasticBehavior {
 	WhenScrollable: Enum.ElasticBehavior.WhenScrollable;
 	Always: Enum.ElasticBehavior.Always;
 	Never: Enum.ElasticBehavior.Never;
-	GetEnumItems(): Array<Enum.ElasticBehavior>;
 }
 
 interface Enum_EnviromentalPhysicsThrottle {
@@ -13847,33 +13239,28 @@ interface Enum_EnviromentalPhysicsThrottle {
 	Skip4: Enum.EnviromentalPhysicsThrottle.Skip4;
 	Skip8: Enum.EnviromentalPhysicsThrottle.Skip8;
 	Skip16: Enum.EnviromentalPhysicsThrottle.Skip16;
-	GetEnumItems(): Array<Enum.EnviromentalPhysicsThrottle>;
 }
 
 interface Enum_ErrorReporting {
 	DontReport: Enum.ErrorReporting.DontReport;
 	Prompt: Enum.ErrorReporting.Prompt;
 	Report: Enum.ErrorReporting.Report;
-	GetEnumItems(): Array<Enum.ErrorReporting>;
 }
 
 interface Enum_ExplosionType {
 	NoCraters: Enum.ExplosionType.NoCraters;
 	Craters: Enum.ExplosionType.Craters;
 	CratersAndDebris: Enum.ExplosionType.CratersAndDebris;
-	GetEnumItems(): Array<Enum.ExplosionType>;
 }
 
 interface Enum_FillDirection {
 	Horizontal: Enum.FillDirection.Horizontal;
 	Vertical: Enum.FillDirection.Vertical;
-	GetEnumItems(): Array<Enum.FillDirection>;
 }
 
 interface Enum_FilterResult {
 	Rejected: Enum.FilterResult.Rejected;
 	Accepted: Enum.FilterResult.Accepted;
-	GetEnumItems(): Array<Enum.FilterResult>;
 }
 
 interface Enum_Font {
@@ -13898,7 +13285,6 @@ interface Enum_Font {
 	GothamSemibold: Enum.Font.GothamSemibold;
 	GothamBold: Enum.Font.GothamBold;
 	GothamBlack: Enum.Font.GothamBlack;
-	GetEnumItems(): Array<Enum.Font>;
 }
 
 interface Enum_FontSize {
@@ -13917,7 +13303,6 @@ interface Enum_FontSize {
 	Size42: Enum.FontSize.Size42;
 	Size60: Enum.FontSize.Size60;
 	Size96: Enum.FontSize.Size96;
-	GetEnumItems(): Array<Enum.FontSize>;
 }
 
 interface Enum_FormFactor {
@@ -13925,7 +13310,6 @@ interface Enum_FormFactor {
 	Brick: Enum.FormFactor.Brick;
 	Plate: Enum.FormFactor.Plate;
 	Custom: Enum.FormFactor.Custom;
-	GetEnumItems(): Array<Enum.FormFactor>;
 }
 
 interface Enum_FrameStyle {
@@ -13936,14 +13320,12 @@ interface Enum_FrameStyle {
 	ChatGreen: Enum.FrameStyle.ChatGreen;
 	ChatRed: Enum.FrameStyle.ChatRed;
 	DropShadow: Enum.FrameStyle.DropShadow;
-	GetEnumItems(): Array<Enum.FrameStyle>;
 }
 
 interface Enum_FramerateManagerMode {
 	Automatic: Enum.FramerateManagerMode.Automatic;
 	On: Enum.FramerateManagerMode.On;
 	Off: Enum.FramerateManagerMode.Off;
-	GetEnumItems(): Array<Enum.FramerateManagerMode>;
 }
 
 interface Enum_FriendRequestEvent {
@@ -13951,7 +13333,6 @@ interface Enum_FriendRequestEvent {
 	Revoke: Enum.FriendRequestEvent.Revoke;
 	Accept: Enum.FriendRequestEvent.Accept;
 	Deny: Enum.FriendRequestEvent.Deny;
-	GetEnumItems(): Array<Enum.FriendRequestEvent>;
 }
 
 interface Enum_FriendStatus {
@@ -13960,27 +13341,23 @@ interface Enum_FriendStatus {
 	Friend: Enum.FriendStatus.Friend;
 	FriendRequestSent: Enum.FriendStatus.FriendRequestSent;
 	FriendRequestReceived: Enum.FriendStatus.FriendRequestReceived;
-	GetEnumItems(): Array<Enum.FriendStatus>;
 }
 
 interface Enum_FunctionalTestResult {
 	Passed: Enum.FunctionalTestResult.Passed;
 	Warning: Enum.FunctionalTestResult.Warning;
 	Error: Enum.FunctionalTestResult.Error;
-	GetEnumItems(): Array<Enum.FunctionalTestResult>;
 }
 
 interface Enum_GameAvatarType {
 	R6: Enum.GameAvatarType.R6;
 	R15: Enum.GameAvatarType.R15;
 	PlayerChoice: Enum.GameAvatarType.PlayerChoice;
-	GetEnumItems(): Array<Enum.GameAvatarType>;
 }
 
 interface Enum_GearGenreSetting {
 	AllGenres: Enum.GearGenreSetting.AllGenres;
 	MatchingGenreOnly: Enum.GearGenreSetting.MatchingGenreOnly;
-	GetEnumItems(): Array<Enum.GearGenreSetting>;
 }
 
 interface Enum_GearType {
@@ -13993,7 +13370,6 @@ interface Enum_GearType {
 	SocialItems: Enum.GearType.SocialItems;
 	BuildingTools: Enum.GearType.BuildingTools;
 	Transport: Enum.GearType.Transport;
-	GetEnumItems(): Array<Enum.GearType>;
 }
 
 interface Enum_Genre {
@@ -14011,7 +13387,6 @@ interface Enum_Genre {
 	War: Enum.Genre.War;
 	SkatePark: Enum.Genre.SkatePark;
 	Tutorial: Enum.Genre.Tutorial;
-	GetEnumItems(): Array<Enum.Genre>;
 }
 
 interface Enum_GraphicsMode {
@@ -14022,20 +13397,17 @@ interface Enum_GraphicsMode {
 	Metal: Enum.GraphicsMode.Metal;
 	Vulkan: Enum.GraphicsMode.Vulkan;
 	NoGraphics: Enum.GraphicsMode.NoGraphics;
-	GetEnumItems(): Array<Enum.GraphicsMode>;
 }
 
 interface Enum_HandlesStyle {
 	Resize: Enum.HandlesStyle.Resize;
 	Movement: Enum.HandlesStyle.Movement;
-	GetEnumItems(): Array<Enum.HandlesStyle>;
 }
 
 interface Enum_HorizontalAlignment {
 	Center: Enum.HorizontalAlignment.Center;
 	Left: Enum.HorizontalAlignment.Left;
 	Right: Enum.HorizontalAlignment.Right;
-	GetEnumItems(): Array<Enum.HorizontalAlignment>;
 }
 
 interface Enum_HoverAnimateSpeed {
@@ -14044,7 +13416,6 @@ interface Enum_HoverAnimateSpeed {
 	Medium: Enum.HoverAnimateSpeed.Medium;
 	Fast: Enum.HoverAnimateSpeed.Fast;
 	VeryFast: Enum.HoverAnimateSpeed.VeryFast;
-	GetEnumItems(): Array<Enum.HoverAnimateSpeed>;
 }
 
 interface Enum_HttpCachePolicy {
@@ -14053,7 +13424,6 @@ interface Enum_HttpCachePolicy {
 	DataOnly: Enum.HttpCachePolicy.DataOnly;
 	Default: Enum.HttpCachePolicy.Default;
 	InternalRedirectRefresh: Enum.HttpCachePolicy.InternalRedirectRefresh;
-	GetEnumItems(): Array<Enum.HttpCachePolicy>;
 }
 
 interface Enum_HttpContentType {
@@ -14062,7 +13432,6 @@ interface Enum_HttpContentType {
 	ApplicationUrlEncoded: Enum.HttpContentType.ApplicationUrlEncoded;
 	TextPlain: Enum.HttpContentType.TextPlain;
 	TextXml: Enum.HttpContentType.TextXml;
-	GetEnumItems(): Array<Enum.HttpContentType>;
 }
 
 interface Enum_HttpError {
@@ -14078,7 +13447,6 @@ interface Enum_HttpError {
 	Aborted: Enum.HttpError.Aborted;
 	SslConnectFail: Enum.HttpError.SslConnectFail;
 	Unknown: Enum.HttpError.Unknown;
-	GetEnumItems(): Array<Enum.HttpError>;
 }
 
 interface Enum_HttpRequestType {
@@ -14089,33 +13457,28 @@ interface Enum_HttpRequestType {
 	Avatar: Enum.HttpRequestType.Avatar;
 	Analytics: Enum.HttpRequestType.Analytics;
 	Localization: Enum.HttpRequestType.Localization;
-	GetEnumItems(): Array<Enum.HttpRequestType>;
 }
 
 interface Enum_HumanoidCollisionType {
 	OuterBox: Enum.HumanoidCollisionType.OuterBox;
 	InnerBox: Enum.HumanoidCollisionType.InnerBox;
-	GetEnumItems(): Array<Enum.HumanoidCollisionType>;
 }
 
 interface Enum_HumanoidDisplayDistanceType {
 	Viewer: Enum.HumanoidDisplayDistanceType.Viewer;
 	Subject: Enum.HumanoidDisplayDistanceType.Subject;
 	None: Enum.HumanoidDisplayDistanceType.None;
-	GetEnumItems(): Array<Enum.HumanoidDisplayDistanceType>;
 }
 
 interface Enum_HumanoidHealthDisplayType {
 	DisplayWhenDamaged: Enum.HumanoidHealthDisplayType.DisplayWhenDamaged;
 	AlwaysOn: Enum.HumanoidHealthDisplayType.AlwaysOn;
 	AlwaysOff: Enum.HumanoidHealthDisplayType.AlwaysOff;
-	GetEnumItems(): Array<Enum.HumanoidHealthDisplayType>;
 }
 
 interface Enum_HumanoidRigType {
 	R6: Enum.HumanoidRigType.R6;
 	R15: Enum.HumanoidRigType.R15;
-	GetEnumItems(): Array<Enum.HumanoidRigType>;
 }
 
 interface Enum_HumanoidStateType {
@@ -14136,21 +13499,18 @@ interface Enum_HumanoidStateType {
 	Swimming: Enum.HumanoidStateType.Swimming;
 	Physics: Enum.HumanoidStateType.Physics;
 	None: Enum.HumanoidStateType.None;
-	GetEnumItems(): Array<Enum.HumanoidStateType>;
 }
 
 interface Enum_InOut {
 	Edge: Enum.InOut.Edge;
 	Inset: Enum.InOut.Inset;
 	Center: Enum.InOut.Center;
-	GetEnumItems(): Array<Enum.InOut>;
 }
 
 interface Enum_InfoType {
 	Asset: Enum.InfoType.Asset;
 	Product: Enum.InfoType.Product;
 	GamePass: Enum.InfoType.GamePass;
-	GetEnumItems(): Array<Enum.InfoType>;
 }
 
 interface Enum_InitialDockState {
@@ -14159,21 +13519,18 @@ interface Enum_InitialDockState {
 	Left: Enum.InitialDockState.Left;
 	Right: Enum.InitialDockState.Right;
 	Float: Enum.InitialDockState.Float;
-	GetEnumItems(): Array<Enum.InitialDockState>;
 }
 
 interface Enum_InputType {
 	NoInput: Enum.InputType.NoInput;
 	Constant: Enum.InputType.Constant;
 	Sin: Enum.InputType.Sin;
-	GetEnumItems(): Array<Enum.InputType>;
 }
 
 interface Enum_JointCreationMode {
 	All: Enum.JointCreationMode.All;
 	Surface: Enum.JointCreationMode.Surface;
 	None: Enum.JointCreationMode.None;
-	GetEnumItems(): Array<Enum.JointCreationMode>;
 }
 
 interface Enum_JointType {
@@ -14184,7 +13541,6 @@ interface Enum_JointType {
 	Glue: Enum.JointType.Glue;
 	Weld: Enum.JointType.Weld;
 	Snap: Enum.JointType.Snap;
-	GetEnumItems(): Array<Enum.JointType>;
 }
 
 interface Enum_KeyCode {
@@ -14442,32 +13798,27 @@ interface Enum_KeyCode {
 	DPadDown: Enum.KeyCode.DPadDown;
 	Thumbstick1: Enum.KeyCode.Thumbstick1;
 	Thumbstick2: Enum.KeyCode.Thumbstick2;
-	GetEnumItems(): Array<Enum.KeyCode>;
 }
 
 interface Enum_KeywordFilterType {
 	Include: Enum.KeywordFilterType.Include;
 	Exclude: Enum.KeywordFilterType.Exclude;
-	GetEnumItems(): Array<Enum.KeywordFilterType>;
 }
 
 interface Enum_Language {
 	Default: Enum.Language.Default;
-	GetEnumItems(): Array<Enum.Language>;
 }
 
 interface Enum_LeftRight {
 	Left: Enum.LeftRight.Left;
 	Center: Enum.LeftRight.Center;
 	Right: Enum.LeftRight.Right;
-	GetEnumItems(): Array<Enum.LeftRight>;
 }
 
 interface Enum_LevelOfDetailSetting {
 	High: Enum.LevelOfDetailSetting.High;
 	Medium: Enum.LevelOfDetailSetting.Medium;
 	Low: Enum.LevelOfDetailSetting.Low;
-	GetEnumItems(): Array<Enum.LevelOfDetailSetting>;
 }
 
 interface Enum_Limb {
@@ -14478,13 +13829,11 @@ interface Enum_Limb {
 	LeftLeg: Enum.Limb.LeftLeg;
 	RightLeg: Enum.Limb.RightLeg;
 	Unknown: Enum.Limb.Unknown;
-	GetEnumItems(): Array<Enum.Limb>;
 }
 
 interface Enum_ListDisplayMode {
 	Horizontal: Enum.ListDisplayMode.Horizontal;
 	Vertical: Enum.ListDisplayMode.Vertical;
-	GetEnumItems(): Array<Enum.ListDisplayMode>;
 }
 
 interface Enum_ListenerType {
@@ -14492,7 +13841,6 @@ interface Enum_ListenerType {
 	CFrame: Enum.ListenerType.CFrame;
 	ObjectPosition: Enum.ListenerType.ObjectPosition;
 	ObjectCFrame: Enum.ListenerType.ObjectCFrame;
-	GetEnumItems(): Array<Enum.ListenerType>;
 }
 
 interface Enum_Material {
@@ -14533,7 +13881,6 @@ interface Enum_Material {
 	Limestone: Enum.Material.Limestone;
 	Pavement: Enum.Material.Pavement;
 	ForceField: Enum.Material.ForceField;
-	GetEnumItems(): Array<Enum.Material>;
 }
 
 interface Enum_MembershipType {
@@ -14541,7 +13888,6 @@ interface Enum_MembershipType {
 	BuildersClub: Enum.MembershipType.BuildersClub;
 	TurboBuildersClub: Enum.MembershipType.TurboBuildersClub;
 	OutrageousBuildersClub: Enum.MembershipType.OutrageousBuildersClub;
-	GetEnumItems(): Array<Enum.MembershipType>;
 }
 
 interface Enum_MeshType {
@@ -14557,7 +13903,6 @@ interface Enum_MeshType {
 	Sphere: Enum.MeshType.Sphere;
 	Cylinder: Enum.MeshType.Cylinder;
 	FileMesh: Enum.MeshType.FileMesh;
-	GetEnumItems(): Array<Enum.MeshType>;
 }
 
 interface Enum_MessageType {
@@ -14565,14 +13910,12 @@ interface Enum_MessageType {
 	MessageInfo: Enum.MessageType.MessageInfo;
 	MessageWarning: Enum.MessageType.MessageWarning;
 	MessageError: Enum.MessageType.MessageError;
-	GetEnumItems(): Array<Enum.MessageType>;
 }
 
 interface Enum_MouseBehavior {
 	Default: Enum.MouseBehavior.Default;
 	LockCenter: Enum.MouseBehavior.LockCenter;
 	LockCurrentPosition: Enum.MouseBehavior.LockCurrentPosition;
-	GetEnumItems(): Array<Enum.MouseBehavior>;
 }
 
 interface Enum_MoveState {
@@ -14581,21 +13924,18 @@ interface Enum_MoveState {
 	Pushing: Enum.MoveState.Pushing;
 	Stopping: Enum.MoveState.Stopping;
 	AirFree: Enum.MoveState.AirFree;
-	GetEnumItems(): Array<Enum.MoveState>;
 }
 
 interface Enum_NameOcclusion {
 	OccludeAll: Enum.NameOcclusion.OccludeAll;
 	EnemyOcclusion: Enum.NameOcclusion.EnemyOcclusion;
 	NoOcclusion: Enum.NameOcclusion.NoOcclusion;
-	GetEnumItems(): Array<Enum.NameOcclusion>;
 }
 
 interface Enum_NetworkOwnership {
 	Automatic: Enum.NetworkOwnership.Automatic;
 	Manual: Enum.NetworkOwnership.Manual;
 	OnContact: Enum.NetworkOwnership.OnContact;
-	GetEnumItems(): Array<Enum.NetworkOwnership>;
 }
 
 interface Enum_NormalId {
@@ -14605,20 +13945,17 @@ interface Enum_NormalId {
 	Front: Enum.NormalId.Front;
 	Right: Enum.NormalId.Right;
 	Left: Enum.NormalId.Left;
-	GetEnumItems(): Array<Enum.NormalId>;
 }
 
 interface Enum_OutputLayoutMode {
 	Horizontal: Enum.OutputLayoutMode.Horizontal;
 	Vertical: Enum.OutputLayoutMode.Vertical;
-	GetEnumItems(): Array<Enum.OutputLayoutMode>;
 }
 
 interface Enum_OverrideMouseIconBehavior {
 	None: Enum.OverrideMouseIconBehavior.None;
 	ForceShow: Enum.OverrideMouseIconBehavior.ForceShow;
 	ForceHide: Enum.OverrideMouseIconBehavior.ForceHide;
-	GetEnumItems(): Array<Enum.OverrideMouseIconBehavior>;
 }
 
 interface Enum_PacketPriority {
@@ -14626,14 +13963,12 @@ interface Enum_PacketPriority {
 	HIGH_PRIORITY: Enum.PacketPriority.HIGH_PRIORITY;
 	MEDIUM_PRIORITY: Enum.PacketPriority.MEDIUM_PRIORITY;
 	LOW_PRIORITY: Enum.PacketPriority.LOW_PRIORITY;
-	GetEnumItems(): Array<Enum.PacketPriority>;
 }
 
 interface Enum_PartType {
 	Ball: Enum.PartType.Ball;
 	Block: Enum.PartType.Block;
 	Cylinder: Enum.PartType.Cylinder;
-	GetEnumItems(): Array<Enum.PartType>;
 }
 
 interface Enum_PathStatus {
@@ -14643,13 +13978,11 @@ interface Enum_PathStatus {
 	FailStartNotEmpty: Enum.PathStatus.FailStartNotEmpty;
 	FailFinishNotEmpty: Enum.PathStatus.FailFinishNotEmpty;
 	NoPath: Enum.PathStatus.NoPath;
-	GetEnumItems(): Array<Enum.PathStatus>;
 }
 
 interface Enum_PathWaypointAction {
 	Walk: Enum.PathWaypointAction.Walk;
 	Jump: Enum.PathWaypointAction.Jump;
-	GetEnumItems(): Array<Enum.PathWaypointAction>;
 }
 
 interface Enum_PermissionLevelShown {
@@ -14658,7 +13991,6 @@ interface Enum_PermissionLevelShown {
 	RobloxScript: Enum.PermissionLevelShown.RobloxScript;
 	Studio: Enum.PermissionLevelShown.Studio;
 	Roblox: Enum.PermissionLevelShown.Roblox;
-	GetEnumItems(): Array<Enum.PermissionLevelShown>;
 }
 
 interface Enum_Platform {
@@ -14682,7 +14014,6 @@ interface Enum_Platform {
 	BeOS: Enum.Platform.BeOS;
 	UWP: Enum.Platform.UWP;
 	None: Enum.Platform.None;
-	GetEnumItems(): Array<Enum.Platform>;
 }
 
 interface Enum_PlaybackState {
@@ -14692,7 +14023,6 @@ interface Enum_PlaybackState {
 	Paused: Enum.PlaybackState.Paused;
 	Completed: Enum.PlaybackState.Completed;
 	Cancelled: Enum.PlaybackState.Cancelled;
-	GetEnumItems(): Array<Enum.PlaybackState>;
 }
 
 interface Enum_PlayerActions {
@@ -14701,21 +14031,18 @@ interface Enum_PlayerActions {
 	CharacterLeft: Enum.PlayerActions.CharacterLeft;
 	CharacterRight: Enum.PlayerActions.CharacterRight;
 	CharacterJump: Enum.PlayerActions.CharacterJump;
-	GetEnumItems(): Array<Enum.PlayerActions>;
 }
 
 interface Enum_PlayerChatType {
 	All: Enum.PlayerChatType.All;
 	Team: Enum.PlayerChatType.Team;
 	Whisper: Enum.PlayerChatType.Whisper;
-	GetEnumItems(): Array<Enum.PlayerChatType>;
 }
 
 interface Enum_PoseEasingDirection {
 	Out: Enum.PoseEasingDirection.Out;
 	InOut: Enum.PoseEasingDirection.InOut;
 	In: Enum.PoseEasingDirection.In;
-	GetEnumItems(): Array<Enum.PoseEasingDirection>;
 }
 
 interface Enum_PoseEasingStyle {
@@ -14724,7 +14051,6 @@ interface Enum_PoseEasingStyle {
 	Elastic: Enum.PoseEasingStyle.Elastic;
 	Cubic: Enum.PoseEasingStyle.Cubic;
 	Bounce: Enum.PoseEasingStyle.Bounce;
-	GetEnumItems(): Array<Enum.PoseEasingStyle>;
 }
 
 interface Enum_PrivilegeType {
@@ -14733,13 +14059,11 @@ interface Enum_PrivilegeType {
 	Member: Enum.PrivilegeType.Member;
 	Visitor: Enum.PrivilegeType.Visitor;
 	Banned: Enum.PrivilegeType.Banned;
-	GetEnumItems(): Array<Enum.PrivilegeType>;
 }
 
 interface Enum_ProductPurchaseDecision {
 	NotProcessedYet: Enum.ProductPurchaseDecision.NotProcessedYet;
 	PurchaseGranted: Enum.ProductPurchaseDecision.PurchaseGranted;
-	GetEnumItems(): Array<Enum.ProductPurchaseDecision>;
 }
 
 interface Enum_QualityLevel {
@@ -14765,19 +14089,16 @@ interface Enum_QualityLevel {
 	Level19: Enum.QualityLevel.Level19;
 	Level20: Enum.QualityLevel.Level20;
 	Level21: Enum.QualityLevel.Level21;
-	GetEnumItems(): Array<Enum.QualityLevel>;
 }
 
 interface Enum_R15CollisionType {
 	OuterBox: Enum.R15CollisionType.OuterBox;
 	InnerBox: Enum.R15CollisionType.InnerBox;
-	GetEnumItems(): Array<Enum.R15CollisionType>;
 }
 
 interface Enum_RenderFidelity {
 	Automatic: Enum.RenderFidelity.Automatic;
 	Precise: Enum.RenderFidelity.Precise;
-	GetEnumItems(): Array<Enum.RenderFidelity>;
 }
 
 interface Enum_RenderPriority {
@@ -14786,13 +14107,11 @@ interface Enum_RenderPriority {
 	Camera: Enum.RenderPriority.Camera;
 	Character: Enum.RenderPriority.Character;
 	Last: Enum.RenderPriority.Last;
-	GetEnumItems(): Array<Enum.RenderPriority>;
 }
 
 interface Enum_RenderingTestComparisonMethod {
 	psnr: Enum.RenderingTestComparisonMethod.psnr;
 	diff: Enum.RenderingTestComparisonMethod.diff;
-	GetEnumItems(): Array<Enum.RenderingTestComparisonMethod>;
 }
 
 interface Enum_ReverbType {
@@ -14820,7 +14139,6 @@ interface Enum_ReverbType {
 	ParkingLot: Enum.ReverbType.ParkingLot;
 	SewerPipe: Enum.ReverbType.SewerPipe;
 	UnderWater: Enum.ReverbType.UnderWater;
-	GetEnumItems(): Array<Enum.ReverbType>;
 }
 
 interface Enum_RibbonTool {
@@ -14834,7 +14152,6 @@ interface Enum_RibbonTool {
 	Group: Enum.RibbonTool.Group;
 	Ungroup: Enum.RibbonTool.Ungroup;
 	None: Enum.RibbonTool.None;
-	GetEnumItems(): Array<Enum.RibbonTool>;
 }
 
 interface Enum_RollOffMode {
@@ -14842,27 +14159,23 @@ interface Enum_RollOffMode {
 	Linear: Enum.RollOffMode.Linear;
 	InverseTapered: Enum.RollOffMode.InverseTapered;
 	LinearSquare: Enum.RollOffMode.LinearSquare;
-	GetEnumItems(): Array<Enum.RollOffMode>;
 }
 
 interface Enum_RotationType {
 	MovementRelative: Enum.RotationType.MovementRelative;
 	CameraRelative: Enum.RotationType.CameraRelative;
-	GetEnumItems(): Array<Enum.RotationType>;
 }
 
 interface Enum_RuntimeUndoBehavior {
 	Aggregate: Enum.RuntimeUndoBehavior.Aggregate;
 	Snapshot: Enum.RuntimeUndoBehavior.Snapshot;
 	Hybrid: Enum.RuntimeUndoBehavior.Hybrid;
-	GetEnumItems(): Array<Enum.RuntimeUndoBehavior>;
 }
 
 interface Enum_SaveFilter {
 	SaveAll: Enum.SaveFilter.SaveAll;
 	SaveWorld: Enum.SaveFilter.SaveWorld;
 	SaveGame: Enum.SaveFilter.SaveGame;
-	GetEnumItems(): Array<Enum.SaveFilter>;
 }
 
 interface Enum_SavedQualitySetting {
@@ -14877,7 +14190,6 @@ interface Enum_SavedQualitySetting {
 	QualityLevel8: Enum.SavedQualitySetting.QualityLevel8;
 	QualityLevel9: Enum.SavedQualitySetting.QualityLevel9;
 	QualityLevel10: Enum.SavedQualitySetting.QualityLevel10;
-	GetEnumItems(): Array<Enum.SavedQualitySetting>;
 }
 
 interface Enum_ScaleType {
@@ -14886,7 +14198,6 @@ interface Enum_ScaleType {
 	Tile: Enum.ScaleType.Tile;
 	Fit: Enum.ScaleType.Fit;
 	Crop: Enum.ScaleType.Crop;
-	GetEnumItems(): Array<Enum.ScaleType>;
 }
 
 interface Enum_ScreenOrientation {
@@ -14895,42 +14206,36 @@ interface Enum_ScreenOrientation {
 	LandscapeSensor: Enum.ScreenOrientation.LandscapeSensor;
 	Portrait: Enum.ScreenOrientation.Portrait;
 	Sensor: Enum.ScreenOrientation.Sensor;
-	GetEnumItems(): Array<Enum.ScreenOrientation>;
 }
 
 interface Enum_ScrollBarInset {
 	None: Enum.ScrollBarInset.None;
 	ScrollBar: Enum.ScrollBarInset.ScrollBar;
 	Always: Enum.ScrollBarInset.Always;
-	GetEnumItems(): Array<Enum.ScrollBarInset>;
 }
 
 interface Enum_ScrollingDirection {
 	X: Enum.ScrollingDirection.X;
 	Y: Enum.ScrollingDirection.Y;
 	XY: Enum.ScrollingDirection.XY;
-	GetEnumItems(): Array<Enum.ScrollingDirection>;
 }
 
 interface Enum_ServerAudioBehavior {
 	Enabled: Enum.ServerAudioBehavior.Enabled;
 	Muted: Enum.ServerAudioBehavior.Muted;
 	OnlineGame: Enum.ServerAudioBehavior.OnlineGame;
-	GetEnumItems(): Array<Enum.ServerAudioBehavior>;
 }
 
 interface Enum_SizeConstraint {
 	RelativeXY: Enum.SizeConstraint.RelativeXY;
 	RelativeXX: Enum.SizeConstraint.RelativeXX;
 	RelativeYY: Enum.SizeConstraint.RelativeYY;
-	GetEnumItems(): Array<Enum.SizeConstraint>;
 }
 
 interface Enum_SortOrder {
 	LayoutOrder: Enum.SortOrder.LayoutOrder;
 	Name: Enum.SortOrder.Name;
 	Custom: Enum.SortOrder.Custom;
-	GetEnumItems(): Array<Enum.SortOrder>;
 }
 
 interface Enum_SoundType {
@@ -14949,7 +14254,6 @@ interface Enum_SoundType {
 	StepOn: Enum.SoundType.StepOn;
 	Swoosh: Enum.SoundType.Swoosh;
 	Victory: Enum.SoundType.Victory;
-	GetEnumItems(): Array<Enum.SoundType>;
 }
 
 interface Enum_SpecialKey {
@@ -14959,7 +14263,6 @@ interface Enum_SpecialKey {
 	PageUp: Enum.SpecialKey.PageUp;
 	PageDown: Enum.SpecialKey.PageDown;
 	ChatHotkey: Enum.SpecialKey.ChatHotkey;
-	GetEnumItems(): Array<Enum.SpecialKey>;
 }
 
 interface Enum_StartCorner {
@@ -14967,13 +14270,11 @@ interface Enum_StartCorner {
 	TopRight: Enum.StartCorner.TopRight;
 	BottomLeft: Enum.StartCorner.BottomLeft;
 	BottomRight: Enum.StartCorner.BottomRight;
-	GetEnumItems(): Array<Enum.StartCorner>;
 }
 
 interface Enum_Status {
 	Poison: Enum.Status.Poison;
 	Confusion: Enum.Status.Confusion;
-	GetEnumItems(): Array<Enum.Status>;
 }
 
 interface Enum_StudioStyleGuideColor {
@@ -15061,7 +14362,6 @@ interface Enum_StudioStyleGuideColor {
 	HeaderSection: Enum.StudioStyleGuideColor.HeaderSection;
 	Midlight: Enum.StudioStyleGuideColor.Midlight;
 	StatusBar: Enum.StudioStyleGuideColor.StatusBar;
-	GetEnumItems(): Array<Enum.StudioStyleGuideColor>;
 }
 
 interface Enum_StudioStyleGuideModifier {
@@ -15070,14 +14370,12 @@ interface Enum_StudioStyleGuideModifier {
 	Pressed: Enum.StudioStyleGuideModifier.Pressed;
 	Disabled: Enum.StudioStyleGuideModifier.Disabled;
 	Hover: Enum.StudioStyleGuideModifier.Hover;
-	GetEnumItems(): Array<Enum.StudioStyleGuideModifier>;
 }
 
 interface Enum_Style {
 	AlternatingSupports: Enum.Style.AlternatingSupports;
 	BridgeStyleSupports: Enum.Style.BridgeStyleSupports;
 	NoSupports: Enum.Style.NoSupports;
-	GetEnumItems(): Array<Enum.Style>;
 }
 
 interface Enum_SurfaceConstraint {
@@ -15085,7 +14383,6 @@ interface Enum_SurfaceConstraint {
 	Hinge: Enum.SurfaceConstraint.Hinge;
 	SteppingMotor: Enum.SurfaceConstraint.SteppingMotor;
 	Motor: Enum.SurfaceConstraint.Motor;
-	GetEnumItems(): Array<Enum.SurfaceConstraint>;
 }
 
 interface Enum_SurfaceType {
@@ -15099,7 +14396,6 @@ interface Enum_SurfaceType {
 	Motor: Enum.SurfaceType.Motor;
 	SteppingMotor: Enum.SurfaceType.SteppingMotor;
 	SmoothNoOutlines: Enum.SurfaceType.SmoothNoOutlines;
-	GetEnumItems(): Array<Enum.SurfaceType>;
 }
 
 interface Enum_SwipeDirection {
@@ -15108,20 +14404,17 @@ interface Enum_SwipeDirection {
 	Up: Enum.SwipeDirection.Up;
 	Down: Enum.SwipeDirection.Down;
 	None: Enum.SwipeDirection.None;
-	GetEnumItems(): Array<Enum.SwipeDirection>;
 }
 
 interface Enum_TableMajorAxis {
 	RowMajor: Enum.TableMajorAxis.RowMajor;
 	ColumnMajor: Enum.TableMajorAxis.ColumnMajor;
-	GetEnumItems(): Array<Enum.TableMajorAxis>;
 }
 
 interface Enum_Technology {
 	Legacy: Enum.Technology.Legacy;
 	Voxel: Enum.Technology.Voxel;
 	Compatibility: Enum.Technology.Compatibility;
-	GetEnumItems(): Array<Enum.Technology>;
 }
 
 interface Enum_TeleportResult {
@@ -15133,7 +14426,6 @@ interface Enum_TeleportResult {
 	Unauthorized: Enum.TeleportResult.Unauthorized;
 	Flooded: Enum.TeleportResult.Flooded;
 	IsTeleporting: Enum.TeleportResult.IsTeleporting;
-	GetEnumItems(): Array<Enum.TeleportResult>;
 }
 
 interface Enum_TeleportState {
@@ -15142,47 +14434,40 @@ interface Enum_TeleportState {
 	WaitingForServer: Enum.TeleportState.WaitingForServer;
 	Failed: Enum.TeleportState.Failed;
 	InProgress: Enum.TeleportState.InProgress;
-	GetEnumItems(): Array<Enum.TeleportState>;
 }
 
 interface Enum_TeleportType {
 	ToPlace: Enum.TeleportType.ToPlace;
 	ToInstance: Enum.TeleportType.ToInstance;
 	ToReservedServer: Enum.TeleportType.ToReservedServer;
-	GetEnumItems(): Array<Enum.TeleportType>;
 }
 
 interface Enum_TextFilterContext {
 	PublicChat: Enum.TextFilterContext.PublicChat;
 	PrivateChat: Enum.TextFilterContext.PrivateChat;
-	GetEnumItems(): Array<Enum.TextFilterContext>;
 }
 
 interface Enum_TextTruncate {
 	None: Enum.TextTruncate.None;
 	AtEnd: Enum.TextTruncate.AtEnd;
-	GetEnumItems(): Array<Enum.TextTruncate>;
 }
 
 interface Enum_TextXAlignment {
 	Left: Enum.TextXAlignment.Left;
 	Center: Enum.TextXAlignment.Center;
 	Right: Enum.TextXAlignment.Right;
-	GetEnumItems(): Array<Enum.TextXAlignment>;
 }
 
 interface Enum_TextYAlignment {
 	Top: Enum.TextYAlignment.Top;
 	Center: Enum.TextYAlignment.Center;
 	Bottom: Enum.TextYAlignment.Bottom;
-	GetEnumItems(): Array<Enum.TextYAlignment>;
 }
 
 interface Enum_TextureMode {
 	Stretch: Enum.TextureMode.Stretch;
 	Wrap: Enum.TextureMode.Wrap;
 	Static: Enum.TextureMode.Static;
-	GetEnumItems(): Array<Enum.TextureMode>;
 }
 
 interface Enum_TextureQueryType {
@@ -15190,7 +14475,6 @@ interface Enum_TextureQueryType {
 	NonHumanoidOrphaned: Enum.TextureQueryType.NonHumanoidOrphaned;
 	Humanoid: Enum.TextureQueryType.Humanoid;
 	HumanoidOrphaned: Enum.TextureQueryType.HumanoidOrphaned;
-	GetEnumItems(): Array<Enum.TextureQueryType>;
 }
 
 interface Enum_ThreadPoolConfig {
@@ -15205,14 +14489,12 @@ interface Enum_ThreadPoolConfig {
 	Threads4: Enum.ThreadPoolConfig.Threads4;
 	Threads8: Enum.ThreadPoolConfig.Threads8;
 	Threads16: Enum.ThreadPoolConfig.Threads16;
-	GetEnumItems(): Array<Enum.ThreadPoolConfig>;
 }
 
 interface Enum_ThrottlingPriority {
 	Extreme: Enum.ThrottlingPriority.Extreme;
 	ElevatedOnServer: Enum.ThrottlingPriority.ElevatedOnServer;
 	Default: Enum.ThrottlingPriority.Default;
-	GetEnumItems(): Array<Enum.ThrottlingPriority>;
 }
 
 interface Enum_ThumbnailSize {
@@ -15223,28 +14505,24 @@ interface Enum_ThumbnailSize {
 	Size100x100: Enum.ThumbnailSize.Size100x100;
 	Size150x150: Enum.ThumbnailSize.Size150x150;
 	Size352x352: Enum.ThumbnailSize.Size352x352;
-	GetEnumItems(): Array<Enum.ThumbnailSize>;
 }
 
 interface Enum_ThumbnailType {
 	HeadShot: Enum.ThumbnailType.HeadShot;
 	AvatarBust: Enum.ThumbnailType.AvatarBust;
 	AvatarThumbnail: Enum.ThumbnailType.AvatarThumbnail;
-	GetEnumItems(): Array<Enum.ThumbnailType>;
 }
 
 interface Enum_TickCountSampleMethod {
 	Fast: Enum.TickCountSampleMethod.Fast;
 	Benchmark: Enum.TickCountSampleMethod.Benchmark;
 	Precise: Enum.TickCountSampleMethod.Precise;
-	GetEnumItems(): Array<Enum.TickCountSampleMethod>;
 }
 
 interface Enum_TopBottom {
 	Top: Enum.TopBottom.Top;
 	Center: Enum.TopBottom.Center;
 	Bottom: Enum.TopBottom.Bottom;
-	GetEnumItems(): Array<Enum.TopBottom>;
 }
 
 interface Enum_TouchCameraMovementMode {
@@ -15252,7 +14530,6 @@ interface Enum_TouchCameraMovementMode {
 	Follow: Enum.TouchCameraMovementMode.Follow;
 	Classic: Enum.TouchCameraMovementMode.Classic;
 	Orbital: Enum.TouchCameraMovementMode.Orbital;
-	GetEnumItems(): Array<Enum.TouchCameraMovementMode>;
 }
 
 interface Enum_TouchMovementMode {
@@ -15262,39 +14539,33 @@ interface Enum_TouchMovementMode {
 	Thumbpad: Enum.TouchMovementMode.Thumbpad;
 	ClickToMove: Enum.TouchMovementMode.ClickToMove;
 	DynamicThumbstick: Enum.TouchMovementMode.DynamicThumbstick;
-	GetEnumItems(): Array<Enum.TouchMovementMode>;
 }
 
 interface Enum_TweenStatus {
 	Canceled: Enum.TweenStatus.Canceled;
 	Completed: Enum.TweenStatus.Completed;
-	GetEnumItems(): Array<Enum.TweenStatus>;
 }
 
 interface Enum_UITheme {
 	Light: Enum.UITheme.Light;
 	Dark: Enum.UITheme.Dark;
-	GetEnumItems(): Array<Enum.UITheme>;
 }
 
 interface Enum_UiMessageType {
 	UiMessageError: Enum.UiMessageType.UiMessageError;
 	UiMessageInfo: Enum.UiMessageType.UiMessageInfo;
-	GetEnumItems(): Array<Enum.UiMessageType>;
 }
 
 interface Enum_UploadSetting {
 	Never: Enum.UploadSetting.Never;
 	Ask: Enum.UploadSetting.Ask;
 	Always: Enum.UploadSetting.Always;
-	GetEnumItems(): Array<Enum.UploadSetting>;
 }
 
 interface Enum_UserCFrame {
 	Head: Enum.UserCFrame.Head;
 	LeftHand: Enum.UserCFrame.LeftHand;
 	RightHand: Enum.UserCFrame.RightHand;
-	GetEnumItems(): Array<Enum.UserCFrame>;
 }
 
 interface Enum_UserInputState {
@@ -15303,7 +14574,6 @@ interface Enum_UserInputState {
 	End: Enum.UserInputState.End;
 	Cancel: Enum.UserInputState.Cancel;
 	None: Enum.UserInputState.None;
-	GetEnumItems(): Array<Enum.UserInputState>;
 }
 
 interface Enum_UserInputType {
@@ -15328,33 +14598,28 @@ interface Enum_UserInputType {
 	TextInput: Enum.UserInputType.TextInput;
 	InputMethod: Enum.UserInputType.InputMethod;
 	None: Enum.UserInputType.None;
-	GetEnumItems(): Array<Enum.UserInputType>;
 }
 
 interface Enum_VRTouchpad {
 	Left: Enum.VRTouchpad.Left;
 	Right: Enum.VRTouchpad.Right;
-	GetEnumItems(): Array<Enum.VRTouchpad>;
 }
 
 interface Enum_VRTouchpadMode {
 	Touch: Enum.VRTouchpadMode.Touch;
 	VirtualThumbstick: Enum.VRTouchpadMode.VirtualThumbstick;
 	ABXY: Enum.VRTouchpadMode.ABXY;
-	GetEnumItems(): Array<Enum.VRTouchpadMode>;
 }
 
 interface Enum_VerticalAlignment {
 	Center: Enum.VerticalAlignment.Center;
 	Top: Enum.VerticalAlignment.Top;
 	Bottom: Enum.VerticalAlignment.Bottom;
-	GetEnumItems(): Array<Enum.VerticalAlignment>;
 }
 
 interface Enum_VerticalScrollBarPosition {
 	Left: Enum.VerticalScrollBarPosition.Left;
 	Right: Enum.VerticalScrollBarPosition.Right;
-	GetEnumItems(): Array<Enum.VerticalScrollBarPosition>;
 }
 
 interface Enum_VibrationMotor {
@@ -15364,21 +14629,18 @@ interface Enum_VibrationMotor {
 	RightTrigger: Enum.VibrationMotor.RightTrigger;
 	LeftHand: Enum.VibrationMotor.LeftHand;
 	RightHand: Enum.VibrationMotor.RightHand;
-	GetEnumItems(): Array<Enum.VibrationMotor>;
 }
 
 interface Enum_VideoQualitySettings {
 	LowResolution: Enum.VideoQualitySettings.LowResolution;
 	MediumResolution: Enum.VideoQualitySettings.MediumResolution;
 	HighResolution: Enum.VideoQualitySettings.HighResolution;
-	GetEnumItems(): Array<Enum.VideoQualitySettings>;
 }
 
 interface Enum_VirtualInputMode {
 	Recording: Enum.VirtualInputMode.Recording;
 	Playing: Enum.VirtualInputMode.Playing;
 	None: Enum.VirtualInputMode.None;
-	GetEnumItems(): Array<Enum.VirtualInputMode>;
 }
 
 interface Enum_WaterDirection {
@@ -15388,7 +14650,6 @@ interface Enum_WaterDirection {
 	Y: Enum.WaterDirection.Y;
 	NegZ: Enum.WaterDirection.NegZ;
 	Z: Enum.WaterDirection.Z;
-	GetEnumItems(): Array<Enum.WaterDirection>;
 }
 
 interface Enum_WaterForce {
@@ -15397,13 +14658,11 @@ interface Enum_WaterForce {
 	Medium: Enum.WaterForce.Medium;
 	Strong: Enum.WaterForce.Strong;
 	Max: Enum.WaterForce.Max;
-	GetEnumItems(): Array<Enum.WaterForce>;
 }
 
 interface Enum_ZIndexBehavior {
 	Global: Enum.ZIndexBehavior.Global;
 	Sibling: Enum.ZIndexBehavior.Sibling;
-	GetEnumItems(): Array<Enum.ZIndexBehavior>;
 }
 
 declare type CastsToEnum<

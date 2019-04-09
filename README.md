@@ -111,6 +111,7 @@ Here are the reasons I use rbx-safe-types over rbx-types:
 	- This allows rbx-safe-types to add `CastsToEnum<EnumType | EnumItem>`, so that TS code can pass strings/numbers into Roblox functions which require Enums. At the moment, we are waiting on a TS update which allow us to permit this behavior on property setting.
 	- Goal: At some point I would like to have an optimization built-in to the transpiler to fold `Enum.EnumType.EnumItem.Value` into a constant.
 	- Caveat: As a side effect of TypeScript's type system, if working exclusively with the Enum Objects themselves, you may have to `return error("")` on an extra branch because TS considers any object that looks like a duck to be a duck. Thus, Enums are not considered immutable by TypeScript, but their `Value` and `Name` properties are, because strings and numbers are each immutable.
+	- Like Roblox Objects, one should refrain from trying to iterate over their members using a for loop.
 - rbx-safe-types doesn't have a bunch of internal members of Instances which look like: `_210: never`
 - rbx-safe-types removes 99% of the internal `Rbx_` classes. Those that remain now carry the prefix `RbxInternal` instead to avoid confusion for users.
 - rbx-safe-types has more dank documentation:
