@@ -421,7 +421,12 @@ interface Array<T> extends ReadonlyArray<T> {
 }
 
 interface ArrayConstructor {
-	new <T>(): Array<T>;
+	/** Instantiates a new array.
+	 * If length is provided, roblox-TS will load `length` amount of nil's into the new array.
+	 * Note that this does not affect the `length` property of the array,
+	 * it only keeps it from needing to resize to this `length` later.
+	 */
+	new <T>(length?: number): Array<T>;
 }
 
 declare const Array: ArrayConstructor;

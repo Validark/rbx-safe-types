@@ -47,13 +47,13 @@ export class EnumGenerator extends Generator {
 				this.write(`export const ${enumItemName}: ${enumItemName};`);
 				this.write(``);
 			}
-			this.write(`export function GetEnumItems(): Array<${enumTypeName}>;`);
+			// this.write(`export function GetEnumItems(): Array<${enumTypeName}>;`);
 			this.popIndent();
 			this.write(`}`);
 			this.write(`export type ${enumTypeName} = ${enumTypeName}.${enumItemNames.join(` | ${enumTypeName}.`)};`);
 			this.write(``);
 		}
-		this.write(`export function GetEnums(): Array<Enum_${enumTypeNames.join(" | Enum_")}>;`);
+		// this.write(`export function GetEnums(): Array<Enum_${enumTypeNames.join(" | Enum_")}>;`);
 		this.popIndent();
 		this.write(`}`);
 		this.write(``);
@@ -64,7 +64,7 @@ export class EnumGenerator extends Generator {
 			for (const { Name: enumItemName, Value: enumItemValue } of enumTypeItems) {
 				this.write(`${enumItemName}: Enum.${enumTypeName}.${enumItemName};`);
 			}
-			this.write(`GetEnumItems(): Array<Enum.${enumTypeName}>;`);
+			// this.write(`GetEnumItems(): Array<Enum.${enumTypeName}>;`);
 			this.popIndent();
 			this.write(`}`);
 			this.write(``);

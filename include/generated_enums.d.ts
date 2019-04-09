@@ -7,50 +7,8 @@
 // GENERATED ROBLOX ENUMS
 
 declare namespace Enum {
-	export namespace ActionType {
-		export interface Nothing {
-			Name: "Nothing";
-			Value: 0;
-			EnumType: Enum_ActionType;
-		}
-
-		export const Nothing: Nothing;
-
-		export interface Pause {
-			Name: "Pause";
-			Value: 1;
-			EnumType: Enum_ActionType;
-		}
-
-		export const Pause: Pause;
-
-		export interface Lose {
-			Name: "Lose";
-			Value: 2;
-			EnumType: Enum_ActionType;
-		}
-
-		export const Lose: Lose;
-
-		export interface Draw {
-			Name: "Draw";
-			Value: 3;
-			EnumType: Enum_ActionType;
-		}
-
-		export const Draw: Draw;
-
-		export interface Win {
-			Name: "Win";
-			Value: 4;
-			EnumType: Enum_ActionType;
-		}
-
-		export const Win: Win;
-
-		export function GetEnumItems(): Array<ActionType>;
-	}
-	export type ActionType = ActionType.Nothing | ActionType.Pause | ActionType.Lose | ActionType.Draw | ActionType.Win;
+	export const ActionType: Enum_ActionType;
+	export  type ActionType = Enum_ActionType["Nothing"] | Enum_ActionType["Pause"] | Enum_ActionType["Lose"] | Enum_ActionType["Draw"] | Enum_ActionType["Win"]
 
 	export namespace ActuatorRelativeTo {
 		export interface Attachment0 {
@@ -13293,11 +13251,31 @@ declare namespace Enum {
 }
 
 interface Enum_ActionType {
-	Nothing: Enum.ActionType.Nothing;
-	Pause: Enum.ActionType.Pause;
-	Lose: Enum.ActionType.Lose;
-	Draw: Enum.ActionType.Draw;
-	Win: Enum.ActionType.Win;
+	readonly Nothing: {
+		Name: "Nothing";
+		Value: 0;
+		EnumType: Enum_ActionType;
+	};
+	readonly Pause: {
+		Name: "Pause";
+		Value: 1;
+		EnumType: Enum_ActionType;
+	};
+	readonly Lose: {
+		Name: "Lose";
+		Value: 2;
+		EnumType: Enum_ActionType;
+	};
+	readonly Draw: {
+		Name: "Draw";
+		Value: 3;
+		EnumType: Enum_ActionType;
+	};
+	readonly Win: {
+		Name: "Win";
+		Value: 4;
+		EnumType: Enum_ActionType;
+	};
 	GetEnumItems(): Array<Enum.ActionType>;
 }
 
