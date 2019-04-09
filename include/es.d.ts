@@ -478,7 +478,9 @@ interface Map<K, V> extends ReadonlyMap<K, V> {
 	set(key: K, value: V): this;
 
 	/**
-	 * Deletes the given key from the Map
+	 * Deletes the given key from the Map.
+	 *
+	 * Returns a boolean indicating whether or not a value was removed.
 	 */
 	delete(key: K): boolean;
 
@@ -562,6 +564,8 @@ interface Set<T> extends ReadonlySet<T> {
 
 	/**
 	 * Deletes the given key from the set
+	 *
+	 * Returns a boolean indicating whether or not a value was removed.
 	 */
 	delete(value: T): boolean;
 
