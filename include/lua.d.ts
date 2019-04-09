@@ -114,10 +114,11 @@ interface LuaMetatable<T> {
 /** Sets the metatable for the given table. If setTo is nil, the metatable of the given table is removed. If the original metatable has a "__metatable" field, this will raise an error. This function returns the table t, which was passed to the function. */
 declare function setmetatable<T extends object>(object: T, metatable: LuaMetatable<T>): T;
 
-interface LuaDateTable {
+interface DateTable {
 	year: number;
 	month: number;
 	day: number;
+
 	hour?: number;
 	min?: number;
 	sec?: number;
@@ -126,22 +127,10 @@ interface LuaDateTable {
 	wday?: number;
 }
 
-interface DateTable {
-	year: number;
-	month: number;
-	day: number;
-	hour: number;
-	min: number;
-	sec: number;
-	isdst: boolean;
-	yday: number;
-	wday: number;
-}
-
 declare namespace os {
 	function time(): number;
-	function time(dateTable: LuaDateTable): number;
-	function date(formatString: "*t" | "!*t", time?: number): DateTable;
+	function time(dateTable: DateTable): number;
+	function date(formatString: "*t" | "!*t", time?: number): Required<DateTable>;
 	function difftime(t2: number, t1: number): number;
 }
 
