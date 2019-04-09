@@ -425,6 +425,8 @@ interface ArrayConstructor {
 	 * If length is provided, roblox-TS will load `length` amount of nil's into the new array.
 	 * Note that this does not affect the `length` property of the array,
 	 * it only keeps it from needing to resize to this `length` later.
+	 *
+	 * @param length A literal integer between 0 and 200 inclusive, which is the number of nil's to push onto the array
 	 */
 	new <T>(length?: number): Array<T>;
 }
