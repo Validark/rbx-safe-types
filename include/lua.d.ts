@@ -167,7 +167,7 @@ interface String {
 	format(...args: Array<number | string>): string;
 
 	/** Returns an iterator function that, each time it is called, returns the next captures from pattern over the string s. */
-	gmatch(pattern: string): () => string;
+	gmatch(pattern: string): () => string | undefined;
 
 	/** Returns a copy of s in which all (or the first n, if given) occurrences of the pattern have been replaced by a replacement string specified by repl, which can be a string, a table, or a function. gsub also returns, as its second value, the total number of matches that occurred. */
 	gsub(pattern: string, repl: unknown, n?: number): string;
@@ -211,6 +211,9 @@ declare namespace string {
 
 	/** Returns a formatted version of its variable number of arguments following the description given in its first argument (which must be a string). */
 	function format(pattern: string, ...args: Array<number | string>): string;
+
+	/** Returns an iterator function that, each time it is called, returns the next captures from pattern over the string s. */
+	function gmatch(s: string, pattern: string): () => string | undefined;
 
 	/** Returns a copy of s in which all (or the first n, if given) occurrences of the pattern have been replaced by a replacement string specified by repl, which can be a string, a table, or a function. gsub also returns, as its second value, the total number of matches that occurred. */
 	function gsub(s: string, pattern: string, repl: unknown, n?: number): string;
