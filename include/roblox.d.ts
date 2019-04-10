@@ -212,7 +212,7 @@ interface AssetProductInfo extends ProductInfo {
 	/** If InfoType was Asset, this is the ID of the given asset. */
 	AssetId: number;
 	/** The [type of asset](https://developer.roblox.com/articles/Asset-types) (e.g. place, model, shirt) */
-	AssetTypeId: number;
+	AssetTypeId: AssetType["id"];
 	/** Describes whether the asset is purchasable */
 	IsForSale: boolean;
 	/** Describes whether the asset is a "limited item" that is no longer (if ever) sold */
@@ -321,17 +321,17 @@ interface CharacterAppearanceInfo {
 	/** Describes the BrickColor values for each limb */
 	bodyColors: {
 		/** The BrickColor value of the leftArm */
-		leftArmColorId: number;
+		leftArmColorId: BrickColors[keyof BrickColors]["Number"];
 		/** The BrickColor value of the torso */
-		torsoColorId: number;
+		torsoColorId: BrickColors[keyof BrickColors]["Number"];
 		/** The BrickColor value of the rightArm */
-		rightArmColorId: number;
+		rightArmColorId: BrickColors[keyof BrickColors]["Number"];
 		/** The BrickColor value of the head */
-		headColorId: number;
+		headColorId: BrickColors[keyof BrickColors]["Number"];
 		/** The BrickColor value of the leftLeg */
-		leftLegColorId: number;
+		leftLegColorId: BrickColors[keyof BrickColors]["Number"];
 		/** The BrickColor value of the rightLeg */
-		rightLegColorId: number;
+		rightLegColorId: BrickColors[keyof BrickColors]["Number"];
 	};
 
 	/** The assets currently equipped by the Player (hats, body parts, etc, excluding gear) */
