@@ -13352,7 +13352,7 @@ It’s often a better idea to set `Player/Team` to the respective `Team` instead
 	/** The UserId is a `Player` property that contains a read-only integer that **uniquely and consistently** identifies every user account on Roblox. Unlike the `Instance/Name` of a Player, which may change according the user’s present username, this value will never change for the same account.
 
 This property is essential when saving/loading player data using `GlobalDataStore|GlobalDataStores`. Use a player’s UserId as the data store key so that each player has a unique key. */
-	UserId: number;
+	readonly UserId: number;
 	/** The CharacterAdded event fires when a player’s character spawns (or respawns). This event fires soon after setting `Player/Character` to a non-nil value or calling `Player/LoadCharacter`. Note, CharacterAdded fires when the Character is assigned to the `Player`, which is before the Character is parented to the `Workspace`.
 
 This can be used alongside the `Player/CharacterRemoving` event, which fires right before a player’s character is about to be removed, typically after death. As such, both of these event can potentially fire many times as players die then respawn in a place. If you want to detect when a player joins or leaves the game, you can use the `Players/PlayerAdded` and `Players/PlayerRemoving` events instead.
