@@ -2650,27 +2650,39 @@ interface BodyForce extends RbxInternalBodyMover {
 	Force: Vector3;
 }
 
-/** The BodyGyro object applies a [torque]() (or **rotational force**) on a `BasePart` such that it maintains a constant [angular displacement](), or orientation. This allows for the creation of parts that point in a certain direction, as if a [real gyroscope]() were acting upon it. It is the rotational counterpart to a `BodyPosition`. If you would like to maintain a constant [angular velocity](), use a `BodyAngularVelocity` instead.
+/** The **BodyGyro** object applies a torque (rotational force) on a `BasePart` such that it maintains a constant angular displacement, or orientation. This allows for the creation of parts that point in a certain direction, as if a real gyroscope were acting upon it. Essentially, it’s the rotational counterpart to a `BodyPosition`.
 
-The `BodyGyro/CFrame|CFrame` property controls the goal orientation. Only the angular components of the `DataType/CFrame` are used - position will make no difference. `BodyGyro/MaxTorque|MaxTorque` limits the amount of angular force that may be applied. `BodyGyro/P|P` controls the power used in achieving the goal orientation. Finally, `BodyGyro/D|D` controls dampening behavior.
+If you would like to maintain a constant angular velocity, use a `BodyAngularVelocity` instead.
 
-### Setting the Orientation (CFrame)
+The `BodyGyro/CFrame|CFrame` property controls the goal orientation. Only the angular components of the `DataType/CFrame` are used; position will make no difference. `BodyGyro/MaxTorque|MaxTorque` limits the amount of angular force that may be applied, `BodyGyro/P|P` controls the power used in achieving the goal orientation, and `BodyGyro/D|D` controls dampening behavior.
 
-Like all `CFrame`\-type properties, the `BodyGyro/CFrame` property isn’t editable in the Properties window in Studio. Since there’s no physical component to a BodyGyro, you should use the Command bar or another scripting method to set the CFrame. A common technique used to set the goal orientation is to use a part’s present orientation: simply set the `BodyGyro/CFrame` to the Part’s `BasePart/CFrame|CFrame`. For example:
+### Setting the Orientation
 
-`workspace.Part.BodyGyro.CFrame = workspace.Part.CFrame`
+Like all `DataType/CFrame` properties, the `BodyGyro/CFrame` property isn’t editable in the **Properties** window of Studio. Since there’s no physical component to a **BodyGyro**, you should use scripting to set the `BodyGyro/CFrame`.
 
-You can also use a CFrame constructor which initializes rotation, such as: `CFrame.fromAxisAngle`, `CFrame.fromEulerAnglesXYZ` or `CFrame.fromEulerAnglesYXZ`. Beware of [gimbal lock]() as you decide on the method and angles (in radians). Additionally, you could use `CFrame.new(gyro.Parent.Position, targetPosition)` in order to have the BodyGyro “look at” a `targetPosition`.
+A common technique for setting the goal orientation is to set the `BodyGyro/CFrame` to a part’s `BasePart/CFrame|CFrame`. For example:
+
+```lua
+workspace.Part.BodyGyro.CFrame = workspace.Part.CFrame
+```
+
+You can also use a `DataType/CFrame` **constructor** which initializes rotation such as `CFrame.fromAxisAngle`, `CFrame.fromEulerAnglesXYZ`, or `CFrame.fromEulerAnglesYXZ`. Alternatively, you can use the following structure to make the body gyro “look at” a `targetPosition`.
+
+```lua
+CFrame.new(BodyGyro.Parent.Position, targetPosition)
+```
 
 ### Troubleshooting
 
-- If your part isn’t moving at all, the assembly most likely has mass larger than what the BodyGyro can move. Try raising the `BodyGyro/MaxTorque|MaxTorque` and/or `BodyGyro/P|P` (power) properties. You should also check that no `BasePart/Anchored|Anchored` parts are within the assembly or in the way of the assembly.
+- If the assembly isn’t moving at all, it most likely has mass larger than what the **BodyGyro** can move. Try raising the `BodyGyro/MaxTorque|MaxTorque` and/or `BodyGyro/P|P` (power) properties. You should also check that no `BasePart/Anchored|Anchored` parts are within the assembly or in the way of the assembly.
+- If the assembly isn’t moving on all axes, double check the axis in question has sufficient `BodyGyro/MaxTorque|MaxTorque`. Alternatively, if the part allows movement on an axis and shouldn’t, be sure the `BodyGyro/MaxTorque|MaxTorque` is non-zero
 
-- If your part isn’t moving on all axes, double check the axis in question has sufficient `BodyGyro/MaxTorque`. Alternatively, if the part allows movement on an axis and shouldn’t, be sure the MaxTorque is nonzero on that axis and refine the manner in which you are setting the BodyGyro’s `BodyGyro/CFrame|CFrame`.
+ on that axis and refine the manner in which you are setting the **BodyGyro**`BodyGyro/CFrame|CFrame`.
+- If the assembly is moving too quickly, consider raising the `BodyGyro/D|D` (dampening) property.
+- If the assembly is moving too slowly, consider lowering the `BodyGyro/D|D` (dampening) property. Also consider raising the `BodyGyro/MaxTorque|MaxTorque` and/or `BodyGyro/P|P` (power) properties.
+- Any assembly containing a part that contains a **BodyGyro** or `BodyPosition` will not be simulated when interacting with a player unless that player is the /articles/Network Ownership|network owner
 
-- If your part is moving too quickly, consider raising the `BodyGyro/D|D` (dampening) property.
-
-- If your part is moving too slowly, consider lowering the `BodyGyro/D|D` (dampening) property. Also consider raising the `BodyGyro/MaxTorque|MaxTorque` and/or `BodyGyro/P|P` (power) properties. */
+ of the assembly. */
 interface BodyGyro extends RbxInternalBodyMover {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "BodyGyro";
@@ -2684,17 +2696,18 @@ interface BodyGyro extends RbxInternalBodyMover {
 	P: number;
 }
 
-/** The BodyPosition obejct applies a [force]() on a `BasePart` such that it will maintain a constant position in the world. The `BodyPosition/Position|Position` property, not to be confused with `BasePart/Position`, controls the target world position. This is the translational counterpart to a `BodyGyro`. If you need further control on a force applied to an object, consider using a `BodyForce` or `BodyThrust` instead.
+/** The **BodyPosition** object applies a force on a `BasePart` such that it will maintain a constant position in the world. The `BodyPosition/Position|Position` property, not to be confused with `BasePart/Position`, controls the target world position. This is the translational counterpart to a `BodyGyro`. If you need further control on a force applied to an object, consider using a `BodyForce` or `BodyThrust` instead.
 
 The strength of the force applied by this object is controlled by several factors, namely the distance to the goal position: the force is stronger when farther away from the goal. This is amplified by `BodyPosition/P|P` (power). The present velocity will also dampen the force applied by this object, and this is amplified by `BodyPosition/D|D` (dampening). The resulting force is then capped by `BodyPosition/MaxForce|MaxForce`. Note the force applied on the part to achieve the goal position may vary on a per-axis basis.
 
 ### Troubleshooting
 
-- If an assembly with a BodyPosition isn’t moving, it is likely the `BodyPosition/MaxForce|MaxForce` is too low. Also check for any `BasePart/Anchored|Anchored` parts within the assembly or in the way of the assembly.
+- If the assembly isn’t moving, it’s likely the `BodyPosition/MaxForce|MaxForce` is too low. Also check for any `BasePart/Anchored|Anchored` parts within the assembly or in the way of the assembly.
+- If the assembly is moving horizontally but not vertically, it’s likely the `BodyPosition/MaxForce|MaxForce` is strong enough to overcome friction but not gravity. Consider raising the **Y** component of `BodyPosition/MaxForce|MaxForce` in order to get the object off the ground.
+- If the assembly is **overshooting** the goal position and springing back, it’s likely the `BodyPosition/D|D` (dampening) is too low. Alternatively, the `BodyPosition/MaxForce|MaxForce` and/or `BodyPosition/P|P` may be too high.
+- Any assembly containing a part that contains a **BodyPosition** or a `BodyGyro` will not be simulated when interacting with a player unless that player is the /articles/Network Ownership|network owner
 
-- If an assembly with a BodyPosition is moving horizontally but not vertically, it is likely the `BodyPosition/MaxForce|MaxForce` is strong enough to overcome friction but not gravity. Consider raising the Y component of `BodyPosition/MaxForce|MaxForce` in order to get the object off the ground.
-
-- If an assembly with a BodyPosition is **overshooting** the goal position and **rubber banding back**, it is likely that the `BodyPosition/D|D` (dampening) is too low. Alternatively, the `BodyPosition/MaxForce|MaxForce` and/or `BodyPosition/P|P` may be too high. */
+ of the assembly. */
 interface BodyPosition extends RbxInternalBodyMover {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "BodyPosition";
@@ -3721,11 +3734,11 @@ interface Configuration extends RbxInternalInstance {
 }
 
 interface RbxInternalConstraint extends RbxInternalInstance {
-	/** This property determines if the `Constraint` is currently active in the world. If true, it is currently active.
+	/** True if the constraint is currently active in the world.
 
-True if the constraint and both of its `BasePart|parts` are in the `Workspace` and the constraint’s `Constraint/Enabled` property is true.This property determines if the `Constraint` is currently active in the world. If true, it is currently active.
+True if the constraint and both of its parts are in the `Workspace` and the constraint’s `Constraint/Enabled` property is true.True if the constraint is currently active in the world.
 
-True if the constraint and both of its `BasePart|parts` are in the `Workspace` and the constraint’s `Constraint/Enabled` property is true.
+True if the constraint and both of its parts are in the `Workspace` and the constraint’s `Constraint/Enabled` property is true.
 
 Tags: ReadOnly, NotReplicated */
 	readonly Active: boolean;
@@ -3755,13 +3768,11 @@ type Constraint =
 	| Torque
 	| VectorForce;
 
-/** An AlignOrientation is a constraint that applies a torque to make its attachments align. Like other constraints, this has two `Attachment`s. In this case the two attachments are constrained to be oriented in the same direction but not necessarily the same position.
+/** **AlignOrientation** is a constraint that applies a torque to make its attachments align. Like other constraints, this has two `Attachment|Attachments`. In this case, the two attachments are constrained to be **oriented** in the same direction but not necessarily the same position.
 
-By default, this constraint only applies torque on `Constraint/Attachment0`'s parent, although it can be configured to apply torque on both attachments. Note that this torque can also be limited to a max amount via `AlignOrientation/MaxTorque`.
+By default, this constraint only applies torque on the parent of `Constraint/Attachment0|Attachment0`, although it can be configured to apply torque on both attachments. This torque can be limited to a max amount via `AlignOrientation/MaxTorque`.
 
-Note that any torque created by AlignOrientation will be applied about the center of mass of the parent of the attachments (or the center of mass of rigidly connected parts to the parents).
-
-Take a look at the gif below for a demonstration of AlignmentOrientation on a `BasePart`!
+Note that any torque created by **AlignOrientation** will be applied about the center of mass of the parent of the attachments (or the center of mass of parts rigidly connected to the parents). Also note that if this constraint attaches one part (**A**) to another part (**B**) that is anchored or connected to an anchored part (**Z**), part **A** will not be locally simulated when interacting with a player.
 
 ![AlignmentOrientation Demonstration](https://developer.roblox.com/assets/5b38275a073818f8577295aa/alignorientation.gif) */
 interface AlignOrientation extends RbxInternalConstraint {
@@ -3783,7 +3794,11 @@ interface AlignOrientation extends RbxInternalConstraint {
 	RigidityEnabled: boolean;
 }
 
-/** An AlignPosition is used to apply a force towards a location. Like other constraints, AlignPositions have two Attachments. In this case the attachments are constrained to be in the same position, although not necessarily in the same orientation. By default, this constraint only applies forces on Attachment0, although it can be configured to apply forces on both attachments. */
+/** **AlignPosition** is used to apply a force towards a location. Like other constraints, this has two `Attachment|Attachments`. In this case, the two attachments are constrained to be in the same **position**, although not necessarily in the same orientation.
+
+By default, this constraint only applies force on the parent of `Constraint/Attachment0|Attachment0`, although it can be configured to apply force on both attachments.
+
+Note that if this constraint attaches one part (**A**) to another part (**B**) that is anchored or connected to an anchored part (**Z**), part **A** will not be locally simulated when interacting with a player. */
 interface AlignPosition extends RbxInternalConstraint {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "AlignPosition";
@@ -3812,7 +3827,9 @@ interface AngularVelocity extends RbxInternalConstraint {
 	RelativeTo: Enum.ActuatorRelativeTo;
 }
 
-/** A BallSocketConstraint constrains its `Attachment` so that they occupy the same position. By default it allows both attachments to freely rotate about all of their axes. If `BallSocketConstraint/LimitsEnabled` is true then the attachments can only rotate in a limited cone. */
+/** A **BallSocketConstraint** constrains its `Attachment|Attachments` so that they occupy the same position. By default it allows both attachments to freely rotate about all of their axes, but if `BallSocketConstraint/LimitsEnabled` is `true`, the attachments can only rotate in a limited cone.
+
+Note that if this constraint attaches one part (**A**) to another part (**B**) that is anchored or connected to an anchored part (**Z**), part **A** will not be locally simulated when interacting with a player. */
 interface BallSocketConstraint extends RbxInternalConstraint {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "BallSocketConstraint";
@@ -3840,13 +3857,14 @@ The angle that is used is the angle between the x-axes of the attachments:
 	UpperAngle: number;
 }
 
-/** A hinge allows two Attachments to rotate about one axis. A HingeConstraint constrains its two attachments so that they both occupy the same position and that their x-axes point in the same direction. The constraint allows the attachments to rotate about their x-axes.
+/** A **HingeConstraint** allows two `Attachment|Attachments` to rotate about one axis, constraining the two attachments so that they both occupy the same position and that their **X** axes point in the same direction.
 
-Hinges can also be configured to actuate rotation. If `HingeConstraint/ActuatorType` is set to `Enum/ActuatorType|Motor`, then the hinge will attempt to rotate the attachments with the goal of reaching `HingeConstraint/AngularVelocity`. This rotation is limited by both `HingeConstraint/MotorMaxAcceleration` and `HingeConstraint/MotorMaxTorque`.
+Hinges can also be configured to actuate rotation, as follows:
 
-If ActuatorType is set to `Enum/ActuatorType|Servo`, then the hinge will attempt to rotate to an angle specified by `HingeConstraint/TargetAngle`. This rotation is limited by both `HingeConstraint/AngularSpeed` and `HingeConstraint/ServoMaxTorque`.
+- If `HingeConstraint/ActuatorType` is set to `Enum/ActuatorType|Motor`, the hinge will attempt to rotate the attachments with the goal of reaching `HingeConstraint/AngularVelocity`. This rotation is limited by both `HingeConstraint/MotorMaxAcceleration` and `HingeConstraint/MotorMaxTorque`.
+- If `HingeConstraint/ActuatorType` is set to `Enum/ActuatorType|Servo`, the hinge will attempt to rotate to an angle specified by `HingeConstraint/TargetAngle`. This rotation is limited by both `HingeConstraint/AngularSpeed` and `HingeConstraint/ServoMaxTorque`.
 
-Both actuated and free spinning rotation using a HingeConstraint can be limited by setting `HingeConstraint/LimitsEnabled` to `true`. */
+Note that both actuated and free spinning rotation can be limited by setting `HingeConstraint/LimitsEnabled` to `true`. Also note that if this constraint attaches one part (**A**) to another part (**B**) that is anchored or connected to an anchored part (**Z**), part **A** will not be locally simulated when interacting with a player. */
 interface HingeConstraint extends RbxInternalConstraint {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "HingeConstraint";
@@ -3920,9 +3938,9 @@ interface LineForce extends RbxInternalConstraint {
 	ReactionForceEnabled: boolean;
 }
 
-/** A RodConstraint constrains two `Attachment` to remain separated by the value specified by `RodConstraint/Length`. While the attachments remain at a set distance from one another they can both rotate freely.
+/** A **RodConstraint** constrains two `Attachment|Attachments` to remain separated by the value specified by `RodConstraint/Length`. While the attachments remain at a set distance from one another, they can both rotate freely.
 
-![RodConstraint.gif]( =744x600) */
+Note that if this constraint attaches one part (**A**) to another part (**B**) that is anchored or connected to an anchored part (**Z**), part **A** will not be locally simulated when interacting with a player. */
 interface RodConstraint extends RbxInternalConstraint {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "RodConstraint";
@@ -4027,9 +4045,13 @@ Here is a case where the UpperLimit is 4 and the LowerLimit is 2. Note that in t
 /** The base class for constraints that allow their attachments to slide along an axis. */
 type SlidingBallConstraint = CylindricalConstraint | PrismaticConstraint;
 
-/** A CylindricalConstraint allows its `Attachment` to slide along an axis and rotate about another axis. It can be thought of like a combination of a `PrismaticConstraint` and a `HingeConstraint`. The sliding axis is determined by the x axis of the constraint’s `Constraint/Attachment0`. The rotation axis is centered at the constraint’s `Constraint/Attachment1` and is angled off of the sliding constraint by the constraint’s `CylindricalConstraint/InclinationAngle`.
+/** A **CylindricalConstraint** allows its attachments to slide along one axis and rotate about another axis. It can be thought of like a combination of a `PrismaticConstraint` and a `HingeConstraint`. The sliding axis is determined by the **X** axis of the constraint’s `Constraint/Attachment0`. The rotation axis is centered at the constraint’s `Constraint/Attachment1` and is angled off of the sliding constraint by the constraint’s `CylindricalConstraint/InclinationAngle`.
 
-This constraint, along with a `SpringConstraint`, is ideal for building vehicle suspension. */
+This constraint, along with a `SpringConstraint`, is ideal for building vehicle suspension as demonstrated in /articles/building carkit 1|Building a Basic Car
+
+.
+
+Note that if this constraint attaches one part (**A**) to another part (**B**) that is anchored or connected to an anchored part (**Z**), part **A** will not be locally simulated when interacting with a player. */
 interface CylindricalConstraint extends RbxInternalSlidingBallConstraint {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "CylindricalConstraint";
@@ -4069,23 +4091,26 @@ Tags: ReadOnly, NotReplicated */
 	readonly WorldRotationAxis: Vector3;
 }
 
-/** A PrismaticConstraint creates a rigid joint between two `/Attachment`s. This joint allows the two Attachments to slide along one axis but does not allow any rotation. When a PrismaticConstraint is enabled, it constrains its Attachments so that the Attachments x-axes are collinear but pointing in opposite directions. It will also constrain the Attachments so their y-axes are parallel.
+/** A **PrismaticConstraint** creates a rigid joint between two `Attachment|Attachments`, allowing them to slide along one axis but not rotate. This constrains the attachments so that their **X** axes are collinear but pointing in opposite directions. It also constrains the attachments so that their **Y** axes are parallel.
 
-PrismaticConstraints can also be configured to actuate translation. If `SlidingBallConstraint/ActuatorType` is set to `Enum/ActuatorType/Motor`, then it will attempt to translate the attachments with the goal of reaching `SlidingBallConstraint/Velocity`. This translation is limited by both `SlidingBallConstraint/MotorMaxAcceleration` and `SlidingBallConstraint/MotorMaxForce`.
+This constraint inherits properties from `SlidingBallConstraint` and can be configured to actuate translation, as follows:
 
-If ActuatorType is set to `Enum/ActuatorType/Servo`, then the PrismaticConstraint will attempt to translate its Attachments to a set separation specified by `SlidingBallConstraint/TargetPosition`. This translation is limited by both `Attachment` and `Attachment`.
+- If `SlidingBallConstraint/ActuatorType` is set to `Enum/ActuatorType|Motor`, it will attempt to translate the attachments with the goal of reaching `SlidingBallConstraint/Velocity`. This translation is limited by both `SlidingBallConstraint/MotorMaxAcceleration` and `SlidingBallConstraint/MotorMaxForce`.
+- If `SlidingBallConstraint/ActuatorType` is set to `Enum/ActuatorType|Servo`, it will attempt to translate the attachments to a set separation specified by `SlidingBallConstraint/TargetPosition`.
 
-Both actuated and free translation using a PrismaticConstraint can be limited by setting `SlidingBallConstraint/LimitsEnabled` to `true`. */
+Note that both actuated and free translation can be limited by setting `SlidingBallConstraint/LimitsEnabled` to `true`. Also note that if this constraint attaches one part (**A**) to another part (**B**) that is anchored or connected to an anchored part (**Z**), part **A** will not be locally simulated when interacting with a player. */
 interface PrismaticConstraint extends RbxInternalSlidingBallConstraint {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "PrismaticConstraint";
 }
 
-/** A SpringConstraint applies a force to its `Attachment` based on spring and damper behavior. Assuming the SpringConstraint has `SpringConstraint/Stiffness`, it will apply forces based on how far apart the Attachments are. If the Attachments are further apart than the SpringConstraint’s `SpringConstraint/FreeLength` then the Attachments will be forced together. If they are closer than the FreeLength then the Attachments will be forced apart. In addition, if `SpringConstraint/Damping` is set then there will be a damping component to the applied force that scales with the velocity of the attachments.
+/** A **SpringConstraint** applies a force to its `Attachment|Attachments` based on spring and damper behavior. Assuming the constraint has `SpringConstraint/Stiffness`, it will apply forces based on how far apart the attachments are. If the attachments are further apart than the constraint’s `SpringConstraint/FreeLength`, the attachments will be forced together. If they are closer than the `SpringConstraint/FreeLength`, the attachments will be forced apart. In addition, if `SpringConstraint/Damping` is set, there will be a damping component to the applied force that scales with the velocity of the attachments.
 
-The following code shows how the force of a SpringConstraint is calculated:
+This constraint, along with a `CylindricalConstraint`, is ideal for building vehicle suspension as demonstrated in /articles/building carkit 1|Building a Basic Car
 
-`force * axis` will be applied to Attachment0’s part at Attachment0’s Position. `-force * axis` will be applied to Attachment1’s part at Attachment1’s Position. */
+.
+
+Note that if this constraint attaches one part (**A**) to another part (**B**) that is anchored or connected to an anchored part (**Z**), part **A** will not be locally simulated when interacting with a player. */
 interface SpringConstraint extends RbxInternalConstraint {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "SpringConstraint";
@@ -6132,7 +6157,7 @@ You can disable image rendering by setting `ImageButton/ImageTransparency` to 1.
 interface ImageButton extends RbxInternalGuiButton {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "ImageButton";
-	/** [LACKS DOCUMENTATION] */
+	/** A textureId that could be set on the `ImageButton|ImageButton’s` properties. When the button is hovered, it will render HoverImage if specified. */
 	HoverImage: string;
 	/** The Image property is a content-type property that should hold the asset ID of a Decal or Image on the Roblox website. It functions identically to `Decal/Texture` with regards to loading the image from the Roblox website. The rendered image will be colorized using `ImageButton/ImageColor3`. It is possible to further manipulate the rendered image into sliced (`ImageButton/SliceCenter`), tiled (`ImageButton/ScaleType`) and nine-slice images using other image properties. */
 	Image: string;
@@ -6152,7 +6177,7 @@ This property behaves identically to `ImageLabel/ImageRectOffset`. */
 
 Tags: ReadOnly, NotReplicated */
 	readonly IsLoaded: boolean;
-	/** [LACKS DOCUMENTATION] */
+	/** A textureId that could be set on the `ImageButton|ImageButton’s` properties. When the button is pressed, it will render HoverImage if specified. */
 	PressedImage: string;
 	/** The ScaleType property determines in what way an `ImageButton/Image` is rendered when the UI element’s absolute size differs from the source image’s size.
 
@@ -9499,6 +9524,8 @@ Note, although outlines are not deprecated they are not the default and may no l
 
 For more information on changing outlines, please see this [blog post](). */
 	Outlines: boolean;
+	/** This property controls how blurry the shadows are. */
+	ShadowSoftness: number;
 	/** A 24 hour string representation of the current time of day used by `Lighting`.
 
 Note, this property does not correspond with the actual time of day and will not change during the game unless it has been changed by a script.
@@ -11205,6 +11232,8 @@ If a part is not `/BasePart/Anchored` and has CanCollide disabled, it may fall o
 
 Even when CanCollide is disabled, parts may still fire the `/BasePart/Touched` event (as well the other parts touching them). In addition, a part allow other parts to pass through even if CanCollide is enabled if their collision groups are not set to collide with each other. Part collision groups are managed by `/PhysicsService`. */
 	CanCollide: boolean;
+	/** Determines whether this Part casts a shadow. */
+	CastShadow: boolean;
 	/** The CenterOfMass property describes the position in which a `BasePart|part`'s [center of mass]() is located. Should a force be applied to the part toward this point, the part would not rotate as a result of this force. **CenterOfMass is currently not enabled.** */
 	readonly CenterOfMass: Vector3;
 	/** The CollisionGroupId property describes the ID number of the part’s collision group. Parts start off in the Default group whose ID is 0. Although this property can be directly changed, it is recommended to instead manipulate the collision group of a part using the **name** of the group with the `/PhysicsService/SetPartCollisionGroup` function. You can find the ID of a collision group by using `/PhysicsService/GetCollisionGroupId`.
@@ -19611,9 +19640,9 @@ interface IntConstrainedValue extends RbxInternalValueBase {
 
 Tags: Hidden, NotReplicated */
 	ConstrainedValue: number;
-	/** The highest number that the `/IntConstrainedValue/Value` property can be. */
+	/** [LACKS DOCUMENTATION] */
 	MaxValue: number;
-	/** The lowest number that the `/IntConstrainedValue/Value` property can be. */
+	/** [LACKS DOCUMENTATION] */
 	MinValue: number;
 	/** [LACKS DOCUMENTATION]
 

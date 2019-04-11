@@ -10963,6 +10963,46 @@ declare namespace Enum {
 		}
 
 		export const StatusBar: StatusBar;
+
+		export interface DialogButton {
+			Name: "DialogButton";
+			Value: 84;
+			EnumType: Enum_StudioStyleGuideColor;
+		}
+
+		export const DialogButton: DialogButton;
+
+		export interface DialogButtonText {
+			Name: "DialogButtonText";
+			Value: 85;
+			EnumType: Enum_StudioStyleGuideColor;
+		}
+
+		export const DialogButtonText: DialogButtonText;
+
+		export interface DialogButtonBorder {
+			Name: "DialogButtonBorder";
+			Value: 86;
+			EnumType: Enum_StudioStyleGuideColor;
+		}
+
+		export const DialogButtonBorder: DialogButtonBorder;
+
+		export interface DialogMainButton {
+			Name: "DialogMainButton";
+			Value: 87;
+			EnumType: Enum_StudioStyleGuideColor;
+		}
+
+		export const DialogMainButton: DialogMainButton;
+
+		export interface DialogMainButtonText {
+			Name: "DialogMainButtonText";
+			Value: 88;
+			EnumType: Enum_StudioStyleGuideColor;
+		}
+
+		export const DialogMainButtonText: DialogMainButtonText;
 	}
 	export type StudioStyleGuideColor =
 		| StudioStyleGuideColor.MainBackground
@@ -11048,7 +11088,12 @@ declare namespace Enum {
 		| StudioStyleGuideColor.CheckedFieldIndicator
 		| StudioStyleGuideColor.HeaderSection
 		| StudioStyleGuideColor.Midlight
-		| StudioStyleGuideColor.StatusBar;
+		| StudioStyleGuideColor.StatusBar
+		| StudioStyleGuideColor.DialogButton
+		| StudioStyleGuideColor.DialogButtonText
+		| StudioStyleGuideColor.DialogButtonBorder
+		| StudioStyleGuideColor.DialogMainButton
+		| StudioStyleGuideColor.DialogMainButtonText;
 
 	export namespace StudioStyleGuideModifier {
 		export interface Default {
@@ -11348,8 +11393,16 @@ declare namespace Enum {
 		}
 
 		export const Compatibility: Compatibility;
+
+		export interface ShadowMap {
+			Name: "ShadowMap";
+			Value: 3;
+			EnumType: Enum_Technology;
+		}
+
+		export const ShadowMap: ShadowMap;
 	}
-	export type Technology = Technology.Legacy | Technology.Voxel | Technology.Compatibility;
+	export type Technology = Technology.Legacy | Technology.Voxel | Technology.Compatibility | Technology.ShadowMap;
 
 	export namespace TeleportResult {
 		export interface Success {
@@ -14362,6 +14415,11 @@ interface Enum_StudioStyleGuideColor {
 	HeaderSection: Enum.StudioStyleGuideColor.HeaderSection;
 	Midlight: Enum.StudioStyleGuideColor.Midlight;
 	StatusBar: Enum.StudioStyleGuideColor.StatusBar;
+	DialogButton: Enum.StudioStyleGuideColor.DialogButton;
+	DialogButtonText: Enum.StudioStyleGuideColor.DialogButtonText;
+	DialogButtonBorder: Enum.StudioStyleGuideColor.DialogButtonBorder;
+	DialogMainButton: Enum.StudioStyleGuideColor.DialogMainButton;
+	DialogMainButtonText: Enum.StudioStyleGuideColor.DialogMainButtonText;
 }
 
 interface Enum_StudioStyleGuideModifier {
@@ -14415,6 +14473,7 @@ interface Enum_Technology {
 	Legacy: Enum.Technology.Legacy;
 	Voxel: Enum.Technology.Voxel;
 	Compatibility: Enum.Technology.Compatibility;
+	ShadowMap: Enum.Technology.ShadowMap;
 }
 
 interface Enum_TeleportResult {
