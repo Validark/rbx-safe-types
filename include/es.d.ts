@@ -129,12 +129,21 @@ interface ObjectConstructor {
 declare const Object: ObjectConstructor;
 
 interface String {
+	/** The current number of characters in the string */
 	readonly length: number;
-	split(sep: string): Array<string>;
+	/** Returns an array of substrings, separated by each `sep`.
+	 * Accepts Lua character classes, unless `plain` is true.
+	 */
+	split(sep: string, plain?: boolean): Array<string>;
+	/** Returns a new string equivalent to this string but with the whitespace removed from the start and end */
 	trim(): string;
+	/** Returns a new string equivalent to this string but with the whitespace removed from the start */
 	trimLeft(): string;
+	/** Returns a new string equivalent to this string but with the whitespace removed from the end */
 	trimRight(): string;
+	/** Returns a new string equivalent to this string but with the whitespace removed from the start */
 	trimStart(): string;
+	/** Returns a new string equivalent to this string but with the whitespace removed from the end */
 	trimEnd(): string;
 }
 
