@@ -106,7 +106,7 @@ Here are the reasons I use rbx-safe-types over rbx-types:
 - rbx-safe-types does not assume that indexing arrays results in defined values.
 - rbx-safe-types pulls documentation from https://developer.roblox.com/api-reference and thus has far more documentation.
 - rbx-safe-types sometimes contains better type information about APIs that return dictionaries. For example, the fields in [GetFriendsOnline](https://developer.roblox.com/api-reference/function/Player/GetFriendsOnline) which may or may not be undefined can be validated by checking the `LocationType`, which rbx-safe-types has a const enum for.
-- rbx-safe-types is more knowledgable about BrickColor values
+- rbx-safe-types has full support for BrickColors, and can be used similarly to the ClassName narrowing mentioned above if desired.
 - rbx-safe-types has "real" Roblox Enum object support, meaning one can access `EnumItem.Value`, `EnumItem.Name`, and `EnumItem.EnumType`. However, neither `Enum.GetEnums()` nor `EnumType.GetEnumItems()` are supported. `EnumItem.Value` is recommended for those concerned with efficiency, and `EnumItem.Name` is obviously better for readability and TypeScript's suggestion prompts.
 	- This allows rbx-safe-types to add `CastsToEnum<EnumType | EnumItem>`, so that TS code can pass strings/numbers into Roblox functions which require Enums. At the moment, we are waiting on a TS update which allow us to permit this behavior on property setting.
 	- Goal: At some point I would like to have an optimization built-in to the transpiler to fold `Enum.EnumType.EnumItem.Value` into a constant.
