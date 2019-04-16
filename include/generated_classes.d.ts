@@ -1485,8 +1485,7 @@ interface AssetService extends RbxInternalInstance {
 	): number;
 	/** Returns an array of assetIds that are contained in a specified package. */
 	GetAssetIdsForPackage(packageAssetId: number): Array<number>;
-
-	GetBundleDetailsAsync(bundleId: number): object;
+	GetBundleDetailsAsync(bundleId: number): BundleInfo;
 	/** Returns a `StandardPages` object which contains the name and placeId of places within the current ‘Game’ (otherwise known as a ‘Universe’). */
 	GetGamePlacesAsync(): StandardPages;
 	/** Saves the state of the current place. This will only work for places that have been created with `AssetService/CreatePlaceAsync` or `AssetService/CreatePlaceInPlayerInventoryAsync`. */
@@ -1683,26 +1682,8 @@ A player may delete an awarded badge from their inventory and be awarded the bad
 
 - `BadgeService/GetBadgeInfoAsync`
 - `BadgeService/AwardBadge`
-- `BadgeService/UserHasBadgeAsync`AwardBadge will grant a player a badge given a `Player`'s `Player/UserId|UserId` and a badge ID. In order to successfully award a badge, the following criteria must be met:
-
-- The player must be presently connected to the game.
-- The player must not already have the badge.\*
-- Badges must be awarded on the server, i.e. from a `Script` or `ModuleScript` eventually required by a `Script`, instead of a `LocalScript`
-- Only Roblox game servers may award badges, i.e. badges cannot be awarded in Studio.
-- The badge must be awarded in a place that is part of the game associated with the badge (checked using `BadgeService/IsLegal|IsLegal`)
-- The owner of the place must also own the badge, i.e. the owner must not have deleted the badge.
-- The owner of the badge must be subscribed to Builders Club
-- The badge must not have been disabled (checked using `BadgeService/IsDisabled|IsDisabled`).
-
-A player may delete an awarded badge from their inventory and be awarded the badge again.
-
-### See also
-
-- `BadgeService/GetBadgeInfoAsync`
-- `BadgeService/AwardBadge`
-- `BadgeService/UserHasBadgeAsync`
-
-Tags: Yields */
+- `BadgeService/UserHasBadgeAsync` */
+	/** @rbxts server */
 	AwardBadge(userId: number, badgeId: number): boolean;
 	/** This function fteches information about a badge given its ID. It takes a brief moment to load the information from the Roblox website; repeated calls will cache for a short duration. It returns a dictionary with the following fields:
 
@@ -1716,22 +1697,9 @@ Tags: Yields */
 ### See also
 
 - `BadgeService/AwardBadge`
-- `BadgeService/UserHasBadgeAsync`This function fteches information about a badge given its ID. It takes a brief moment to load the information from the Roblox website; repeated calls will cache for a short duration. It returns a dictionary with the following fields:
-
-| Key                                                      | Type                                                     | Description                                              |
-| -------------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------- |
-| `Name`                                                   | string                                                   | The name of the badge.                                   |
-| `Description`                                            | string                                                   | The description of the badge.                            |
-| `IconImageId`                                            | int64                                                    | The asset ID of the image for this badge.                |
-| `IsEnabled`                                              | bool                                                     | Indicates whether this badge is available to be awarded. |
-
-### See also
-
-- `BadgeService/AwardBadge`
-- `BadgeService/UserHasBadgeAsync`
-
-Tags: Yields */
-	GetBadgeInfoAsync(badgeId: number): object;
+- `BadgeService/UserHasBadgeAsync` */
+	/** @rbxts server */
+	GetBadgeInfoAsync(badgeId: number): BadgeInfo;
 	/** UserHasBadgeAsync checks whether a player owns a badge given the `Player`'s `Player/UserId|UserId` and the badge’s id. Such a query can only be made under the following conditions:
 
 - This function must be called from the server, i.e. in a `Script` or `ModuleScript` eventually required by a Script.
@@ -1746,23 +1714,8 @@ Any badge for any game can be queried, no matter who created the badge or which 
 ### See also
 
 - `BadgeService/GetBadgeInfoAsync`
-- `BadgeService/AwardBadge`UserHasBadgeAsync checks whether a player owns a badge given the `Player`'s `Player/UserId|UserId` and the badge’s id. Such a query can only be made under the following conditions:
-
-- This function must be called from the server, i.e. in a `Script` or `ModuleScript` eventually required by a Script.
-- The player in question must be present in the server.
-
-Any badge for any game can be queried, no matter who created the badge or which game it is used for. There are a number of applications of UserHasBadge:
-
-- A restricted door that can only be opened by players who own a badge (see code sample)
-- A basic way of determining if a player has played another game
-- Very simple progress saving. However, it is recommended developers use `DataStoreService` for saving as it is more scale-able and robust (remember - players can delete their own badges).
-
-### See also
-
-- `BadgeService/GetBadgeInfoAsync`
-- `BadgeService/AwardBadge`
-
-Tags: Yields */
+- `BadgeService/AwardBadge` */
+	/** @rbxts server */
 	UserHasBadgeAsync(userId: number, badgeId: number): boolean;
 }
 
@@ -4202,27 +4155,40 @@ interface ContextActionService extends RbxInternalInstance {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "ContextActionService";
 	/** Fires when the current player equips a [Tool](https://developer.roblox.com/api-reference/class/Tool). */
-	readonly LocalToolEquipped: RBXScriptSignal<(toolEquipped: Tool) => void>;
+	/** @rbxts client */
+	readonly LocalToolEquipped: RBXScriptSignal<(toolEquipped: Tool | Flag) => void>;
 	/** Fires when the current player unequips a [Tool](https://developer.roblox.com/api-reference/class/Tool). */
-	readonly LocalToolUnequipped: RBXScriptSignal<(toolUnequipped: Tool) => void>;
+	/** @rbxts client */
+	readonly LocalToolUnequipped: RBXScriptSignal<(toolUnequipped: Tool | Flag) => void>;
 	/** BindAction will bind an action to user input given an action handling function. The action handler function will be called when some input matches the provided user input enums.
 
 The method behaves like a stack: if two actions are bound to the same user input, only the most recent action handler will be called. When UnbindAction is called, the action handler is removed from the stack. If an action handler returns `Enum.ContextActionResult.Pass`, an input will call to the next most recently bound action handler. */
+	/** @rbxts client */
 	BindAction(
+		/** The name of the action being bound */
 		actionName: string,
+		/** The function to call when the corresponding event fires */
 		functionToBind: (actionName: string, state: Enum.UserInputState, inputObject: InputObject) => void,
+		/** Whether or not a TouchButton will be created for this action on mobile */
 		createTouchButton: boolean,
-		...inputTypes: Array<CastsToEnum<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType, true>>
+		/** The event to which the functionToBind will be bound. */
+		...inputTypes: Array<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType>
 	): void;
 	/** Binds function to fire when specified inputTypes occur. Allows the priority of the bound action to be specified.
 
 If there are multiple actions bound to one of the *inputTypes*, the priority of this action will determine if it will be passed first.Binds function to fire when specified inputTypes occur. Allows the priority of the bound action to be specified. */
+	/** @rbxts client */
 	BindActionAtPriority(
+		/** The name of the action being bound */
 		actionName: string,
+		/** The function to call when the corresponding event fires */
 		functionToBind: (actionName: string, state: Enum.UserInputState, inputObject: InputObject) => void,
+		/** Whether or not a TouchButton will be created for this action on mobile */
 		createTouchButton: boolean,
+		/** The priority level.  */
 		priorityLevel: number,
-		...inputTypes: Array<CastsToEnum<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType, true>>
+		/** The event to which the functionToBind will be bound. */
+		...inputTypes: Array<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType>
 	): void;
 	/** Specifies the `Enum/KeyCode` that can be used with a `Enum/UserInputType` to activate a [Tool]( "Tool"), or a [HopperBin]( "HopperBin").
 
@@ -4239,9 +4205,9 @@ When the KeyCode is used, it will fire the [Button1Down]( "Button1Down") event u
 		keyCodeForActivation?: CastsToEnum<Enum.KeyCode>,
 	): void;
 	/** Returns a table with all bound action info. Each entry is a key with *actionName* and value being the same table you would get from `ContextActionService/GetBoundActionInfo`. */
-	GetAllBoundActionInfo(): object;
+	GetAllBoundActionInfo(): Map<string, BoundActionInfo>;
 	/** Returns a table with info regarding the function bound with *actionName*. Table has the keys *title* (current title that was set with `ContextActionService/SetTitle`) *image* (image set with `ContextActionService/SetImage`) *description* (description set with `ContextActionService/SetDescription`) *inputTypes* (tuple containing all input bound for this *actionName*) *createTouchButton* (whether or not we created a touch button for this *actionName*). */
-	GetBoundActionInfo(actionName: string): object;
+	GetBoundActionInfo(actionName: string): BoundActionInfo;
 	/** Returns the `BackpackItem/TextureId` of a [tool]( "Tool") currently equipped by the [Player]( "Player"), if one is equipped. */
 	GetCurrentLocalToolIcon(): string;
 	/** If *actionName* key contains a bound action, then *description* is set as the description of the bound action. This description will appear for users in a listing of current actions available. */
@@ -4262,12 +4228,13 @@ When the KeyCode is used, it will fire the [Button1Down]( "Button1Down") event u
 	/** Removes all functions bound. No actionNames will remain. All touch buttons will be removed. If a button was manipulated manually there is no guarantee it will be cleaned up. */
 	UnbindAllActions(): void;
 	/** If *actionName* key contains a bound action, then this will return the touch button (if was created). Returns nil if a touch button was not created. No guarantees are made whether button will be retrievable when button is manipulated. */
+	/** @rbxts client */
 	GetButton(actionName: string): ImageButton | undefined;
 }
 
 interface RbxInternalController extends RbxInternalInstance {
 	/** Fired when the pressed state of a bound button is changed. This event can be used in conjunction with `Controller/GetButton` to see whether a bound button is being pressed down or not. */
-	readonly ButtonChanged: RBXScriptSignal<(button: CastsToEnum<Enum.Button>) => void>;
+	readonly ButtonChanged: RBXScriptSignal<(button: Enum.Button) => void>;
 	/** Activates an overriding bind on the specified button. */
 	BindButton(button: CastsToEnum<Enum.Button>, caption: string): void;
 	/** Returns whether or not Button is being pressed. */
@@ -4902,7 +4869,7 @@ interface Dragger extends RbxInternalInstance {
 	/** Rotates the currently dragged part(s) by 90 degrees on the given axis. */
 	AxisRotate(axis?: CastsToEnum<Enum.Axis>): void;
 	/** Initializes a dragging action, specifying which parts to use when dragging. */
-	MouseDown(mousePart: Instance, pointOnMousePart: Vector3, parts: Array<Instance>): void;
+	MouseDown(mousePart: BasePart, pointOnMousePart: Vector3, parts: Array<BasePart>): void;
 	/** Tries to move the currently dragged part to the point where MouseRay hits another part. */
 	MouseMove(mouseRay: Ray): void;
 	/** Stops the current dragging action (made by [MouseDown](https://developer.roblox.com/api-reference/function/Dragger/MouseDown)) */
@@ -4978,7 +4945,7 @@ Note that the effect of an `Explosion` is not disrupted by obstacles, this means
 This event will also fire when `Explosion/BlastPressure` is equal to zero. This means developers can program their own custom behavior for explosions by eliminating the explosion’s influence on `BasePart`s and `Terrain`.
 
 Note that this event will fire for every `BasePart` hit. This means it can fire multiple times for the same player character (as the character `Model` is made up of multiple parts). For this reason when dealing custom damage using the `Explosion.Hit` event it’s recommended to implement a check to see if the character has already been hit by the `Explosion`. */
-	readonly Hit: RBXScriptSignal<(part: Instance, distance: number) => void>;
+	readonly Hit: RBXScriptSignal<(part: BasePart, distance: number) => void>;
 }
 
 interface RbxInternalFaceInstance extends RbxInternalInstance {
@@ -6044,9 +6011,7 @@ Since this event only requires one finger, this event can be simulated in Studio
 ![TouchSwipe event firing on a Frame](https://developer.roblox.com/assets/bltca477d4e524ee20d/TouchSwipe.gif)
 
 This event is part of a family of touch-related events. Other events like this one are `GuiObject/TouchTap`, `GuiObject/TouchRotate`, `GuiObject/TouchPinch`, `GuiObject/TouchPan` and `Guiobject/TouchLongPress`. In addition, `UserInputService` has a similarly named event that is not restricted to a specific UI element: `UserInputService/TouchSwipe`. */
-	readonly TouchSwipe: RBXScriptSignal<
-		(swipeDirection: CastsToEnum<Enum.SwipeDirection>, numberOfTouches: number) => void
-	>;
+	readonly TouchSwipe: RBXScriptSignal<(swipeDirection: Enum.SwipeDirection, numberOfTouches: number) => void>;
 	/** The TouchTap event fires when the player performs a tap gesture on the UI element using a touch-enabled device. A tap is a quick single touch without any movement involved (a longer press would fire `GuiObject/TouchLongPress`, and moving during the touch would fire `GuiObject/TouchPan` and/or `GuiObject/TouchSwipe`). It fires with a table of `DataType/Vector2`s that describe the relative positions of the fingers involved in the gesture.
 
 Since this event only requires one finger, this event can be simulated in Studio using the emulator and a mouse. Below is an example of TouchTap being fired on a Frame that is `GuiObject/Active`. Below, the event fires when the cursor briefly pauses (to simulate a tap) and the Frame toggles its `GuiObject/BackgroundTransparency`. The code for this can be found the code samples.
@@ -6132,7 +6097,7 @@ interface RbxInternalGuiButton extends RbxInternalGuiObject {
 	/** Sets the style of the GuiButton based on a list of pre-determined styles. */
 	Style: Enum.ButtonStyle;
 	/** Fires when the button is activated. */
-	readonly Activated: RBXScriptSignal<(inputObject: Instance) => void>;
+	readonly Activated: RBXScriptSignal<(inputObject: InputObject) => void>;
 	/** Fired when the mouse has fully left clicked the GUI object. By clicking, the mouse has to be in bounds of the button and has to be pressed down and up again before this event fires. */
 	readonly MouseButton1Click: RBXScriptSignal<() => void>;
 	/** Fired when the mouse is in the left mouse down state on the GUI object. */
@@ -6529,7 +6494,7 @@ interface TextBox extends RbxInternalGuiObject {
 	readonly ClassName: "TextBox";
 	/** Determines whether clicking on the TextBox will clear its `TextBox/Text` property */
 	ClearTextOnFocus: boolean;
-	/** [LACKS DOCUMENTATION] */
+
 	CursorPosition: number;
 	/** The Font property selects one of several pre-defined `Enum/Font|fonts` with which the UI element will render its text. Some fonts have bold, italic and/or light variants (as there is no font-weight or font-style properties).
 
@@ -6553,19 +6518,13 @@ This property may contain newline characters, however, it is not possible to typ
 	Text: string;
 	/** The read-only property TextBounds reflects the absolute pixel size of rendered text. In other words, if you were to try to fit text into a rectangle, this property would reflect the minimum dimensions of the rectangle you would need in order to fit the text.
 
-Using `TextService/GetTextSize`, you can predict what TextBounds will be on a TextLabel given a string, `TextBox/Font`, `TextBox/TextSize` and frame size.The read-only property TextBounds reflects the absolute pixel size of rendered text. In other words, if you were to try to fit text into a rectangle, this property would reflect the minimum dimensions of the rectangle you would need in order to fit the text.
-
-Using `TextService/GetTextSize`, you can predict what TextBounds will be on a TextLabel given a string, `TextBox/Font`, `TextBox/TextSize` and frame size.
-
-Tags: ReadOnly, NotReplicated */
+Using `TextService/GetTextSize`, you can predict what TextBounds will be on a TextLabel given a string, `TextBox/Font`, `TextBox/TextSize` and frame size. */
 	readonly TextBounds: Vector2;
 	/** This property determines the color of all the text rendered by a `GuiObject|GUI` element. This property along with `TextBox/Font`, `TextBox/TextSize` and `TextBox/TextTransparency` will determine the visual properties of text. Text is rendered after the text stroke (`TextBox/TextStrokeColor3`).
 
 It’s important that text is easily read by players! Be sure to choose colors with little-to-no saturation, like white, grey, or black. Make sure the color of your text is contrasted by the `TextBox/BackgroundColor3` of the UI element. If the element has a transparent background, try applying a black `TextBox/TextStrokeColor3` to help contrast the text with the 3D world behind it. */
 	TextColor3: Color3;
-	/** Whether the text fits within the constraints of the TextBox.Whether the text fits within the constraints of the TextBox.
-
-Tags: ReadOnly, NotReplicated */
+	/** Whether the text fits within the constraints of the TextBox. */
 	readonly TextFits: boolean;
 	/** Changes whether text is resized to fit the GUI object that renders it. */
 	TextScaled: boolean;
@@ -6614,7 +6573,7 @@ It can be used alongside `TextBox.Focus` to track when a TextBox gains and loses
 See also the `/UserInputService/TextBoxFocused` and `/UserInputService/TextBoxFocusReleased` for similar functions that rely on the UserInputService service.
 
 This event will only fire when used in a `/LocalScript`. */
-	readonly FocusLost: RBXScriptSignal<(enterPressed: boolean, inputThatCausedFocusLoss: Instance) => void>;
+	readonly FocusLost: RBXScriptSignal<(enterPressed: boolean, inputThatCausedFocusLoss: InputObject) => void>;
 	/** The Focused event fires when the `/TextBox` gains focus - typically when a client clicks/taps on a TextBox to begin text entry. This also fires if a TextBox forces focus on the user.
 
 It can be used alongside `TextBox.FocusLost` to track when a TextBox gains and loses focus.
@@ -7157,17 +7116,15 @@ interface ArcHandles extends RbxInternalHandlesBase {
 	/** Sets the current Axes ArcHandles will show. */
 	Axes: Axes;
 	/** Fired when the left mouse button goes down on one of the GUI handles. */
-	readonly MouseButton1Down: RBXScriptSignal<(axis: CastsToEnum<Enum.Axis>) => void>;
+	readonly MouseButton1Down: RBXScriptSignal<(axis: Enum.Axis) => void>;
 	/** Fired when the left mouse button is released on one of the GUI handles. */
-	readonly MouseButton1Up: RBXScriptSignal<(axis: CastsToEnum<Enum.Axis>) => void>;
+	readonly MouseButton1Up: RBXScriptSignal<(axis: Enum.Axis) => void>;
 	/** Fired when the mouse moves while the MouseButton1Down event has fired, but the left mouse button has not been released yet. */
-	readonly MouseDrag: RBXScriptSignal<
-		(axis: CastsToEnum<Enum.Axis>, relativeAngle: number, deltaRadius: number) => void
-	>;
+	readonly MouseDrag: RBXScriptSignal<(axis: Enum.Axis, relativeAngle: number, deltaRadius: number) => void>;
 	/** Fired when a mouse “enters” the GUI handle. */
-	readonly MouseEnter: RBXScriptSignal<(axis: CastsToEnum<Enum.Axis>) => void>;
+	readonly MouseEnter: RBXScriptSignal<(axis: Enum.Axis) => void>;
 	/** Fired when the mouse leaves the GUI handle. */
-	readonly MouseLeave: RBXScriptSignal<(axis: CastsToEnum<Enum.Axis>) => void>;
+	readonly MouseLeave: RBXScriptSignal<(axis: Enum.Axis) => void>;
 }
 
 /** For handles to be interactive, they must be parented to a player's PlayerGui or the CoreGui.
@@ -7181,15 +7138,15 @@ interface Handles extends RbxInternalHandlesBase {
 	/** Sets the GUI style of the handles. Currently there are only two types; Resize and Movement. */
 	Style: Enum.HandlesStyle;
 	/** Fired when the left mouse button goes down on one of the GUI handles. */
-	readonly MouseButton1Down: RBXScriptSignal<(face: CastsToEnum<Enum.NormalId>) => void>;
+	readonly MouseButton1Down: RBXScriptSignal<(face: Enum.NormalId) => void>;
 	/** Fired when the left mouse button is released on one of the GUI handles. */
-	readonly MouseButton1Up: RBXScriptSignal<(face: CastsToEnum<Enum.NormalId>) => void>;
+	readonly MouseButton1Up: RBXScriptSignal<(face: Enum.NormalId) => void>;
 	/** Fired when the mouse moves while the MouseButton1Down event has fired, but the left mouse button has not been released yet. */
-	readonly MouseDrag: RBXScriptSignal<(face: CastsToEnum<Enum.NormalId>, distance: number) => void>;
+	readonly MouseDrag: RBXScriptSignal<(face: Enum.NormalId, distance: number) => void>;
 	/** Fired when a mouse “enters” the GUI handle. */
-	readonly MouseEnter: RBXScriptSignal<(face: CastsToEnum<Enum.NormalId>) => void>;
+	readonly MouseEnter: RBXScriptSignal<(face: Enum.NormalId) => void>;
 	/** Fired when the mouse leaves the GUI handle. */
-	readonly MouseLeave: RBXScriptSignal<(face: CastsToEnum<Enum.NormalId>) => void>;
+	readonly MouseLeave: RBXScriptSignal<(face: Enum.NormalId) => void>;
 }
 
 /** An instance used to show a physical selection of a particular side of a `BasePart`. However, it should be noted that the `GuiBase3d/Transparency` property doesn’t appear to currently work with this instance. */
@@ -7911,7 +7868,7 @@ The humanoid state describes the activity the `Humanoid` is currently doing. It 
 - Individual states can be disabled using `Humanoid/SetStateEnabled`
 - As there is no idle humanoid state, you should instead use the `Humanoid/Running` event or listen to the `Humanoid/RootPart|RootPart's` `BasePart/Velocity` to work out when the `Humanoid` is standing still */
 	readonly StateChanged: RBXScriptSignal<
-		(oldValue: CastsToEnum<Enum.HumanoidStateType>, newValue: CastsToEnum<Enum.HumanoidStateType>) => void
+		(oldValue: Enum.HumanoidStateType, newValue: Enum.HumanoidStateType) => void
 	>;
 	/** The StateEnableChanged event fires when `Humanoid/SetStateEnabled` is called on the `Humanoid`.
 
@@ -7921,9 +7878,7 @@ Parameters include the `Enum/HumanoidStateType` in question along with a bool in
 
 - To find if a state is currently enabled, use `Humanoid/GetStateEnabled`
 - To listen to `Humanoid` state changes use `Humanoid/StateChanged` */
-	readonly StateEnabledChanged: RBXScriptSignal<
-		(state: CastsToEnum<Enum.HumanoidStateType>, isEnabled: boolean) => void
-	>;
+	readonly StateEnabledChanged: RBXScriptSignal<(state: Enum.HumanoidStateType, isEnabled: boolean) => void>;
 	/** This event is fired when the `Humanoid` enters or leaves the *StrafingNoPhysics* `Enum/HumanoidStateType`.
 
 When the `Humanoid` enters the *StrafingNoPhysics* state this event will fire with an *active* parameter of *true*. The event will fire again with *active* equal to *false* when the `Humanoid` leaves the *StrafingNoPhysics* state.
@@ -8011,7 +7966,7 @@ Although they will be equipped, `Tool|Tools` for which `Tool/RequiresHandle` is 
 ### See also
 
 - To unequip tools, use `Humanoid/UnequipTools` */
-	EquipTool(tool: Tool): void;
+	EquipTool(tool: Tool | Flag): void;
 	/** This function returns an array of `Accessory|Accessories` that the `Humanoid` is currently wearing.
 
 All `Accessory` objects parented to the `Humanoid|Humanoid's` parent will be included, regardless of if they are attached to the `Humanoid` or not. If the humanoid is not wearing any accessories, the array will be empty.
@@ -8929,9 +8884,9 @@ interface JointsService extends RbxInternalInstance {
 	/** Updates all visible joints for the parts assigned by the `JointsService/SetJoinAfterMoveTarget` and `JointsService/SetJoinAfterMoveInstance` methods. */
 	CreateJoinAfterMoveJoints(): void;
 	/** Sets the PVInstance that will be connected with the target PVInstance specified by [SetJoinAfterMoveTarget](https://developer.roblox.com/api-reference/function/JointsService/SetJoinAfterMoveTarget). */
-	SetJoinAfterMoveInstance(joinInstance: Instance): void;
+	SetJoinAfterMoveInstance(joinInstance: PVInstance): void;
 	/** Sets the PVInstance that will be connected with the PVInstance specified by [SetJoinAfterMoveInstance](https://developer.roblox.com/api-reference/function/JointsService/SetJoinAfterMoveInstance). */
-	SetJoinAfterMoveTarget(joinTarget: Instance): void;
+	SetJoinAfterMoveTarget(joinTarget: PVInstance): void;
 	/** When used it will visibly display a potential surface connection between the two `BasePart`, which were set with `JointsService/SetJoinAfterMoveTarget` and `JointsService/SetJoinAfterMoveInstance`. */
 	ShowPermissibleJoints(): void;
 }
@@ -8978,7 +8933,7 @@ Note, this function will not error when an instance other than a KeyframeMarker 
 - `Keyframe/RemoveMarker`
 - `Keyframe/GetMarkers`
 - `AnimationTrack/GetMarkerReachedSignal` */
-	AddMarker(marker: Instance): void;
+	AddMarker(marker: KeyframeMarker): void;
 	/** This function adds a `Pose` to the `Keyframe` by parenting it to the keyframe. It is functionally identical to setting the pose’s `Instance/Parent` to the keyframe.
 
 Note, this function will not error when an instance other than a `Pose` is given as the pose parameter and will parent it successfully. */
@@ -9015,7 +8970,7 @@ Note, this function will not error when an instance other than a KeyframeMarker 
 - `Keyframe/AddMarker`
 - `Keyframe/GetMarkers`
 - `AnimationTrack/GetMarkerReachedSignal` */
-	RemoveMarker(marker: Instance): void;
+	RemoveMarker(marker: KeyframeMarker): void;
 	/** This function removes a `Pose` from the `Keyframe` by setting its `Instance/Parent` to nil.
 
 The `Pose`'s `Instance/Parent` is set to nil, but it is not destroyed. This means, provided the pose is referenced it can be re-parented later.
@@ -9721,7 +9676,7 @@ This function can error and thus should be wrapped in a `articles/Built-in Funct
 
 - `LocalizationService/GetTranslatorForPlayer`, same functionality as this function except that it does not yield
 - `LocalizationService/GetTranslatorForPlayerAsync`, same functionality as this function except that it yields until the translator has been loaded */
-	GetTranslatorForLocaleAsync(locale: string): Instance | undefined;
+	GetTranslatorForLocaleAsync(locale: string): Translator;
 	/** This function takes a player an argument and yields until the cloud localization data for that player’s locale has been loaded, and then returns a `Translator` object which can be used to perform translations for that locale if any are available.
 
 This function can error and thus should be wrapped in a pcall.
@@ -9730,7 +9685,7 @@ This function can error and thus should be wrapped in a pcall.
 
 - `LocalizationService/GetTranslatorForPlayer`, same functionality as this function except that it does not yield
 - `LocalizationService/GetTranslatorForLocaleAsync`, returns a Translator to be used for translations using the locale data loaded */
-	GetTranslatorForPlayerAsync(player: Instance): Instance | undefined;
+	GetTranslatorForPlayerAsync(player: Player): Translator;
 }
 
 /** A LocalizationTable is a database of translations. It contains source strings and translations for various languages. It is used with `Translator` and the `LocalizationService` auto-translator system to control text translations in the game.
@@ -9800,7 +9755,7 @@ interface LogService extends RbxInternalInstance {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "LogService";
 	/** Fired when text is added to the output. */
-	readonly MessageOut: RBXScriptSignal<(message: string, messageType: CastsToEnum<Enum.MessageType>) => void>;
+	readonly MessageOut: RBXScriptSignal<(message: string, messageType: Enum.MessageType) => void>;
 	/** Returns a table of tables, each of which corresponds to something which has been displayed in the output… */
 	GetLogHistory(): Array<LogInfo>;
 }
@@ -10051,7 +10006,7 @@ For game passes, use `MarketplaceService/PromptGamePassPurchase`. */
 		currencyType?: CastsToEnum<Enum.CurrencyType>,
 	): void;
 	/** Returns a `Pages` object which contains information for all of the current game’s developer products. */
-	GetDeveloperProductsAsync(): Instance | undefined;
+	GetDeveloperProductsAsync(): Pages;
 	/** This function provides information about an asset, developer product or game pass given its **assetId** and the `Enum/InfoType` (Asset, Product or GamePass respectively).
 
 Information about the queried item is provided in a dictionary with the following keys. Note that not all information is provided or necessarily relevant for the kind of object you are querying.
@@ -10683,7 +10638,7 @@ interface NetworkClient extends RbxInternalNetworkPeer {
 	/** The client’s authorization ticket. This is only used when connecting to non-local Roblox servers. */
 	Ticket: string;
 	/** Fired when the client successfully connects to a server. Returns a string showing the server’s IP and Port, and the client’s `ClientReplicator`. */
-	readonly ConnectionAccepted: RBXScriptSignal<(peer: string, replicator: Instance) => void>;
+	readonly ConnectionAccepted: RBXScriptSignal<(peer: string, replicator: ClientReplicator) => void>;
 	/** Fired if the client fails to connect to the server. */
 	readonly ConnectionFailed: RBXScriptSignal<(peer: string, code: number, reason: string) => void>;
 	/** Fires if the client tries to connect to a server, but the request to join was rejected.
@@ -10704,7 +10659,7 @@ Tags: ReadOnly, NotReplicated */
 
 interface RbxInternalNetworkReplicator extends RbxInternalInstance {
 	/** Returns the player that is connected to the NetworkReplicator. */
-	GetPlayer(): Instance | undefined;
+	GetPlayer(): Player;
 }
 /** An object which handles the replication of other objects either from the server to the client, or from the client to the server. */
 type NetworkReplicator = ClientReplicator | ServerReplicator;
@@ -11756,25 +11711,19 @@ interface Seat extends RbxInternalDerivesFromPart {
 	readonly ClassName: "Seat";
 	/** Whether or not the seat is usable. If set to true, the seat will act as a normal part. */
 	Disabled: boolean;
-	/** The humanoid that is sitting in the seatThe humanoid that is sitting in the seat
-
-Tags: ReadOnly, NotReplicated */
+	/** The humanoid that is sitting in the seat */
 	readonly Occupant?: Humanoid;
 	/** Forces the character with the specified [Humanoid](https://developer.roblox.com/api-reference/class/Humanoid) to sit in the Seat. */
-	Sit(humanoid: Instance): void;
+	Sit(humanoid: Humanoid): void;
 }
 
 /** A SkateboardPlatform can be used to create a skateboard. When characters get on a skateboard, they are stuck to it until they press the escape key. Until then, the character uses skateboard animations and travels faster than a walking character. */
 interface SkateboardPlatform extends RbxInternalDerivesFromPart {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "SkateboardPlatform";
-	/** The SkateboardPlatform’s active SkateboardController.The SkateboardPlatform’s active SkateboardController.
-
-Tags: ReadOnly, NotReplicated */
+	/** The SkateboardPlatform’s active SkateboardController. */
 	readonly Controller?: SkateboardController;
-	/** The `/Humanoid` that is controlling the SkateboardPlatform.The `/Humanoid` that is controlling the SkateboardPlatform.
-
-Tags: ReadOnly, NotReplicated */
+	/** The `/Humanoid` that is controlling the SkateboardPlatform. */
 	readonly ControllingHumanoid?: Humanoid;
 	/** The direction of movement, tied to the keys A and D. Must be 1 (right), 0 (straight), or -1 (left). Will refresh back to 0 unless constantly set. */
 	Steer: number;
@@ -11783,13 +11732,11 @@ Tags: ReadOnly, NotReplicated */
 	/** The direction of movement, tied to the keys W and S. Must be an integer 1 (forward), 0 (null), or -1 (reverse). Will refresh back to 0 unless constantly set. */
 	Throttle: number;
 	/** Fired when the skateboard is equipped. */
-	readonly Equipped: RBXScriptSignal<(humanoid: Instance, skateboardController: Instance) => void>;
+	readonly Equipped: RBXScriptSignal<(humanoid: Humanoid, skateboardController: SkateboardController) => void>;
 	/** Fired when the SkateboardPlatform’s `/SkateboardPlatform/ControllingHumanoid` changes the force being used on the SkateboardPlatform. */
-	readonly MoveStateChanged: RBXScriptSignal<
-		(newState: CastsToEnum<Enum.MoveState>, oldState: CastsToEnum<Enum.MoveState>) => void
-	>;
+	readonly MoveStateChanged: RBXScriptSignal<(newState: Enum.MoveState, oldState: Enum.MoveState) => void>;
 	/** Fired whenever the skateboard is unequipped. */
-	readonly Unequipped: RBXScriptSignal<(humanoid: Instance) => void>;
+	readonly Unequipped: RBXScriptSignal<(humanoid: Humanoid) => void>;
 	/** Adds ‘‘impulseWorld’’ to the SkateboardPlatform’s `/BasePart/Velocity`. */
 	ApplySpecificImpulse(impulseWorld: Vector3): void;
 }
@@ -11997,9 +11944,7 @@ While VehicleSeats are great for making simple vehicles they do have some limita
 interface VehicleSeat extends RbxInternalBasePart {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "VehicleSeat";
-	/** Displays how many hinges are detected by the VehicleSeat. Useful for debugging vehicle designs.Displays how many hinges are detected by the VehicleSeat. Useful for debugging vehicle designs.
-
-Tags: ReadOnly, NotReplicated */
+	/** Displays how many hinges are detected by the VehicleSeat. Useful for debugging vehicle designs. */
 	readonly AreHingesDetected: number;
 	/** Toggles whether the `VehicleSeat` is active or not.
 
@@ -12009,9 +11954,7 @@ If the seat is disabled then it will not automatically weld a character to it on
 	HeadsUpDisplay: boolean;
 	/** The maximum speed that can be attained. */
 	MaxSpeed: number;
-	/** The humanoid that is sitting in the seatThe humanoid that is sitting in the seat
-
-Tags: ReadOnly, NotReplicated */
+	/** The humanoid that is sitting in the seat */
 	readonly Occupant?: Humanoid;
 	/** The direction of movement, tied to the keys A and D. Must be one of 1 (right), 0 (straight), or -1 (left). Will refresh back to 0 unless constantly set. */
 	Steer: number;
@@ -12026,7 +11969,7 @@ Tags: ReadOnly, NotReplicated */
 	/** The speed at which the vehicle will turn. Higher numbers can cause problems and are not necessarily better. */
 	TurnSpeed: number;
 	/** Forces the character with the specified [Humanoid](https://developer.roblox.com/api-reference/class/Humanoid) to sit in the VehicleSeat. */
-	Sit(humanoid: Instance): void;
+	Sit(humanoid: Humanoid): void;
 }
 
 interface RbxInternalDerivesFromModel extends RbxInternalPVInstance {
@@ -13021,7 +12964,8 @@ This function will throw a runtime error in the following circumstances:
 
 -  The specified group does not exist.
 -  The specified part is not a BasePart.Returns whether the part is in the collision group. */
-	CollisionGroupContainsPart(name: string, part: Instance): boolean;
+	CollisionGroupContainsPart(name: string, part: BasePart): boolean;
+	CollisionGroupContainsPart(name: string, part: BasePart): boolean;
 	/** Sets the collision status between two groups.
 
 This function will throw an error if either of the groups do not exist.Sets the collision status between two groups. */
@@ -13078,7 +13022,7 @@ This function will throw a runtime error in the following circumstances:
 
 - The part parameter is not a `BasePart` instance.
 - The specified group does not exist. */
-	SetPartCollisionGroup(part: Instance, name: string): void;
+	SetPartCollisionGroup(part: BasePart, name: string): void;
 }
 
 /** The PhysicsSettings is a singleton class, which lets developers view debugging features in Roblox’s physics engine.
@@ -13499,7 +13443,7 @@ This event is used by Roblox to automatically disconnect players that have been 
 
 When a teleportation request is made using `TeleportService`, there are a series of stages before the `Player` is teleported. The current stage is represented by the `Enum/TeleportState` value which is given by OnTeleport. See below for a practical example of this. */
 	readonly OnTeleport: RBXScriptSignal<
-		(teleportState: CastsToEnum<Enum.TeleportState>, placeId: number, spawnName: string) => void
+		(teleportState: Enum.TeleportState, placeId: number, spawnName: string) => void
 	>;
 	/** The ClearCharacterAppearance function removes all `Hat`, `Shirt`, `Pants`, `CharacterMesh`, and `BodyColors` from the given player’s `Player/Character`. In addition, it also removes the T-Shirt `Decal` on the player’s torso. The character’s body part colors and face will remain unchanged. This method does nothing if the player does not have a Character.
 
@@ -13538,9 +13482,9 @@ Despite this, it is still appropriate for the secure transmission of [immutable 
 You should not use this function for data that can be changed. For example, the amount of in-game currency the user currently has. This is because GetJoinData cannot guarantee a malicious user is not transmitting data from a previous session. For data like this, you should rely on `GlobalDataStore|GlobalDataStores`.
 
 As with all cases, you should implement proper server validation to ensure your game is secure. For more information see this article on `Articles/Game Security`. */
-	GetJoinData(): object;
+	GetJoinData(): PlayerJoinInfo;
 	/** Returns the mouse being used by the client. */
-	GetMouse(): Instance | undefined;
+	GetMouse(): PlayerMouse;
 	/** Returns whether or not the appearance of the player’s character has loaded */
 	HasAppearanceLoaded(): boolean;
 	/** The Kick method allows a game to gracefully disconnect a client from the game and optionally provide a message to the disconnected player. This is useful for moderating abusive players. When used in conjunction with a `DataStore`, it is possible to create ban lists with expiration dates. Only allow specific whitelisted users whom you trust to trigger this method on other players.
@@ -13565,6 +13509,9 @@ Some fields are only present for certain location types. For example, *PlaceId* 
 | PlaceId                                                                                                                                | number                                                                                                                                 | The placeId of the friends last location.                                                                                              |
 | GameId                                                                                                                                 | string                                                                                                                                 | The `DataModel/JobId` of the friends last location.                                                                                    |
 | LocationType                                                                                                                           | number                                                                                                                                 | The location type of the friends last location. 0 for mobile website. 1 for mobile in game. 2 for website. 3 for studio. 4 for ingame. | */
+	/** ### TS Usage
+	 * One should check the LocationType of each member of this array in order to verify which members are present. Should be compared to the LocationType const enum.
+	 */
 	GetFriendsOnline(maxFriends?: number): Array<FriendOnlineInfo>;
 	/** Returns the player’s rank in the group as an integer between 0 and 255, where 0 is a non-member and 255 is the group’s owner. */
 	GetRankInGroup(groupId: number): number;
@@ -14161,12 +14108,12 @@ The `Pose/CFrame` of each `Pose` determines the `Motor6D/Transform` of the joint
 
 The way in which a joint will interpolate between two `Pose`s during animation playback is determined by the `Pose/EasingStyle` and EasingDirection of the first pose. */
 	EasingStyle: Enum.PoseEasingStyle;
-	/** [LACKS DOCUMENTATION] */
+
 	Weight: number;
 	/** This function adds a sub `Pose` to the `Pose` by parenting it to it. It is functionally identical to setting the new pose’s `Instance/Parent` to the pose.
 
 Note, this function will not error when an instance other than a `Pose` is given as the pose parameter and will parent it successfully. */
-	AddSubPose(pose: Instance): void;
+	AddSubPose(pose: Pose): void;
 	/** This function returns an array containing all sub `Pose`s that have been added to a `Pose`. This is functionally the same as using the `Instance/GetChildren` function on the `Pose`.
 
 Note, this function will return all children of the `Pose`, including non `Pose` `Instance`s if any are present. */
@@ -14174,7 +14121,7 @@ Note, this function will return all children of the `Pose`, including non `Pose`
 	/** This function removes a sub `Pose` from the `Pose` by parenting it to nil. It is functionally identical to setting the new pose’s `Instance/Parent` to nil.
 
 Note, this function will not error when an instance other than a `Pose` is given as the pose parameter and remove it successfully. */
-	RemoveSubPose(pose: Instance): void;
+	RemoveSubPose(pose: Pose): void;
 }
 
 interface RbxInternalPostEffect extends RbxInternalInstance {
@@ -14544,7 +14491,7 @@ To fire from the server to the client, you should use `RemoteFunction/InvokeClie
 - Binding a function to OnServerInvoke is done with the assignment operator `=`, and not with an event. That is because OnServerInvoke is a callback and expects a function to be assigned to it. When the RemoteFunction is invoked, it will execute the function that was assigned to the onInvoke function.
 
 - Only one function can be assigned to OnServerInvoke at a time. If multiple functions are assigned, only the last function to be assigned will be used. */
-	OnServerInvoke: (player: Instance, arguments: Array<any>) => void;
+	OnServerInvoke: (player: Player, arguments: Array<any>) => void;
 	/** Calls the method bound to the RemoteFunction by `RemoteFunction/OnClientInvoke` for the given `Player`. Use from a `Script`.
 
 If the result is not needed then it is recommended to use a `RemoteEvent/FireClient` instead, as its call is asynchronous and doesn’t need to wait for a response to continue execution.
@@ -14560,7 +14507,7 @@ In practice, the server does not often invoke the client. Clients typically do n
 ### Warning
 
 If a client disconnects or leaves the game while it is being invoked from the server, the InvokeClient function will error. It is therefore recommended to wrap this function in a pcall so it does stop the execution of other code. */
-	InvokeClient(player: Instance, ...arguments: Array<any>): unknown;
+	InvokeClient(player: Player, ...arguments: Array<any>): unknown;
 	/** Clients invoking the server is often used because the server either has access to information the client does not, or the client is requesting a game action that only the server can perform. When invoked, this calls the method bound to the RemoteFunction by `RemoteFunction/OnServerInvoke`. Use from a `LocalScript`.
 
 If the result is not needed then it is recommended to use a `RemoteEvent/FireServer` instead, as its call is asynchronous and doesn’t need to wait for a response to continue execution.
@@ -14842,21 +14789,13 @@ interface ScriptContext extends RbxInternalInstance {
 interface ScriptDebugger extends RbxInternalInstance {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "ScriptDebugger";
-	/** The current line that the script is on.The current line that the script is on.
-
-Tags: ReadOnly, NotReplicated */
+	/** The current line that the script is on. */
 	readonly CurrentLine: number;
-	/** Describes if this ScriptDebugger is actually debugging the script attached to it.Describes if this ScriptDebugger is actually debugging the script attached to it.
-
-Tags: ReadOnly, NotReplicated */
+	/** Describes if this ScriptDebugger is actually debugging the script attached to it. */
 	readonly IsDebugging: boolean;
-	/** Describes if this ScriptDebugger is paused.Describes if this ScriptDebugger is paused.
-
-Tags: ReadOnly, NotReplicated */
+	/** Describes if this ScriptDebugger is paused. */
 	readonly IsPaused: boolean;
-	/** The script object this debugger is linked to.The script object this debugger is linked to.
-
-Tags: ReadOnly, NotReplicated */
+	/** The script object this debugger is linked to. */
 	readonly Script?: Instance;
 	/** Fired when a breakpoint is added to the script. */
 	readonly BreakpointAdded: RBXScriptSignal<(breakpoint: Instance) => void>;
@@ -14875,13 +14814,13 @@ Tags: ReadOnly, NotReplicated */
 	/** Returns a list of `DebuggerBreakpoint` present in the script. */
 	GetBreakpoints(): Array<Instance>;
 	/** Returns a dictionary of all variables that are visible to the script’s global stack, where the keys are the names of the variables, and the values are the actual values of the variables. */
-	GetGlobals(): object;
+	GetGlobals(): Map<string, any>;
 	/** Returns a dictionary of all local variables in the specified stack, where the keys are the names of the variables, and the values are the actual values of the variables. */
-	GetLocals(stackFrame?: number): object;
+	GetLocals(stackFrame?: number): Map<string, any>;
 	/** Returns an array of all active call stacks in the script. */
 	GetStack(): unknown;
 	/** Returns a dictionary of all upvalues present in the stack specified. */
-	GetUpvalues(stackFrame?: number): object;
+	GetUpvalues(stackFrame?: number): Map<string, any>;
 	/** Returns the current value of a variable being watched by a `DebuggerWatch`. */
 	GetWatchValue(watch: Instance): unknown;
 	/** Returns a list with all the watches for this debugger */
@@ -14956,11 +14895,12 @@ interface RbxInternalServiceProvider extends RbxInternalInstance {
 	/** Fires when the current place is exited. */
 	readonly Close: RBXScriptSignal<() => void>;
 	/** Fired when a service is created. */
-	readonly ServiceAdded: RBXScriptSignal<(service: Instance) => void>;
+	readonly ServiceAdded: RBXScriptSignal<(service: Services[keyof Services]) => void>;
 	/** Fired when a service is about to be removed. */
-	readonly ServiceRemoving: RBXScriptSignal<(service: Instance) => void>;
+	readonly ServiceRemoving: RBXScriptSignal<(service: Services[keyof Services]) => void>;
 	/** Returns the service specified by the given className if it’s already created, errors for an invalid name. */
 	FindService(className: string): Instance | undefined;
+	FindService(className: string): Services[keyof Services] | undefined;
 	/** Returns a service with the class name requested. When called with the name of a service (such as `Debris`) it will return the instance of that service. If the service does not yet exist it will be created and the new service is returned. This is the only way to create some services, and can also be used for services that have unusual names, e.g. RunService’s name is “Run Service”.
 
 ### Notes
@@ -14968,7 +14908,7 @@ interface RbxInternalServiceProvider extends RbxInternalInstance {
 - This function will return nil if the className parameter is an existing class, but the class is not a service.
 - If you attempt to fetch a service that is present under another Object, an error will be thrown stating that the “singleton serviceName already exists”. */
 	GetService<T extends keyof Services>(className: T): Services[T];
-	GetService(className: string): Instance | undefined;
+	GetService(className: string): Services[keyof Services] | undefined;
 }
 /** A ServiceProvider is an abstract class, which stores, and provides certain singleton classes, depending on what inherited class you are using its members with. */
 type ServiceProvider = DataModel | GenericSettings;
@@ -15691,7 +15631,7 @@ The time the effect takes to become inactive after its sound is below the Thresh
 	/** Applies a [ducking]() effect to the compressor sound effect.
 
 The behavior of the sidechain depends on the \`Sound\` or \`SoundGroup\` linked to it. */
-	SideChain?: Instance;
+	SideChain?: Sound | SoundGroup;
 	/** Range: -80 to 0 (default 0)
 
 Volume level at which point the compressor applies its effect. If the effect’s Sound or SoundGroup is below the effect will not attenuate the sound, although the GainMakeup will still be applied. Measured in dB.Volume level at which point the compressor applies its effect. */
@@ -15993,7 +15933,7 @@ By default, the listener is set to the `Workspace/CurrentCamera`. However, a ran
 	/** Plays a `Sound` locally, meaning the sound will only be heard by the client calling this function, regardless of where it’s parented to. This function is most useful for playing a `Sound` locally in the Studio client, for instance in a `Script` for a Articles/Intro to Plugins|custom plugin
 
 . */
-	PlayLocalSound(sound: Instance): void;
+	PlayLocalSound(sound: Sound): void;
 	/** Sets the listener used by the client.
 
 The first parameter is the `Enum/ListenerType` of the listener, the second paramater is dependent on the listener type.
@@ -16476,15 +16416,15 @@ interface Studio extends RbxInternalInstance {
 	["Always Save Script Changes"]: boolean;
 	/** If set to true, the hover selection box that is shown when mousing over selectable objects in the `Workspace` will flash between `Studio/Hover Over Color` and `Studio/Select Color` based on the `Studio/Hover Animate Speed`. */
 	["Animate Hover Over"]: boolean;
-	/** [LACKS DOCUMENTATION] */
+
 	["Attach Debugger To"]: Enum.DEPRECATED_DebuggerDataModelPreference;
 	/** If set to true, the script editor will automatically indent when a new stack is created in the script. */
 	["Auto Indent"]: boolean;
-	/** [LACKS DOCUMENTATION] */
+
 	["Auto-Recovery Enabled"]: boolean;
-	/** [LACKS DOCUMENTATION] */
+
 	["Auto-Recovery Interval (Minutes)"]: number;
-	/** [LACKS DOCUMENTATION] */
+
 	["Auto-Recovery Path"]: QDir;
 	/** If set to true, the auto-save mode will be enabled. */
 	["Auto-Save Enabled"]: boolean;
@@ -16504,7 +16444,7 @@ interface Studio extends RbxInternalInstance {
 	["Camera Shift Speed"]: number;
 	/** Sets the speed in studs/sec that the camera moves when movement keys are pressed. */
 	["Camera Speed"]: number;
-	/** [LACKS DOCUMENTATION] */
+
 	["Camera Zoom to Mouse Position"]: boolean;
 	/** If set to true, the output will be automatically cleared when game sessions are switched. */
 	["Clear Output On Start"]: boolean;
@@ -16516,7 +16456,7 @@ interface Studio extends RbxInternalInstance {
 	DeprecatedObjectsShown: boolean;
 	/** A 4 digit code that can be used by Roblox’s mobile pairing app to connect to your instance of Roblox Studio on the local network. */
 	["Device Pairing Code"]: number;
-	/** [LACKS DOCUMENTATION] */
+
 	["Disable Accurate Play Solo"]: boolean;
 	/** If set to true, the bounding box of a selection will be used for collision detection while dragging, instead of each individual part being checked.
 
@@ -16524,7 +16464,7 @@ interface Studio extends RbxInternalInstance {
 	["Drag Multiple Parts As Single Part"]: boolean;
 	/** When set to true, the script editor and command bar will show an autocomplete menu while writing. */
 	["Enable Autocomplete"]: boolean;
-	/** [LACKS DOCUMENTATION] */
+
 	["Enable CoreScript Debugger"]: boolean;
 	/** Specifies the color of the wavy underline shown when malformed code is detected in the script editor. */
 	["Error Color"]: Color3;
@@ -16536,7 +16476,7 @@ interface Studio extends RbxInternalInstance {
 	["Hover Animate Speed"]: Enum.HoverAnimateSpeed;
 	/** Specifies the color that the hover selection box uses. */
 	["Hover Over Color"]: Color3;
-	/** [LACKS DOCUMENTATION] */
+
 	["Import mesh files as single mesh"]: boolean;
 	/** Sets the text color of built-in Lua keywords. */
 	["Keyword Color"]: Color3;
@@ -16546,9 +16486,7 @@ interface Studio extends RbxInternalInstance {
 	["Line Thickness"]: number;
 	/** Specifies whether or not the [Lua Debugger](https://developer.roblox.com/articles/Lua-debugger) feature is enabled. */
 	LuaDebuggerEnabled: boolean;
-	/** [LACKS DOCUMENTATION]
 
-Tags: Hidden, ReadOnly, NotReplicated */
 	readonly LuaDebuggerEnabledAtStartup: boolean;
 	/** Sets the highlight color of double-clicked variables in the script editor. */
 	["Matching Word Background Color"]: Color3;
@@ -16586,13 +16524,13 @@ Tags: Hidden, ReadOnly, NotReplicated */
 	["Render Throttle Percentage"]: number;
 	/** When set to true, Roblox Studio shortcuts will take priority over inputs being captured in the game window. */
 	["Respect Studio shortcuts when game has focus"]: boolean;
-	/** [LACKS DOCUMENTATION] */
+
 	RuntimeUndoBehavior: Enum.RuntimeUndoBehavior;
 	/** The time (in seconds) a script can wait to be resumed before timing out. */
 	ScriptTimeoutLength: number;
 	/** The color of the selection box used with object selections in the `Workspace` */
 	["Select Color"]: Color3;
-	/** [LACKS DOCUMENTATION] */
+
 	["Select/Hover Color"]: Color3;
 	/** Sets the background color of selected text in the script editor. */
 	["Selection Background Color"]: Color3;
@@ -16604,7 +16542,7 @@ Tags: Hidden, ReadOnly, NotReplicated */
 	["Show Core GUI in Explorer while Playing"]: boolean;
 	/** If set to true, basic diagnostic information is shown in the bottom right. */
 	["Show Diagnostics Bar"]: boolean;
-	/** [LACKS DOCUMENTATION] */
+
 	["Show Hidden Objects in Explorer"]: boolean;
 	/** If set to true, hovering over an object in the `Workspace` will show a selection box. */
 	["Show Hover Over"]: boolean;
@@ -16614,7 +16552,7 @@ Tags: Hidden, ReadOnly, NotReplicated */
 	["Show Plugin GUI Service in Explorer"]: boolean;
 	/** If set to true, certain internal error messages regarding the QT framework that Roblox uses will be shown in the output. */
 	["Show QT warnings in output"]: boolean;
-	/** [LACKS DOCUMENTATION] */
+
 	["Show plus button on hover in Explorer"]: boolean;
 	/** Specifies the color of strings in the script editor. */
 	["String Color"]: Color3;
@@ -16637,10 +16575,8 @@ For instance, if you would like to print the current Studio theme:
 ```lua
 print("The current Studio theme is:", settings().Studio.Theme)
 ``` */
-	Theme?: Instance;
-	/** Specifies the color scheme of Roblox Studio.Specifies the color scheme of Roblox Studio.
-
-Tags: ReadOnly, NotReplicated */
+	Theme?: StudioTheme;
+	/** Specifies the color scheme of Roblox Studio. */
 	readonly ["UI Theme"]: Enum.UITheme;
 	/** Specifies the color of the wavy underline shown when the script analyzer picks up a problem that should be addressed in the script editor. */
 	["Warning Color"]: Color3;
@@ -16825,7 +16761,9 @@ end)
 ```
 
 Note, the *customLoadingScreen* will not be used if the destination place is in a different game. */
-	readonly LocalPlayerArrivedFromTeleport: RBXScriptSignal<(loadingGui: Instance, dataTable?: any) => void>;
+	readonly LocalPlayerArrivedFromTeleport: RBXScriptSignal<
+		(loadingGui: ScreenGui | GuiMain, dataTable?: unknown) => void
+	>;
 	/** This event fires if a request to teleport (from a function such as `TeleportService/Teleport`) fails and the player does not leave the current place server.
 
 This event is fired on both the client and the server.
@@ -16845,7 +16783,8 @@ Note, the *customLoadingScreen* will not be used if the destination place is in 
 During a teleport, whilst the destination place is loading, the *customLoadingScreen* is parented to the `CoreGui`. Once the place has loaded the `ScreenGui|loading screen` is `Instance/Parent|parented` to *nil*.
 
 If you wish to preserve the *customLoadingScreen* and perform your own transitions, you will need to parent it to the `Players/LocalPlayer|LocalPlayer’s` `PlayerGui`. For an example of this, see the code sample below. */
-	GetArrivingTeleportGui(): Instance | undefined;
+	/** @rbxts client */
+	GetArrivingTeleportGui(): ScreenGui | GuiMain | undefined;
 	/** This function returns the *teleportData* the `Players/LocalPlayer` arrived into the place with. It can only be used on the client and can be called at any time.
 
 For example, the following snippet would send the `DataModel/PlaceId` and `DataModel/JobId` in a dictionary:
@@ -16876,6 +16815,7 @@ end)
 If no *teleportData* was set in the teleportation function this function will return *nil*.
 
 Note this function will not return teleportation settings set using `TeleportService/SetTeleportSetting`, to retrieve these settings use `TeleportService/GetTeleportSetting`. */
+	/** @rbxts client */
 	GetLocalPlayerTeleportData(): unknown;
 	/** This function retrieves a teleport setting saved using `TeleportService/SetTeleportSetting` using the given key.
 
@@ -16907,6 +16847,7 @@ In general teleport settings should be used to preserve client side information 
 ### Teleport settings and security
 
 As teleport settings are stored locally, it is possible they can be manipulated by malicious users. This risk can be mitigated by employing server side validation, for more information on this please see the article on `Articles/Game Security`. */
+	/** @rbxts client */
 	GetTeleportSetting(setting: string): unknown;
 	/** This function sets the custom `ScreenGui|teleport GUI` that will be shown to the local user during teleportation, prior to the teleport being invoked.
 
@@ -16944,7 +16885,8 @@ During a teleport, whilst the destination place is loading, the *customLoadingSc
 This `ScreenGui` can be fetched at the destination place using `TeleportService/GetArrivingTeleportGui`, allowing you to parent it to the `PlayerGui` and perform your own transitions.
 
 You are advised to also `Instance/Parent|parent` the `ScreenGui` to the `PlayerGui` in the start place whilst the teleport is initiating. */
-	SetTeleportGui(gui: Instance): void;
+	/** @rbxts client */
+	SetTeleportGui(gui: ScreenGui): void;
 	/** This function stores a value under a given key that persists across all teleportations in the same game.
 
 This method is intended for use on the client only and should not be used on the server.
@@ -16983,7 +16925,8 @@ In general teleport settings should be used to preserve client side information 
 ### Teleport settings and security
 
 As teleport settings are stored locally, it is possible they can be manipulated by malicious users. This risk can be mitigated by employing server side validation, for more information on this please see the article on `Articles/Game Security`. */
-	SetTeleportSetting(setting: string, value?: any): void;
+	/** @rbxts client */
+	SetTeleportSetting(setting: string, value: RbxInternalTeleportData): void;
 	/** This function teleports a `Player` to the place associated with the given *placeId*.
 
 Teleport can be called both from the client and the server (see examples below).
@@ -17032,7 +16975,12 @@ Before using Teleport, you should check to see if an alternative teleport functi
 - `TeleportService/TeleportToPrivateServer` is used to teleport a player to a reserved server created using `TeleportService/ReserveServer`
 
 For more information on how to teleport players, see the `Articles/Teleporting Between Places` tutorial. */
-	Teleport(placeId: number, player?: Player, teleportData?: any, customLoadingScreen?: Instance): void;
+	Teleport(
+		placeId: number,
+		player?: Player,
+		teleportData?: RbxInternalTeleportData,
+		customLoadingScreen?: ScreenGui | GuiMain,
+	): void;
 	/** This function teleports a `Player` to the place instance associated with the given *placeId* and *instanceId*. It can only be used to teleport to places in the same game.
 
 The *placeId* is the `DataModel/PlaceId` of the server and the *instanceId* is the `DataModel/JobId|JobId`.
@@ -17077,10 +17025,10 @@ For more information on how to teleport players, see the `Articles/Teleporting B
 	TeleportToPlaceInstance(
 		placeId: number,
 		instanceId: string,
-		player?: Instance,
+		player?: Player,
 		spawnName?: string,
-		teleportData?: any,
-		customLoadingScreen?: Instance,
+		teleportData?: RbxInternalTeleportData,
+		customLoadingScreen?: ScreenGui | GuiMain,
 	): void;
 	/** This function teleports one of more `Player|Players` to a reserved server created using `TeleportService/ReserveServer`.
 
@@ -17128,8 +17076,8 @@ For more information on how to teleport players, see the `Articles/Teleporting B
 		reservedServerAccessCode: string,
 		players: Array<Player>,
 		spawnName?: string,
-		teleportData?: any,
-		customLoadingScreen?: Instance,
+		teleportData?: RbxInternalTeleportData,
+		customLoadingScreen?: ScreenGui | GuiMain,
 	): void;
 	/** This function behaves the same as `TeleportService/Teleport` with the exception that it includes a *spawnName* parameter, causing the `Player` to spawn at the `SpawnLocation` of that name at the destination place.
 
@@ -17143,9 +17091,9 @@ For more information about teleporting please see `TeleportService/Teleport` or 
 	TeleportToSpawnByName(
 		placeId: number,
 		spawnName: string,
-		player?: Instance,
+		player?: Player,
 		teleportData?: any,
-		customLoadingScreen?: Instance,
+		customLoadingScreen?: ScreenGui | GuiMain,
 	): void;
 	/** This function returns the `DataModel/PlaceId` and `DataModel/JobId` of the server the user with the given `Player/UserId` is in provided it is in the same game as the current place.
 
@@ -17173,6 +17121,7 @@ You should be aware of the following limitations when using this function:
 ### See also
 
 - For the `DataModel/PlaceId|PlaceIds` and `DataModel/JobId|JobIds` of a `Player|Player’s` friends, use `Player/GetFriendsOnline` */
+	/** @rbxts server */
 	GetPlayerPlaceInstanceAsync(userId: number): LuaTuple<[boolean, string, number, string]>;
 	/** This function returns an access code that can be used to teleport players to a reserved server, along with the `DataModel/PrivateServerId` for it.
 
@@ -17194,6 +17143,7 @@ local isReserved = game.PrivateServerId ~= "" and game.PrivateServerOwnerId == 0
 ```
 
 The `DataModel/PrivateServerId` is constant across all server instances associated with the server access code, the `DataModel/JobId` is not. */
+	/** @rbxts server */
 	ReserveServer(placeId: number): LuaTuple<[string, string]>;
 	/** This function teleports a group of `Player|Players` to the same server instance in the given place. It returns the `DataModel/JobId` of the server instance the players were teleported to.
 
@@ -17235,8 +17185,8 @@ In some circumstances a teleport may fail. This can be due to the developer conf
 	TeleportPartyAsync(
 		placeId: number,
 		players: Array<Player>,
-		teleportData?: any,
-		customLoadingScreen?: Instance,
+		teleportData?: RbxInternalTeleportData,
+		customLoadingScreen?: ScreenGui | GuiMain,
 	): string;
 }
 
@@ -17785,7 +17735,7 @@ Tags: ReadOnly, NotReplicated */
 	/** The Completed event of a `Tween` fires when the tween finishes playing. This will happen either when the tween naturally finishes playing, or if it is stopped with `TweenBase/Cancel`.
 
 A function connected to this event will be passed the PlaybackState of the tween when it finished to give indication about why the tween ended. If the tween finishes naturally the status will be Completed, if cancelled then the state will be Cancelled. Note that calling `TweenBase/Pause` will not fire the Completed event. */
-	readonly Completed: RBXScriptSignal<(playbackState: CastsToEnum<Enum.PlaybackState>) => void>;
+	readonly Completed: RBXScriptSignal<(playbackState: Enum.PlaybackState) => void>;
 	/** The Cancel function halts playback of its `Tween` and resets the tween variables. If `TweenBase/Play` is called again the `Tween`'s properties will resume interpolating towards their destination but, as the tween variables have been reset, take the full length of the animation to do so.
 
 Only the tween variables are reset, not the properties being changed by the tween. This means if you cancel a tween half way through its animation the properties will not reset to their original values. Where Cancel differs from `TweenBase/Pause` is that once resumed, it will take the full duration of the tween to complete the animation. */
@@ -18045,9 +17995,7 @@ interface UIPageLayout extends RbxInternalUIGridStyleLayout {
 	Animated: boolean;
 	/** Whether or not the page layout wraps around at the ends. */
 	Circular: boolean;
-	/** The page that is either currently being displayed or is the target of the current animation.The page that is either currently being displayed or is the target of the current animation.
-
-Tags: ReadOnly, NotReplicated */
+	/** The page that is either currently being displayed or is the target of the current animation. */
 	readonly CurrentPage?: GuiObject;
 	/** The easing direction to use when performing an animation. */
 	EasingDirection: Enum.EasingDirection;
@@ -18066,13 +18014,13 @@ Can be set either using scale (Percentage of parent's size in the current direct
 	/** The length of the animation. */
 	TweenTime: number;
 	/** Fires when a page comes into view, and is going to be rendered. */
-	readonly PageEnter: RBXScriptSignal<(page: Instance) => void>;
+	readonly PageEnter: RBXScriptSignal<(page: GuiObject) => void>;
 	/** Fires when a page leaves view, and will not be rendered. */
-	readonly PageLeave: RBXScriptSignal<(page: Instance) => void>;
+	readonly PageLeave: RBXScriptSignal<(page: GuiObject) => void>;
 	/** Fires when an animation to `UIPageLayout/CurrentPage` is completed without being canceled, and the view stops scrolling. */
-	readonly Stopped: RBXScriptSignal<(currentPage: Instance) => void>;
+	readonly Stopped: RBXScriptSignal<(currentPage: GuiObject) => void>;
 	/** If the *page* is in the UIPageLayout, then it sets `UIPageLayout/CurrentPage` to it and animates to it. If the circular layout is enabled, it will take the shortest path to this page. */
-	JumpTo(page: Instance): void;
+	JumpTo(page: GuiObject): void;
 	/** If the index is >= 0 and less than the size of the layout, this method acts like `UIPageLayout/JumpTo`. If it’s out of bounds and circular is set, it will animate the full distance between the in-bounds index of `UIPageLayout/CurrentPage` and the new index. */
 	JumpToIndex(index: number): void;
 	/** Sets `UIPageLayout/CurrentPage` to the page after the current page and animates to it, or does nothing if there isn’t a next page. */
@@ -18497,7 +18445,7 @@ This event can be used to track the movement of a device that has an acceleromet
 Additionally, this event can be used along with `UserInputService/GetDeviceAcceleration` to determine the current movement of a user’s device if the device has an accelerometer.
 
 This event only fires locally - which means that only the player whose device moves can use the event and it will only work in a `LocalScript`. */
-	readonly DeviceAccelerationChanged: RBXScriptSignal<(acceleration: Instance) => void>;
+	readonly DeviceAccelerationChanged: RBXScriptSignal<(acceleration: InputObject) => void>;
 	/** The DeviceGravityChanged event fires when the device’s gravity `DataType/Vector3/vector` changes on a device that has an accelerometer.
 
 A device’s gravity vector represent the force of gravity on each of the device’s X, Y, and Z axes. While gravity never changes, the force it exerts on each axis changes when the device rotates and changes orientation. The force value exerted on each axis is a unit vector ranging from -1 to 1.
@@ -18507,7 +18455,7 @@ An accelerometer is a component found in most mobile devices that measures accel
 This event can be used to determine the real-world direction of the force of gravity on a user’s device. This even can then be used to simulate the force of gravity on a user’s device within the game, such as on in-game objects (see example below).
 
 To check if a user’s device has an enabled accelerometer, see `UserInputService/AccelerometerEnabled`. If the device has an enabled accelerometer, you can use the `UserInputService/GetDeviceGravity` function to get the current force of gravity on the user’s device. */
-	readonly DeviceGravityChanged: RBXScriptSignal<(gravity: Instance) => void>;
+	readonly DeviceGravityChanged: RBXScriptSignal<(gravity: InputObject) => void>;
 	/** The DeviceRotationChanged event fires when a user rotates a device that has a gyroscope.
 
 A gyroscope is an component found in most mobile devices that detects orientation and rotational speed.
@@ -18517,7 +18465,7 @@ The event is useful when tracking the orientation of the device and how changes 
 To check if a user’s device has an enabled gyroscope, and that this event will fire, see `UserInputService/GyroscopeEnabled`.
 
 This event only fires when the Roblox client window is in focus. For example, inputs will not be captured when the window is minimized. */
-	readonly DeviceRotationChanged: RBXScriptSignal<(rotation: Instance, cframe: CFrame) => void>;
+	readonly DeviceRotationChanged: RBXScriptSignal<(rotation: InputObject, cframe: CFrame) => void>;
 	/** The GamepadConnected event fires when a gamepad is connected to the client.
 
 Since a Roblox game supports multiple controllers, this event is useful when paired with the `UserInputService/GamepadDisconnected` event to track which controllers/gamepads are active. You can also use `UserInputService/GetNavigationGamepads` and `UserInputService/GetConnectedGamepads` to find the correct gamepad to use.
@@ -18553,7 +18501,7 @@ As this event fires locally, it can only be used in a `LocalScript`.
 - `UserInputService/GetGamepadConnected`
 - `UserInputService/GamepadSupports`
 - `UserInputService/GamepadEnabled` */
-	readonly GamepadConnected: RBXScriptSignal<(gamepadNum: CastsToEnum<Enum.UserInputType>) => void>;
+	readonly GamepadConnected: RBXScriptSignal<(gamepadNum: Enum.UserInputType) => void>;
 	/** The GamepadDisconnected event fires when a gamepad is disconnected.
 
 Since a Roblox game supports multiple controllers, this event is useful when paired with the `UserInputService/GamepadConnected` event to track which controllers/gamepads are active. You can also use `UserInputService/GetNavigationGamepads` and `UserInputService/GetConnectedGamepads` to find the correct gamepad to use.
@@ -18587,7 +18535,7 @@ See [this](https://developer.roblox.com/learn-roblox/cross-platform) page for ar
 - `UserInputService/GetGamepadConnected`
 - `UserInputService/GamepadSupports`
 - `UserInputService/GamepadEnabled` */
-	readonly GamepadDisconnected: RBXScriptSignal<(gamepadNum: CastsToEnum<Enum.UserInputType>) => void>;
+	readonly GamepadDisconnected: RBXScriptSignal<(gamepadNum: Enum.UserInputType) => void>;
 	/** The InputBegan event fires when a user begins interacting via a Human-Computer Interface device (mouse button down, touch begin, keyboard button down, etc.).
 
 It can be used to track the beginning of user interaction, such as when a user first interacts with a GUI element, a gamepad, etc. It does not capture mouse wheel movements.
@@ -18645,7 +18593,7 @@ As this event only fires locally, it can only be used in a `LocalScript`. */
 To get the value of LastInputType, regardless of whether it has changed, you can use the `UserInputService/GetLastInputType` function.
 
 As this event only fires locally, it can only be used in a `LocalScript`. */
-	readonly LastInputTypeChanged: RBXScriptSignal<(lastInputType: CastsToEnum<Enum.UserInputType>) => void>;
+	readonly LastInputTypeChanged: RBXScriptSignal<(lastInputType: Enum.UserInputType) => void>;
 	/** The TextBoxFocusReleased event fires when a client loses focus on a TextBox - typically when a client stops text entry into a TextBox by pressing return or clicking/touching elsewhere on the screen.
 
 For example, the code below prints the the name of the TextBox losing focus when the event fires.
@@ -18669,7 +18617,7 @@ As this event only fires locally, it can only be used in a `LocalScript`.
 - `UserInputService/GetFocusedTextBox`
 - `TextBox/Focused`
 - `TextBox/FocusLost` */
-	readonly TextBoxFocusReleased: RBXScriptSignal<(textboxReleased: Instance) => void>;
+	readonly TextBoxFocusReleased: RBXScriptSignal<(textboxReleased: TextBox) => void>;
 	/** The TextBoxFocused event fires when a gains focus on a `TextBox` \- typically when a client clicks/taps on a text box to begin inputting text. This also fires if a text box focus is focused using `TextBox/CaptureFocus`.
 
 For example, the code below prints the the name of the TextBox focused when the event fires.
@@ -18693,7 +18641,7 @@ As this event only fires locally, it can only be used in a `LocalScript`.
 - `UserInputService/GetFocusedTextBox`
 - `TextBox/Focused`
 - `TextBox/FocusLost` */
-	readonly TextBoxFocused: RBXScriptSignal<(textboxFocused: Instance) => void>;
+	readonly TextBoxFocused: RBXScriptSignal<(textboxFocused: TextBox) => void>;
 	/** The TouchEnded event fires when a user released their finger from the screen of a TouchEnabled device, ending touch input with the device.
 
 This event can be used to determine when a user stops touching the screen of their device. It can be paired with `UserInputService/TouchStarted` to determine when a user starts and stops touching the screen.
@@ -18729,7 +18677,7 @@ As this event only fires locally, it can only be used in a `LocalScript`.
 - `UserInputService/TouchRotate`
 - `UserInputService/TouchSwipe`
 - `UserInputService/TouchStarted` */
-	readonly TouchEnded: RBXScriptSignal<(touch: Instance, gameProcessedEvent: boolean) => void>;
+	readonly TouchEnded: RBXScriptSignal<(touch: InputObject, gameProcessedEvent: boolean) => void>;
 	/** Fired when a user holds at least one finger for a short amount of time on the same screen position of a TouchEnabled device.
 
 This event can be used to determine when a user holds their finger down on an an-game `GuiObject|GUI` or element.
@@ -18766,7 +18714,7 @@ As this event only fires locally, it can only be used in a `LocalScript`.
 - `UserInputService/TouchStarted`
 - `UserInputService/TouchEnded` */
 	readonly TouchLongPress: RBXScriptSignal<
-		(touchPositions: Array<any>, state: CastsToEnum<Enum.UserInputState>, gameProcessedEvent: boolean) => void
+		(touchPositions: Array<any>, state: Enum.UserInputState, gameProcessedEvent: boolean) => void
 	>;
 	/** The TouchMoved event fires when a user moves their finger on a TouchEnabled device.
 
@@ -18804,7 +18752,7 @@ As this event only fires locally, it can only be used in a `LocalScript`.
 - `UserInputService/TouchSwipe`
 - `UserInputService/TouchStarted`
 - `UserInputService/TouchEnded` */
-	readonly TouchMoved: RBXScriptSignal<(touch: Instance, gameProcessedEvent: boolean) => void>;
+	readonly TouchMoved: RBXScriptSignal<(touch: InputObject, gameProcessedEvent: boolean) => void>;
 	/** The TouchPan event fires when a user drags at least one finger on a `UserInputService/TouchEnabled|TouchEnabled` device.
 
 This event can be used to determine when a user pans their finger along screen of a TouchEnabled device - such as to rotate the `Camera` in a custom camera script.
@@ -18838,10 +18786,10 @@ As this event only fires locally, it can only be used in a `LocalScript`.
 - `UserInputService/TouchEnded` */
 	readonly TouchPan: RBXScriptSignal<
 		(
-			touchPositions: Array<any>,
+			touchPositions: Array<InputObject>,
 			totalTranslation: Vector2,
 			velocity: Vector2,
-			state: CastsToEnum<Enum.UserInputState>,
+			state: Enum.UserInputState,
 			gameProcessedEvent: boolean,
 		) => void
 	>;
@@ -18878,10 +18826,10 @@ As this event only fires locally, it can only be used in a `LocalScript`.
 - `UserInputService/TouchEnded` */
 	readonly TouchPinch: RBXScriptSignal<
 		(
-			touchPositions: Array<any>,
+			touchPositions: Array<InputObject>,
 			scale: number,
 			velocity: number,
-			state: CastsToEnum<Enum.UserInputState>,
+			state: Enum.UserInputState,
 			gameProcessedEvent: boolean,
 		) => void
 	>;
@@ -18918,10 +18866,10 @@ The core scripts that control the user’s camera on a mobile device use code th
 - `UserInputService/TouchEnded` */
 	readonly TouchRotate: RBXScriptSignal<
 		(
-			touchPositions: Array<any>,
+			touchPositions: Array<InputObject>,
 			rotation: number,
 			velocity: number,
-			state: CastsToEnum<Enum.UserInputState>,
+			state: Enum.UserInputState,
 			gameProcessedEvent: boolean,
 		) => void
 	>;
@@ -18948,7 +18896,7 @@ As this event only fires locally, it can only be used in a `LocalScript`.
 - `UserInputService/TouchRotate`
 - `UserInputService/TouchSwipe`
 - `UserInputService/TouchEnded` */
-	readonly TouchStarted: RBXScriptSignal<(touch: Instance, gameProcessedEvent: boolean) => void>;
+	readonly TouchStarted: RBXScriptSignal<(touch: InputObject, gameProcessedEvent: boolean) => void>;
 	/** The TouchSwipe event fires when a user swipes their fingers on a `UserInputService/TouchEnabled|TouchEnabled` device.
 
 This event can be used to determine when a user swipes their fingers on the screen of their device and the direction that the user swiped.
@@ -18973,7 +18921,7 @@ As this event only fires locally, it can only be used in a `LocalScript`.
 - `UserInputService/TouchStarted`
 - `UserInputService/TouchEnded` */
 	readonly TouchSwipe: RBXScriptSignal<
-		(swipeDirection: CastsToEnum<Enum.SwipeDirection>, numberOfTouches: number, gameProcessedEvent: boolean) => void
+		(swipeDirection: Enum.SwipeDirection, numberOfTouches: number, gameProcessedEvent: boolean) => void
 	>;
 	/** The TouchTap event fires when the user touches/taps their finger on the screen on a `UserInputService/TouchEnabled|TouchEnabled` device.
 
@@ -18996,7 +18944,7 @@ As this event only fires locally, it can only be used in a `LocalScript`.
 - `UserInputService/TouchSwipe`
 - `UserInputService/TouchStarted`
 - `UserInputService/TouchEnded` */
-	readonly TouchTap: RBXScriptSignal<(touchPositions: Array<any>, gameProcessedEvent: boolean) => void>;
+	readonly TouchTap: RBXScriptSignal<(touchPositions: Array<InputObject>, gameProcessedEvent: boolean) => void>;
 	/** The TouchTapInWorld event fires when the user touches/taps their finger on the screen on a `UserInputService/TouchEnabled|TouchEnabled` device. It is fired when the user taps in the game world.
 
 This event can be used to determine when a user taps the screen and does not tap a `GuiObject|GUI` element. If the user taps a GUI element, `UserInputService/TouchTap` will fire instead of TouchTapInWorld.
@@ -19034,7 +18982,7 @@ As the event fires locally, it can only be used in a `LocalScript`.
 - `VRService`, used to implement support, including an identical event `VRService/UserHeadCFrameChanged`
 - `Camera/HeadLocked`, when this property is *true* the `Camera` will automatically track the head motion of a player using a VR device
 - `Camera/GetRenderCFrame`, a function which retrieves the `DataType/CFrame` the `Camera` is being orientated at, including the impact of VR devices */
-	readonly UserCFrameChanged: RBXScriptSignal<(type: CastsToEnum<Enum.UserCFrame>, value: CFrame) => void>;
+	readonly UserCFrameChanged: RBXScriptSignal<(type: Enum.UserCFrame, value: CFrame) => void>;
 	/** The `UserInputService` WindowFocusReleased event fires when the window of the Roblox client loses focus - typically when the Roblox client is minimized by the user.
 
 For example, the code below prints *“Window focus released”* whenever the Roblox client loses focus.
@@ -19126,7 +19074,7 @@ In order for this to work, the user’s device must have an enabled acceleromete
 If you want to track when the user’s device’s acceleration changes instead, you can use the `UserInputService/DeviceAccelerationChanged` event.
 
 Since it only fires locally, it can only be used in a `LocalScript`. */
-	GetDeviceAcceleration(): Instance | undefined;
+	GetDeviceAcceleration(): InputObject;
 	/** This function returns an `InputObject` describing the device’s current gravity vector.
 
 The gravity vector is determined by the device’s orientation relative to the real-world force of gravity. For instance, if a device is perfectly upright (portrait), the gravity vector is `DataType/Vector3|Vector3.new(0, 0, -9.18)`. If the left side of the device is pointing down, the vector is Vector3.new(9.81, 0, 0). Finally, if the back of the device is pointing down, the vector is Vector3.new(0, -9.81, 0).
@@ -19138,7 +19086,7 @@ Gravity is only tracked for players using a device with an enabled gyroscope - s
 To check if a user’s device has an enabled gyroscope, check the value of `UserInputService/GyroscopeEnabled`. If the device has an enabled gyroscope, you can also use the `UserInputService/DeviceGravityChanged` event to track when force of gravity on the user’s device changes.
 
 As `UserInputService` is client-side only, this function can only be used in a `LocalScript`. */
-	GetDeviceGravity(): Instance | undefined;
+	GetDeviceGravity(): InputObject;
 	/** This function returns an `InputObject` and a `DataType/CFrame` describing the device’s current rotation vector.
 
 This is fired with an InputObject. The *Position* property of the input object is a `Enum/InputType|Enum.InputType.Gyroscope` that tracks the total rotation in each local device axis.
@@ -19158,7 +19106,7 @@ As `UserInputService` is client-side only, this function can only be used in a `
 - `TextBox/CaptureFocus`
 - `TextBox/IsFocused`
 - `TextBox/ReleaseFocus` */
-	GetFocusedTextBox(): Instance | undefined;
+	GetFocusedTextBox(): TextBox | undefined;
 	/** This function returns whether a gamepad with the given `Enum/UserInputType` is connected to the client.
 
 This can be used to check if a specific gamepad, such as *’Gamepad1’* is connected to the client’s device.
@@ -19531,9 +19479,7 @@ This is fired with a `DataType/CFrame` coordinate and specified UserCFrame indic
 This `/VRService` event can be used alongside `/UserInputService` service events and functions.
 
 Since the event fires locally, it can only be used in a `/LocalScript`. */
-	readonly NavigationRequested: RBXScriptSignal<
-		(cframe: CFrame, inputUserCFrame: CastsToEnum<Enum.UserCFrame>) => void
-	>;
+	readonly NavigationRequested: RBXScriptSignal<(cframe: CFrame, inputUserCFrame: Enum.UserCFrame) => void>;
 	/** The TouchpadModeChanged event fires if the `Enum/VRTouchpadMode` of a `Enum/VRTouchpad` is changed. This event indicates the VRTouchpad that changes, and its new state.
 
 You can use this event to track the states of VRTouchpads connected via the user’s client.
@@ -19541,21 +19487,19 @@ You can use this event to track the states of VRTouchpads connected via the user
 This `/VRService` event can be used alongside `/UserInputService` service events and functions.
 
 Since the event fires locally, it can only be used in a `/LocalScript`. */
-	readonly TouchpadModeChanged: RBXScriptSignal<
-		(pad: CastsToEnum<Enum.VRTouchpad>, mode: CastsToEnum<Enum.VRTouchpadMode>) => void
-	>;
+	readonly TouchpadModeChanged: RBXScriptSignal<(pad: Enum.VRTouchpad, mode: Enum.VRTouchpadMode) => void>;
 	/** The UserCFrameChanged even fires when a `Enum/UserCFrame` is changed. For instance, this event fires when the user moves a connected VR device.
 
 This can be used alongside `VRService\GetUserCFrame` to track the `DataType/CFrame` coordinates of a VR devices, and when it changes/moves. It can also be used alongside `/UserInputService` service events and functions.
 
 Since the event fires locally, it can only be used in a `/LocalScript`. */
-	readonly UserCFrameChanged: RBXScriptSignal<(type: CastsToEnum<Enum.UserCFrame>, value: CFrame) => void>;
+	readonly UserCFrameChanged: RBXScriptSignal<(type: Enum.UserCFrame, value: CFrame) => void>;
 	/** The UserCFrameEnabled event fires when a `Enum/UserCFrame` gets enabled or disabled.
 
 This can be used alongside `VRService\GetUserCFrameEnabled` to track whether a specified UserCFrame is enabled, and when its state changes. It can also be used alongside `/UserInputService` service events and functions.
 
 Since the event fires locally, it can only be used in a `/LocalScript`. */
-	readonly UserCFrameEnabled: RBXScriptSignal<(type: CastsToEnum<Enum.UserCFrame>, enabled: boolean) => void>;
+	readonly UserCFrameEnabled: RBXScriptSignal<(type: Enum.UserCFrame, enabled: boolean) => void>;
 	/** The GetTouchpadMode function returns the `Enum/VRTouchpadMode` indicating the mode of a specified `Enum/VRTouchpad`.
 
 The returned mode indicates how the user interacts with their touchpad to play the game. For more information about the different types of modes, see the `Enum/VRTouchpadMode` page.

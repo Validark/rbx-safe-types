@@ -14915,6 +14915,5 @@ declare type CastsToEnum<
 		| Enum.VirtualInputMode
 		| Enum.WaterDirection
 		| Enum.WaterForce
-		| Enum.ZIndexBehavior,
-	stringOnly extends true | false = false
-> = T | T[stringOnly extends true ? "Name" : "Name" | "Value"];
+		| Enum.ZIndexBehavior
+> = T | T["Name" | "Value"];

@@ -24,6 +24,7 @@ interface AssetService extends RbxInternalInstance {
 	): number;
 	GetGamePlacesAsync(): StandardPages;
 	GetAssetIdsForPackage(packageAssetId: number): Array<number>;
+	GetBundleDetailsAsync(bundleId: number): BundleInfo;
 }
 
 interface RbxInternalBasePart extends RbxInternalInstance {
@@ -46,6 +47,15 @@ interface RbxInternalBasePart extends RbxInternalInstance {
 
 interface Attachment extends RbxInternalInstance {
 	WorldCFrame: CFrame;
+}
+
+interface BadgeService extends RbxInternalInstance {
+	/** @rbxts server */
+	AwardBadge(userId: number, badgeId: number): boolean;
+	/** @rbxts server */
+	GetBadgeInfoAsync(badgeId: number): BadgeInfo;
+	/** @rbxts server */
+	UserHasBadgeAsync(userId: number, badgeId: number): boolean;
 }
 
 interface TextService extends RbxInternalInstance {
@@ -105,24 +115,38 @@ interface ContentProvider extends RbxInternalInstance {
 
 /** @client */
 interface ContextActionService extends RbxInternalInstance {
-	readonly LocalToolEquipped: RBXScriptSignal<(toolEquipped: Tool) => void>;
-	readonly LocalToolUnequipped: RBXScriptSignal<(toolUnequipped: Tool) => void>;
+	/** @rbxts client */
+	readonly LocalToolEquipped: RBXScriptSignal<(toolEquipped: Tool | Flag) => void>;
+	/** @rbxts client */
+	readonly LocalToolUnequipped: RBXScriptSignal<(toolUnequipped: Tool | Flag) => void>;
+	/** @rbxts client */
 	BindAction(
+		/** The name of the action being bound */
 		actionName: string,
+		/** The function to call when the corresponding event fires */
 		functionToBind: (actionName: string, state: Enum.UserInputState, inputObject: InputObject) => void,
+		/** Whether or not a TouchButton will be created for this action on mobile */
 		createTouchButton: boolean,
-		...inputTypes: Array<CastsToEnum<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType, true>>
+		/** The event to which the functionToBind will be bound. */
+		...inputTypes: Array<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType>
 	): void;
-
+	/** @rbxts client */
 	BindActionAtPriority(
+		/** The name of the action being bound */
 		actionName: string,
+		/** The function to call when the corresponding event fires */
 		functionToBind: (actionName: string, state: Enum.UserInputState, inputObject: InputObject) => void,
+		/** Whether or not a TouchButton will be created for this action on mobile */
 		createTouchButton: boolean,
+		/** The priority level.  */
 		priorityLevel: number,
-		...inputTypes: Array<CastsToEnum<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType, true>>
+		/** The event to which the functionToBind will be bound. */
+		...inputTypes: Array<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType>
 	): void;
-
+	/** @rbxts client */
 	GetButton(actionName: string): ImageButton | undefined;
+	GetAllBoundActionInfo(): Map<string, BoundActionInfo>;
+	GetBoundActionInfo(actionName: string): BoundActionInfo;
 }
 
 /** @server */
@@ -235,7 +259,7 @@ interface Humanoid extends RbxInternalInstance {
 	GetPlayingAnimationTracks(): Array<AnimationTrack>;
 	LoadAnimation(animation: Animation): AnimationTrack;
 	AddAccessory(accessory: Accessory): void;
-	EquipTool(tool: Tool): void;
+	EquipTool(tool: Tool | Flag): void;
 	GetAccessories(): Array<Accessory>;
 	GetLimb(part: BasePart): Enum.Limb;
 	GetBodyPartR15(part: BasePart): Enum.BodyPartR15;
@@ -286,6 +310,8 @@ interface Keyframe extends RbxInternalInstance {
 	AddPose(pose: Pose): void;
 	RemovePose(pose: Pose): void;
 	GetPoses(): Array<Pose>;
+	AddMarker(marker: KeyframeMarker): void;
+	RemoveMarker(marker: KeyframeMarker): void;
 }
 
 interface KeyframeSequence extends RbxInternalInstance {
@@ -303,6 +329,8 @@ interface KeyframeSequenceProvider extends RbxInternalInstance {
 
 interface LocalizationService extends RbxInternalInstance {
 	GetTranslatorForPlayer(player: Player): Translator;
+	GetTranslatorForLocaleAsync(locale: string): Translator;
+	GetTranslatorForPlayerAsync(player: Player): Translator;
 }
 
 interface LocalizationTable extends RbxInternalInstance {
@@ -315,9 +343,16 @@ interface LogService extends RbxInternalInstance {
 }
 
 interface RbxInternalServiceProvider extends RbxInternalInstance {
+	readonly ServiceAdded: RBXScriptSignal<(service: Services[keyof Services]) => void>;
+	readonly ServiceRemoving: RBXScriptSignal<(service: Services[keyof Services]) => void>;
 	FindService(className: string): Instance | undefined;
 	GetService<T extends keyof Services>(className: T): Services[T];
-	GetService(className: string): Instance | undefined;
+	GetService(className: string): Services[keyof Services] | undefined;
+	FindService(className: string): Services[keyof Services] | undefined;
+}
+
+interface CompressorSoundEffect extends RbxInternalSoundEffect {
+	SideChain?: Sound | SoundGroup;
 }
 
 interface DataModel extends RbxInternalServiceProvider {
@@ -358,6 +393,7 @@ interface MarketplaceService extends RbxInternalInstance {
 		currencyType?: CastsToEnum<Enum.CurrencyType>,
 	): void;
 	PlayerOwnsAsset(player: Player, assetId: number): boolean;
+	GetDeveloperProductsAsync(): Pages;
 }
 
 interface RbxInternalDerivesFromModel extends RbxInternalPVInstance {
@@ -380,7 +416,31 @@ interface PathfindingService extends RbxInternalInstance {
 }
 
 interface PhysicsService extends RbxInternalInstance {
+	CollisionGroupContainsPart(name: string, part: BasePart): boolean;
 	GetCollisionGroups(): Array<CollisionGroupInfo>;
+	CollisionGroupContainsPart(name: string, part: BasePart): boolean;
+	SetPartCollisionGroup(part: BasePart, name: string): void;
+}
+
+interface VehicleSeat extends RbxInternalBasePart {
+	Sit(humanoid: Humanoid): void;
+}
+
+interface NetworkClient extends RbxInternalNetworkPeer {
+	readonly ConnectionAccepted: RBXScriptSignal<(peer: string, replicator: ClientReplicator) => void>;
+}
+
+interface RbxInternalNetworkReplicator extends RbxInternalInstance {
+	GetPlayer(): Player;
+}
+
+interface Seat extends RbxInternalDerivesFromPart {
+	Sit(humanoid: Humanoid): void;
+}
+
+interface SkateboardPlatform extends RbxInternalDerivesFromPart {
+	readonly Equipped: RBXScriptSignal<(humanoid: Humanoid, skateboardController: SkateboardController) => void>;
+	readonly Unequipped: RBXScriptSignal<(humanoid: Humanoid) => void>;
 }
 
 interface RbxInternalBasePart extends RbxInternalPVInstance {}
@@ -392,11 +452,18 @@ interface Player extends RbxInternalInstance {
 	readonly CharacterAdded: RBXScriptSignal<(character: Model) => void>;
 	readonly CharacterAppearanceLoaded: RBXScriptSignal<(character: Model) => void>;
 	readonly CharacterRemoving: RBXScriptSignal<(character: Model) => void>;
+
+	readonly Chatted: RBXScriptSignal<(message: string, recipient: Instance) => void>;
+	/** ### TS Usage
+	 * One should check the LocationType of each member of this array in order to verify which members are present. Should be compared to the LocationType const enum.
+	 */
 	GetFriendsOnline(maxFriends?: number): Array<FriendOnlineInfo>;
 	/** @rbxts server */
 	LoadCharacter(): void;
 	/** @rbxts server */
 	LoadCharacterWithHumanoidDescription(humanoidDescription: HumanoidDescription): void;
+	GetMouse(): PlayerMouse;
+	GetJoinData(): PlayerJoinInfo;
 }
 
 /** #### Related methods:
@@ -431,6 +498,14 @@ interface Players extends RbxInternalInstance {
 		thumbnailType: CastsToEnum<Enum.ThumbnailType>,
 		thumbnailSize: CastsToEnum<Enum.ThumbnailSize>,
 	): LuaTuple<[string, boolean]>;
+
+	GetJoinData(): PlayerJoinInfo;
+}
+
+interface ScriptDebugger extends RbxInternalInstance {
+	GetGlobals(): Map<string, any>;
+	GetLocals(stackFrame?: number): Map<string, any>;
+	GetUpvalues(stackFrame?: number): Map<string, any>;
 }
 
 interface PointsService extends RbxInternalInstance {
@@ -447,9 +522,14 @@ interface RemoteEvent extends RbxInternalInstance {
 
 interface RemoteFunction extends RbxInternalInstance {
 	OnClientInvoke: (arguments: Array<any>) => void;
-	OnServerInvoke: (player: Instance, arguments: Array<any>) => void;
-	InvokeClient(player: Instance, ...arguments: Array<any>): unknown;
+	OnServerInvoke: (player: Player, arguments: Array<any>) => void;
+	InvokeClient(player: Player, ...arguments: Array<any>): unknown;
 	InvokeServer<R = unknown>(...arguments: Array<any>): R;
+}
+
+interface Pose extends RbxInternalInstance {
+	AddSubPose(pose: Pose): void;
+	RemoveSubPose(pose: Pose): void;
 }
 
 interface SocialService extends RbxInternalInstance {
@@ -468,6 +548,11 @@ interface SoundService extends RbxInternalInstance {
 	SetListener(listenerType: CastsToEnum<Enum.ListenerType.CFrame>, cframe: CFrame): void;
 	SetListener(listenerType: CastsToEnum<Enum.ListenerType.ObjectCFrame>, basePart: BasePart): void;
 	SetListener(listenerType: CastsToEnum<Enum.ListenerType.ObjectPosition>, basePart: BasePart): void;
+	PlayLocalSound(sound: Sound): void;
+}
+
+interface Studio extends RbxInternalInstance {
+	Theme?: StudioTheme;
 }
 
 /** @server */
@@ -535,27 +620,66 @@ interface Teams extends RbxInternalInstance {
 }
 
 interface TeleportService {
+	readonly LocalPlayerArrivedFromTeleport: RBXScriptSignal<
+		(loadingGui: ScreenGui | GuiMain, dataTable?: unknown) => void
+	>;
+
 	readonly TeleportInitFailed: RBXScriptSignal<
 		(player: Player, teleportResult: Enum.TeleportResult, errorMessage: string) => void
 	>;
+	/** @rbxts server */
 	GetPlayerPlaceInstanceAsync(userId: number): LuaTuple<[boolean, string, number, string]>;
+	/** @rbxts server */
 	ReserveServer(placeId: number): LuaTuple<[string, string]>;
-	Teleport(placeId: number, player?: Player, teleportData?: any, customLoadingScreen?: Instance): void;
+	/** @rbxts client */
+	GetArrivingTeleportGui(): ScreenGui | GuiMain | undefined;
+	/** @rbxts client */
+	GetLocalPlayerTeleportData(): unknown;
+	/** @rbxts client */
+	GetTeleportSetting(setting: string): unknown;
+	/** @rbxts client */
+	SetTeleportGui(gui: ScreenGui): void;
+	/** @rbxts client */
+	SetTeleportSetting(setting: string, value: RbxInternalTeleportData): void;
+	Teleport(
+		placeId: number,
+		player?: Player,
+		teleportData?: RbxInternalTeleportData,
+		customLoadingScreen?: ScreenGui | GuiMain,
+	): void;
+
 	TeleportToPrivateServer(
 		placeId: number,
 		reservedServerAccessCode: string,
 		players: Array<Player>,
 		spawnName?: string,
-		teleportData?: any,
-		customLoadingScreen?: Instance,
+		teleportData?: RbxInternalTeleportData,
+		customLoadingScreen?: ScreenGui | GuiMain,
 	): void;
 
 	TeleportPartyAsync(
 		placeId: number,
 		players: Array<Player>,
-		teleportData?: any,
-		customLoadingScreen?: Instance,
+		teleportData?: RbxInternalTeleportData,
+		customLoadingScreen?: ScreenGui | GuiMain,
 	): string;
+
+	TeleportToPlaceInstance(
+		placeId: number,
+		instanceId: string,
+		player?: Player,
+		spawnName?: string,
+		teleportData?: RbxInternalTeleportData,
+		customLoadingScreen?: ScreenGui | GuiMain,
+	): void;
+
+	TeleportToSpawnByName(
+		placeId: number,
+		spawnName: string,
+		player?: Player,
+		teleportData?: any,
+		customLoadingScreen?: ScreenGui | GuiMain,
+	): void;
 }
 
 interface Terrain extends RbxInternalBasePart {
@@ -577,6 +701,33 @@ interface RbxInternalDerivesFromTool extends RbxInternalBackpackItem {
 	readonly Equipped: RBXScriptSignal<(mouse: Mouse) => void>;
 }
 
+interface UIPageLayout extends RbxInternalUIGridStyleLayout {
+	readonly PageEnter: RBXScriptSignal<(page: GuiObject) => void>;
+	readonly PageLeave: RBXScriptSignal<(page: GuiObject) => void>;
+	readonly Stopped: RBXScriptSignal<(currentPage: GuiObject) => void>;
+	JumpTo(page: GuiObject): void;
+}
+
+interface Explosion extends RbxInternalInstance {
+	readonly Hit: RBXScriptSignal<(part: BasePart, distance: number) => void>;
+}
+
+interface Dragger extends RbxInternalInstance {
+	MouseDown(mousePart: BasePart, pointOnMousePart: Vector3, parts: Array<BasePart>): void;
+}
+interface JointsService extends RbxInternalInstance {
+	SetJoinAfterMoveInstance(joinInstance: PVInstance): void;
+	SetJoinAfterMoveTarget(joinTarget: PVInstance): void;
+}
+
+interface RbxInternalGuiButton extends RbxInternalGuiObject {
+	readonly Activated: RBXScriptSignal<(inputObject: InputObject) => void>;
+}
+
+interface TextBox extends RbxInternalGuiObject {
+	readonly FocusLost: RBXScriptSignal<(enterPressed: boolean, inputThatCausedFocusLoss: InputObject) => void>;
+}
+
 interface TweenService {
 	Create<T extends Instances[keyof Instances]>(
 		instance: T,
@@ -589,6 +740,33 @@ interface UserInputService {
 	readonly InputBegan: RBXScriptSignal<(input: InputObject, gameProcessedEvent: boolean) => void>;
 	readonly InputChanged: RBXScriptSignal<(input: InputObject, gameProcessedEvent: boolean) => void>;
 	readonly InputEnded: RBXScriptSignal<(input: InputObject, gameProcessedEvent: boolean) => void>;
+	readonly TextBoxFocusReleased: RBXScriptSignal<(textboxReleased: TextBox) => void>;
+	readonly TextBoxFocused: RBXScriptSignal<(textboxFocused: TextBox) => void>;
+	readonly TouchEnded: RBXScriptSignal<(touch: InputObject, gameProcessedEvent: boolean) => void>;
+	readonly TouchMoved: RBXScriptSignal<(touch: InputObject, gameProcessedEvent: boolean) => void>;
+	readonly TouchPan: RBXScriptSignal<
+		(
+			touchPositions: Array<InputObject>,
+			totalTranslation: Vector2,
+			velocity: Vector2,
+			state: Enum.UserInputState,
+			gameProcessedEvent: boolean,
+		) => void
+	>;
+	readonly TouchRotate: RBXScriptSignal<
+		(
+			touchPositions: Array<InputObject>,
+			rotation: number,
+			velocity: number,
+			state: Enum.UserInputState,
+			gameProcessedEvent: boolean,
+		) => void
+	>;
+	readonly TouchStarted: RBXScriptSignal<(touch: InputObject, gameProcessedEvent: boolean) => void>;
+	readonly TouchTap: RBXScriptSignal<(touchPositions: Array<InputObject>, gameProcessedEvent: boolean) => void>;
+	readonly DeviceAccelerationChanged: RBXScriptSignal<(acceleration: InputObject) => void>;
+	readonly DeviceGravityChanged: RBXScriptSignal<(gravity: InputObject) => void>;
+	readonly DeviceRotationChanged: RBXScriptSignal<(rotation: InputObject, cframe: CFrame) => void>;
 	GetConnectedGamepads(): Array<Enum.UserInputType>;
 	GetDeviceRotation(): LuaTuple<[InputObject, CFrame]>;
 	GetGamepadState(gamepadNum: CastsToEnum<Enum.UserInputType>): Array<InputObject>;
@@ -596,6 +774,9 @@ interface UserInputService {
 	GetMouseButtonsPressed(): Array<InputObject>;
 	GetNavigationGamepads(): Array<Enum.UserInputType>;
 	GetSupportedGamepadKeyCodes(gamepadNum: CastsToEnum<Enum.UserInputType>): Array<Enum.KeyCode>;
+	GetDeviceAcceleration(): InputObject;
+	GetDeviceGravity(): InputObject;
+	GetFocusedTextBox(): TextBox | undefined;
 }
 
 interface Workspace extends RbxInternalDerivesFromModel {

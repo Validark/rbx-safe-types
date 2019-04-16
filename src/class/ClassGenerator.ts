@@ -209,7 +209,7 @@ function isCreatable(rbxClass: ApiClass) {
 	);
 }
 
-function generateArgs(params: Array<ApiParameter>) {
+function generateArgs(params: Array<ApiParameter>, canImplicitlyConvertEnum: boolean = true) {
 	const args = new Array<string>();
 	const paramNames = params.map(param => param.Name);
 	for (let i = 0; i < paramNames.length; i++) {
@@ -224,7 +224,7 @@ function generateArgs(params: Array<ApiParameter>) {
 	let optional = false;
 	for (let i = 0; i < params.length; i++) {
 		const param = params[i];
-		const paramType = safeValueType(param.Type, true);
+		const paramType = safeValueType(param.Type, canImplicitlyConvertEnum);
 		optional = optional || param.Default !== undefined || paramType === "any";
 		args.push(`${safeArgName(paramNames[i])}${optional ? "?" : ""}: ${paramType}`);
 	}
@@ -411,7 +411,7 @@ export class ClassGenerator extends Generator {
 
 	private generateEvent(rbxEvent: ApiEvent, className: string, tsImplInterface?: ts.InterfaceDeclaration) {
 		const name = rbxEvent.Name;
-		const args = generateArgs(rbxEvent.Parameters);
+		const args = generateArgs(rbxEvent.Parameters, false);
 		const description = rbxEvent.Description || this.metadata.getEventDescription(className, name);
 
 		if (!this.writeSignatures(rbxEvent, impl => impl.getProperties(), tsImplInterface, description)) {

@@ -26,7 +26,7 @@ interface Base<T extends string> {
 }
 type BaseType<T> = T extends Base<infer U> ? U : never;
 
-declare const enum FriendLocationType {
+declare const enum LocationType {
 	MobileWebsite = 0,
 	MobileInGame = 1,
 	Website = 2,
@@ -56,19 +56,19 @@ type FriendOnlineInfo =
 	| FieldsPresentWhen<
 			FriendOnlineInfoFields,
 			"LocationType",
-			FriendLocationType.MobileWebsite | FriendLocationType.Website | FriendLocationType.XBoxApp,
+			LocationType.MobileWebsite | LocationType.Website | LocationType.XBoxApp,
 			"VisitorId" | "UserName" | "LastOnline" | "IsOnline" | "LastLocation"
 	  >
 	| FieldsPresentWhen<
 			FriendOnlineInfoFields,
 			"LocationType",
-			FriendLocationType.MobileInGame | FriendLocationType.InGame | FriendLocationType.TeamCreate,
+			LocationType.MobileInGame | LocationType.InGame | LocationType.TeamCreate,
 			"VisitorId" | "UserName" | "LastOnline" | "IsOnline" | "LastLocation" | "PlaceId" | "GameId"
 	  >
 	| FieldsPresentWhen<
 			FriendOnlineInfoFields,
 			"LocationType",
-			FriendLocationType.Studio,
+			LocationType.Studio,
 			"VisitorId" | "UserName" | "LastOnline" | "IsOnline" | "LastLocation" | "PlaceId"
 	  >;
 
@@ -208,6 +208,67 @@ interface ProductInfo {
 	TargetId: number;
 }
 
+interface BadgeInfo {
+	/** The name of the badge. */
+	Name: string;
+	/** The description of the badge. */
+	Description: string;
+	/** The asset ID of the image for this badge. */
+	IconImageId: number;
+	/** Indicates whether this badge is available to be awarded. */
+	IsEnabled: boolean;
+}
+
+interface BundleInfo {
+	/** What kind of Bundle this is */
+	BundleType: "BodyParts" | "AvatarAnimations";
+
+	/** The Description of the Bundle */
+	Description: string;
+
+	/** The Bundle Id */
+	Id: number;
+
+	/** An array of all assets contained within this bundle */
+	Items: Array<{
+		/** The Id of the individual item */
+		Id: number;
+		/** The name of the individual asset */
+		Name: string;
+		/** What type the individual asset is */
+		Type: "Asset" | "UserOutfit";
+	}>;
+
+	/** The name of the Bundle */
+	Name: string;
+}
+
+type RbxInternalTeleportData = string | number | boolean | Array<any> | Map<any, any>;
+
+type PlayerJoinInfo =
+	| {
+			/** The DataModel.PlaceId of the place the Player was teleported from. Only present if the player was teleported to the current place. */
+			SourcePlaceId: undefined;
+			/** An array containing the UserIds teleported alongside the Player. Only present if the player was teleported in using TeleportService:TeleportPartyAsync. */
+			Members: undefined;
+			/** Data passed along with the players. As this is transmitted by the client it is not secure. For this reason it should only be used for local settings and not sensitive items (such as the users’ score or in-game currency). */
+			teleportData?: RbxInternalTeleportData;
+	  }
+	| {
+			/** The DataModel.PlaceId of the place the Player was teleported from. Only present if the player was teleported to the current place. */
+			SourcePlaceId: number;
+			/** An array containing the UserIds teleported alongside the Player. Only present if the player was teleported in using TeleportService:TeleportPartyAsync. */
+			Members: Array<number>;
+			/** Data passed along with the players. As this is transmitted by the client it is not secure. For this reason it should only be used for local settings and not sensitive items (such as the users’ score or in-game currency). */
+			teleportData?: RbxInternalTeleportData;
+	  };
+
+interface BoundActionInfo {
+	inputTypes: Array<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType | string>;
+	priorityLevel: number;
+	stackOrder: number;
+}
+
 declare const enum AssetTypeId {
 	Image = 1,
 	TeeShirt = 2,
@@ -311,9 +372,9 @@ interface FriendOnlineInfoFields {
 	 */
 	GameId: string;
 	/** A numeric enum of the friends last location.
-	 * In TS, you can check this value against the `FriendLocationType` const enum
+	 * In TS, you can check this value against the `LocationType` const enum
 	 */
-	LocationType: FriendLocationType;
+	LocationType: LocationType;
 }
 
 /** A dictionary of an id and name containing information about what type an asset is */
