@@ -38,7 +38,9 @@ interface RbxInternalBasePart extends RbxInternalInstance {
 	GetJoints(): Array<Constraint | JointInstance>;
 	GetTouchingParts(): Array<BasePart>;
 	SetNetworkOwner(playerInstance?: Player): void;
+	/** @rbxts server */
 	SubtractAsync(parts: Array<BasePart>, collisionfidelity?: CastsToEnum<Enum.CollisionFidelity>): UnionOperation;
+	/** @rbxts server */
 	UnionAsync(parts: Array<BasePart>, collisionfidelity?: CastsToEnum<Enum.CollisionFidelity>): UnionOperation;
 }
 
@@ -380,6 +382,8 @@ interface PathfindingService extends RbxInternalInstance {
 interface PhysicsService extends RbxInternalInstance {
 	GetCollisionGroups(): Array<CollisionGroupInfo>;
 }
+
+interface RbxInternalBasePart extends RbxInternalPVInstance {}
 
 interface Player extends RbxInternalInstance {
 	readonly Name: string;

@@ -11504,35 +11504,75 @@ When playerInstance is nil, the server will be the owner instead of a player.Set
 	SetNetworkOwner(playerInstance?: Player): void;
 	/** Lets the game engine dynamically decide who will handle the part’s physics (one of the clients or the server). */
 	SetNetworkOwnershipAuto(): void;
-	/** This is a server-only function that uses [CSG](https://developer.roblox.com/articles/3D-Modeling-with-Parts) to subtract the geometry of a table of `BasePart|BaseParts` from the calling `BasePart`. It returns a parentless `UnionOperation` named **Union** with the following specs:
+	/** This is a server-only function that uses `articles/3D Modeling with Parts|CSG` to subtract the geometry of a table of `BasePart|BaseParts` from the calling BasePart.
 
-- The faces of the returned `UnionOperation` inherit the colors of the original parts’ faces.
-- The `PartOperation/UsePartColor|UsePartColor` property will be false.
-- The `PartOperation/CollisionFidelity|CollisionFidelity` will match the provided enum (or default).
-- The returned `UnionOperation` inherits the following properties from the part that this function was called from: `BasePart/Color|Color`, `BasePart/Material|Material`, `BasePart/Reflectance|Reflectance`, `BasePart/Transparency|Transparency`, `BasePart/Anchored|Anchored`, `BasePart/CanCollide|CanCollide`, `BasePart/Elasticity|Elasticity`, `BasePart/Friction|Friction`, and `BasePart/CustomPhysicalProperties|CustomPhysicalProperties`.
+ The following properties from the calling part will be applied to the resulting part: ColorMaterialReflectanceTransparencyAnchoredCanCollideDensityFrictionElasticityFrictionWeightElasticityWeight
 
-See the `Articles/in game solid modeling|In-Game Solid Modeling` article for more information.
+The resulting union instance will have a null parent and will be named “Union”. If the resulting union’s `PartOperation/UsePartColor` is false, it is rendered with face colors. Face colors of the result come from colors of its constituent parts. Its `PartOperation/UsePartColor|UsePartColor` property defaults to false and its `PartOperation/CollisionFidelity|CollisionFidelity` matches the provided enum.
+
+The original parts remain in the same state and location in the game’s tree as before operation.
+
+The code snippet below demonstrates how to perform the operation as described above:
+
+```lua
+local part = workspace.Part1
+local otherParts = {workspace.Part2, workspace.Part3, workspace.Part4}
+
+-- Perform union operation
+local newUnion = part:SubtractAsync(otherParts)
+```
+
+The image below visualizes parts before and after the operation. The red negated parts are subtracted from the grey part.
+
+![SubtractAsync Visualization](https://developer.roblox.com/assets/5cad5e7d23c3e3b178f1fb2f/SubtractAsync.jpg)
 
  The original parts remain unchanged following a successful subtract operation. In most cases, you should destroy all of the original parts and parent the returned UnionOperation to the same place as the calling BasePart.
 
 ### Potential Errors
 
-This function raises an error under the following conditions:
+- There is a limit to how many parts can be generated. If a union operation would result in a part with more than 5000 triangles, it will fail and Studio will alert you to the error in the Output window.
+- A part made with solid modeling can only use **one** color and material. If you union two parts with different colors/materials, the result will use the characteristics of just one of the parts.
+- A unioned or negated part can only be scaled uniformly (all of the dimensions must be scaled at the same proportion). If you need to change the size of just one part in a solid model construction, it may be easier to un-union
 
-- If the resulting union is empty due to subtractions.
-- When called by the client (this cannot be called by a `LocalScript`).
-- If any of the objects involved are not supported by CSG (only `BasePart|BaseParts` are supported, not `Terrain` or meshes).
-- If the result could not be computed with less than 5000 triangles.
-- Some other CSG problem occurred while attempting to union. */
+ that part, resize it, and then redo the union process.
+- This function can only be called from the server. It cannot be called by the client.
+- All parts must be supported by CSG. Only \`BasePart\|BaseParts\` are supported, not \`Terrain\` or meshes. If A union operation involving any non-supported part will fail and Studio will alert you to the error in the Output window.
+- The resulting union cannot be empty due to subtractions. If a union operation would result in an empty part, it will fail and Studio will alert you to the error in the Output window.
+
+### Solid-Modeling Playground
+
+Now that you understand basic in-game solid modeling, experience it within a sample place!
+
+Rotating WindowsBlast pieces out of rotating windows or fuse new material onto them. Includes a helper module script that rebuilds mechanisms with constraints and attachments!
+
+### See also
+
+- `articles/In Game Solid Modeling`, create custom plugins for solid modeling techniques like unions, negations, and separations
+- `articles/3D Modeling with Parts`, how to combine and subtract parts to create complex solid shapes
+- `articles/Making an Arch`, make an arch for you */
+	/** @rbxts server */
 	SubtractAsync(parts: Array<BasePart>, collisionfidelity?: CastsToEnum<Enum.CollisionFidelity>): UnionOperation;
-	/** This is a server-only function that uses [CSG](https://developer.roblox.com/articles/3D-Modeling-with-Parts) to combine the geometry of the calling `BasePart` with a table of other `BasePart|BaseParts`. It returns a parentless `UnionOperation` named **Union** with the following specs:
+	/** This is a server-only function that uses `articles/3D Modeling with Parts|CSG` to combine the geometry of the calling `BasePart` with a table of other BaseParts.
 
-- The faces of the returned `UnionOperation` inherit the colors of the original parts’ faces.
-- The `PartOperation/UsePartColor|UsePartColor` property will be false.
-- The `PartOperation/CollisionFidelity|CollisionFidelity` will match the provided enum (or default).
-- The returned `UnionOperation` inherits the following properties from the part that this function was called from: `BasePart/Color|Color`, `BasePart/Material|Material`, `BasePart/Reflectance|Reflectance`, `BasePart/Transparency|Transparency`, `BasePart/Anchored|Anchored`, `BasePart/CanCollide|CanCollide`, `BasePart/Elasticity|Elasticity`, `BasePart/Friction|Friction`, and `BasePart/CustomPhysicalProperties|CustomPhysicalProperties`.
+ The following properties from the calling part will be applied to the resulting part:ColorMaterialReflectanceTransparencyAnchoredCanCollideDensityFrictionElasticityFrictionWeightElasticityWeight
 
-See the `Articles/in game solid modeling|In-Game Solid Modeling` article for more information.
+The resulting union instance will have a null parent and will be named “Union”. If the resulting union’s `PartOperation/UsePartColor` is false, it is rendered with face colors. Face colors of the result come from colors of its constituent parts. Its `PartOperation/UsePartColor|UsePartColor` property defaults to false and its `PartOperation/CollisionFidelity|CollisionFidelity` matches the provided enum.
+
+The original parts remain in the same state and location in the game’s tree as before operation.
+
+The code snippet below demonstrates how to perform the operation as described above:
+
+```lua
+local part = workspace.Part1
+local otherParts = {workspace.Part2, workspace.Part3, workspace.Part4}
+
+-- Perform union operation
+local newUnion = part:UnionAsync(otherParts)
+```
+
+The image below visualizes parts before and after the operation. The green parts are combined with the grey part.
+
+![Union Visualization](https://developer.roblox.com/assets/5cad525c4a3a4aa802c91f88/UnionAsync.jpg)
 
  Note that if a NegateOperation is provided, it will also be unioned additively. For subtraction, use BasePart/SubtractAsync|SubtractAsync().
 
@@ -11540,12 +11580,27 @@ See the `Articles/in game solid modeling|In-Game Solid Modeling` article for mor
 
 ### Potential Errors
 
-This function raises an error under the following conditions:
+- There is a limit to how many parts can be generated. If a union operation would result in a part with more than 5000 triangles, it will fail and Studio will alert you to the error in the Output window.
+- A part made with solid modeling can only use **one** color and material. If you union two parts with different colors/materials, the result will use the characteristics of just one of the parts.
+- A unioned or negated part can only be scaled uniformly (all of the dimensions must be scaled at the same proportion). If you need to change the size of just one part in a solid model construction, it may be easier to un-union
 
-- When called by the client (this cannot be called by a `LocalScript`).
-- If any of the objects involved are not supported by CSG (only `BasePart|BaseParts` are supported, not `Terrain` or meshes).
-- If the result could not be computed with less than 5000 triangles.
-- Some other CSG problem occurred while attempting to union. */
+ that part, resize it, and then redo the union process.
+- This function can only be called from the server. It cannot be called by the client.
+- All parts must be supported by CSG. Only \`BasePart\|BaseParts\` are supported, not \`Terrain\` or meshes. If A union operation involving any non-supported part will fail and Studio will alert you to the error in the Output window.
+- The resulting union cannot be empty due to subtractions. If a union operation would result in an empty part, it will fail and Studio will alert you to the error in the Output window.
+
+### Solid-Modeling Playground
+
+Now that you understand basic in-game solid modeling, experience it within a sample place!
+
+Rotating WindowsBlast pieces out of rotating windows or fuse new material onto them. Includes a helper module script that rebuilds mechanisms with constraints and attachments!
+
+### See also
+
+- `articles/In Game Solid Modeling`, create custom plugins for solid modeling techniques like unions, negations, and separations
+- `articles/3D Modeling with Parts`, how to combine and subtract parts to create complex solid shapes
+- `articles/Making an Arch`, make an arch f */
+	/** @rbxts server */
 	UnionAsync(parts: Array<BasePart>, collisionfidelity?: CastsToEnum<Enum.CollisionFidelity>): UnionOperation;
 }
 /** BasePart is an abstract base class for in-world objects that render and are physically simulated while in the `Workspace`. There are several implementations of BasePart, the most common is `Part`, a simple 6-face rectangular prism. Others include `SpawnLocation`, `WedgePart` and the singleton `Terrain` object within the `Workspace`. Most of the time, when documentation refers to a part, most BasePart implementations will work and not just `Part`.
@@ -12279,8 +12334,6 @@ For more information on how raycasting works in Roblox, please see the articles 
 
 This function is a variant of `Workspace/FindPartOnRay` with the addition of an ignore list. This allows the developer to ignore certain parts or `Model`s.
 
-The terrainCellsAreCubes and ignoreWater parameters determine whether terrain cells should be treated as cubes, and whether water should be ignored.
-
 Those looking to utilize a white list instead should use `Workspace/FindPartOnRayWithWhitelist`.
 
 For more information on how raycasting works in Roblox, please see the articles on [raycasting basics](https://developer.roblox.com/articles/Raycasting) and [how to make raycasting guns](https://developer.roblox.com/articles/Making-a-ray-casting-laser-gun-in-Roblox).
@@ -12290,8 +12343,7 @@ For more information on how raycasting works in Roblox, please see the articles 
 - Theoretically, a ray extends infinitely in one direction. However, the max length of the direction vector on Roblox is 5000 studs
 - The length of the direction vector is important - parts further away than its length will not be tested
 - If the ray does not intersect a part, the return values will be nil and the point at the end of the ray, respectively
-- If a nil value is given in the ignore list, instances after this value will not be ignored
-- Parts that are in a `PhysicsService/SetPartCollisionGroup|collision group` that does not collide with the “Default” collision group are ignored implicitly */
+- Parts that are in a `PhysicsService/SetPartCollisionGroup|collision group` that do not collide with the “Default” collision group are ignored implicitly. This is an unintended behavior that may change */
 	FindPartOnRayWithIgnoreList(
 		ray: Ray,
 		ignoreDescendantsTable: Array<Instance>,
