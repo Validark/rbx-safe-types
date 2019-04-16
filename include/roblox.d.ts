@@ -208,11 +208,57 @@ interface ProductInfo {
 	TargetId: number;
 }
 
+declare const enum AssetTypeId {
+	Image = 1,
+	TeeShirt = 2,
+	Audio = 3,
+	Mesh = 4,
+	Lua = 5,
+	Hat = 8,
+	Place = 9,
+	Model = 10,
+	Shirt = 11,
+	Pants = 12,
+	Decal = 13,
+	Head = 17,
+	Face = 18,
+	Gear = 19,
+	Badge = 21,
+	Animation = 24,
+	Torso = 27,
+	RightArm = 28,
+	LeftArm = 29,
+	LeftLeg = 30,
+	RightLeg = 31,
+	Package = 32,
+	GamePass = 34,
+	Plugin = 38,
+	MeshPart = 40,
+	HairAccessory = 41,
+	FaceAccessory = 42,
+	NeckAccessory = 43,
+	ShoulderAccessory = 44,
+	FrontAccessory = 45,
+	BackAccessory = 46,
+	WaistAccessory = 47,
+	ClimbAnimation = 48,
+	DeathAnimation = 49,
+	FallAnimation = 50,
+	IdleAnimation = 51,
+	JumpAnimation = 52,
+	RunAnimation = 53,
+	SwimAnimation = 54,
+	WalkAnimation = 55,
+	PoseAnimation = 56,
+	EarAccessory = 57,
+	EyeAccessory = 58,
+}
+
 interface AssetProductInfo extends ProductInfo {
 	/** If InfoType was Asset, this is the ID of the given asset. */
 	AssetId: number;
-	/** The [type of asset](https://developer.roblox.com/articles/Asset-types) (e.g. place, model, shirt) */
-	AssetTypeId: AssetType["id"];
+	/** The [type of asset](https://developer.roblox.com/articles/Asset-types) (e.g. place, model, shirt). In TypeScript, you should compare this value to a member of the `AssetTypeId` const enum. */
+	AssetTypeId: AssetTypeId;
 	/** Describes whether the asset is purchasable */
 	IsForSale: boolean;
 	/** Describes whether the asset is a "limited item" that is no longer (if ever) sold */
@@ -272,49 +318,49 @@ interface FriendOnlineInfoFields {
 
 /** A dictionary of an id and name containing information about what type an asset is */
 type AssetType =
-	| { id: 1; name: "Image" }
-	| { id: 2; name: "TeeShirt" }
-	| { id: 3; name: "Audio" }
-	| { id: 4; name: "Mesh" }
-	| { id: 5; name: "Lua" }
-	| { id: 8; name: "Hat" }
-	| { id: 9; name: "Place" }
-	| { id: 10; name: "Model" }
-	| { id: 11; name: "Shirt" }
-	| { id: 12; name: "Pants" }
-	| { id: 13; name: "Decal" }
-	| { id: 17; name: "Head" }
-	| { id: 18; name: "Face" }
-	| { id: 19; name: "Gear" }
-	| { id: 21; name: "Badge" }
-	| { id: 24; name: "Animation" }
-	| { id: 27; name: "Torso" }
-	| { id: 28; name: "RightArm" }
-	| { id: 29; name: "LeftArm" }
-	| { id: 30; name: "LeftLeg" }
-	| { id: 31; name: "RightLeg" }
-	| { id: 32; name: "Package" }
-	| { id: 34; name: "GamePass" }
-	| { id: 38; name: "Plugin" }
-	| { id: 40; name: "MeshPart" }
-	| { id: 41; name: "HairAccessory" }
-	| { id: 42; name: "FaceAccessory" }
-	| { id: 43; name: "NeckAccessory" }
-	| { id: 44; name: "ShoulderAccessory" }
-	| { id: 45; name: "FrontAccessory" }
-	| { id: 46; name: "BackAccessory" }
-	| { id: 47; name: "WaistAccessory" }
-	| { id: 48; name: "ClimbAnimation" }
-	| { id: 49; name: "DeathAnimation" }
-	| { id: 50; name: "FallAnimation" }
-	| { id: 51; name: "IdleAnimation" }
-	| { id: 52; name: "JumpAnimation" }
-	| { id: 53; name: "RunAnimation" }
-	| { id: 54; name: "SwimAnimation" }
-	| { id: 55; name: "WalkAnimation" }
-	| { id: 56; name: "PoseAnimation" }
-	| { id: 57; name: "EarAccessory" }
-	| { id: 58; name: "EyeAccessory" };
+	| { id: AssetTypeId.Image; name: "Image" }
+	| { id: AssetTypeId.TeeShirt; name: "TeeShirt" }
+	| { id: AssetTypeId.Audio; name: "Audio" }
+	| { id: AssetTypeId.Mesh; name: "Mesh" }
+	| { id: AssetTypeId.Lua; name: "Lua" }
+	| { id: AssetTypeId.Hat; name: "Hat" }
+	| { id: AssetTypeId.Place; name: "Place" }
+	| { id: AssetTypeId.Model; name: "Model" }
+	| { id: AssetTypeId.Shirt; name: "Shirt" }
+	| { id: AssetTypeId.Pants; name: "Pants" }
+	| { id: AssetTypeId.Decal; name: "Decal" }
+	| { id: AssetTypeId.Head; name: "Head" }
+	| { id: AssetTypeId.Face; name: "Face" }
+	| { id: AssetTypeId.Gear; name: "Gear" }
+	| { id: AssetTypeId.Badge; name: "Badge" }
+	| { id: AssetTypeId.Animation; name: "Animation" }
+	| { id: AssetTypeId.Torso; name: "Torso" }
+	| { id: AssetTypeId.RightArm; name: "RightArm" }
+	| { id: AssetTypeId.LeftArm; name: "LeftArm" }
+	| { id: AssetTypeId.LeftLeg; name: "LeftLeg" }
+	| { id: AssetTypeId.RightLeg; name: "RightLeg" }
+	| { id: AssetTypeId.Package; name: "Package" }
+	| { id: AssetTypeId.GamePass; name: "GamePass" }
+	| { id: AssetTypeId.Plugin; name: "Plugin" }
+	| { id: AssetTypeId.MeshPart; name: "MeshPart" }
+	| { id: AssetTypeId.HairAccessory; name: "HairAccessory" }
+	| { id: AssetTypeId.FaceAccessory; name: "FaceAccessory" }
+	| { id: AssetTypeId.NeckAccessory; name: "NeckAccessory" }
+	| { id: AssetTypeId.ShoulderAccessory; name: "ShoulderAccessory" }
+	| { id: AssetTypeId.FrontAccessory; name: "FrontAccessory" }
+	| { id: AssetTypeId.BackAccessory; name: "BackAccessory" }
+	| { id: AssetTypeId.WaistAccessory; name: "WaistAccessory" }
+	| { id: AssetTypeId.ClimbAnimation; name: "ClimbAnimation" }
+	| { id: AssetTypeId.DeathAnimation; name: "DeathAnimation" }
+	| { id: AssetTypeId.FallAnimation; name: "FallAnimation" }
+	| { id: AssetTypeId.IdleAnimation; name: "IdleAnimation" }
+	| { id: AssetTypeId.JumpAnimation; name: "JumpAnimation" }
+	| { id: AssetTypeId.RunAnimation; name: "RunAnimation" }
+	| { id: AssetTypeId.SwimAnimation; name: "SwimAnimation" }
+	| { id: AssetTypeId.WalkAnimation; name: "WalkAnimation" }
+	| { id: AssetTypeId.PoseAnimation; name: "PoseAnimation" }
+	| { id: AssetTypeId.EarAccessory; name: "EarAccessory" }
+	| { id: AssetTypeId.EyeAccessory; name: "EyeAccessory" };
 
 /** Information about a player's avatar in dictionary form */
 interface CharacterAppearanceInfo {
@@ -339,7 +385,7 @@ interface CharacterAppearanceInfo {
 		/** The asset ID of the equipped asset */
 		id: number;
 
-		/** A table with `name` and `id` fields, each describing the kind of asset equipped ("Hat", "Face", etc.) */
+		/** A table with `name` and `id` fields, each describing the kind of asset equipped ("Hat", "Face", etc.). In TypeScript, the `id` can be compared to a member of the `AssetTypeId` const enum. */
 		assetType: AssetType;
 
 		/** The name of the equipped asset */
