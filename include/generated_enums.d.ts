@@ -7384,6 +7384,36 @@ declare namespace Enum {
 	}
 	export type Language = Language.Default;
 
+	export namespace LanguagePreference {
+		export interface SystemDefault {
+			Name: "SystemDefault";
+			Value: 0;
+			EnumType: Enum_LanguagePreference;
+		}
+
+		export const SystemDefault: SystemDefault;
+
+		export interface English {
+			Name: "English";
+			Value: 1;
+			EnumType: Enum_LanguagePreference;
+		}
+
+		export const English: English;
+
+		export interface SimplifiedChinese {
+			Name: "SimplifiedChinese";
+			Value: 2;
+			EnumType: Enum_LanguagePreference;
+		}
+
+		export const SimplifiedChinese: SimplifiedChinese;
+	}
+	export type LanguagePreference =
+		| LanguagePreference.SystemDefault
+		| LanguagePreference.English
+		| LanguagePreference.SimplifiedChinese;
+
 	export namespace LeftRight {
 		export interface Left {
 			Name: "Left";
@@ -13862,6 +13892,12 @@ interface Enum_Language {
 	Default: Enum.Language.Default;
 }
 
+interface Enum_LanguagePreference {
+	SystemDefault: Enum.LanguagePreference.SystemDefault;
+	English: Enum.LanguagePreference.English;
+	SimplifiedChinese: Enum.LanguagePreference.SimplifiedChinese;
+}
+
 interface Enum_LeftRight {
 	Left: Enum.LeftRight.Left;
 	Center: Enum.LeftRight.Center;
@@ -14822,6 +14858,7 @@ declare type CastsToEnum<
 		| Enum.KeyCode
 		| Enum.KeywordFilterType
 		| Enum.Language
+		| Enum.LanguagePreference
 		| Enum.LeftRight
 		| Enum.LevelOfDetailSetting
 		| Enum.Limb

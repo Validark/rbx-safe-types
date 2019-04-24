@@ -359,6 +359,7 @@ interface InstancesInternal extends CreatableInstancesInternal, Services {
 	FormFactorPart: FormFactorPart;
 	Platform: Platform;
 	Terrain: Terrain;
+	TriangleMeshPart: TriangleMeshPart;
 	Status: Status;
 	PackageLink: PackageLink;
 	Pages: Pages;
@@ -1485,6 +1486,29 @@ interface AssetService extends RbxInternalInstance {
 	): number;
 	/** Returns an array of assetIds that are contained in a specified package. */
 	GetAssetIdsForPackage(packageAssetId: number): Array<number>;
+	/** If the bundle Id does not exist, it throws HTTP 400 (HTTP/1.1 400 Bad Request). If bundleId is not convertible to int, throws "Unable to cast string to int64". If param type is string, it implicitly tries to convert to int.
+
+This function returns details of the contents of the specified bundle.
+
+### Understanding the returned ValueTable
+
+It returns a ValueTable object with the following key-value pairs containing details about the specified bundle
+
+| Key Name                                                            | Value Type                                                          | Description                                                         |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Id number                                                           | int                                                                 | Bundle Id (passed in as an argument)                                |
+| Name                                                                | string                                                              | Bundle name                                                         |
+| Description                                                         | string                                                              | Bundle description                                                  |
+| BundleType                                                          | string                                                              | Bundle Type. eg. BodyParts or \`AvatarAnimation\|AvatarAnimations\` |
+| Items                                                               | ValueArray                                                          | An array of ValueTable objects                                      |
+
+Each object in the Items array contains details of the item as described in the table below:
+
+| Key Name                              | Value Type                            | Description                           |
+| ------------------------------------- | ------------------------------------- | ------------------------------------- |
+| Id number                             | int                                   | Item’s id                             |
+| Name                                  | string                                | Item name                             |
+| Type                                  | string                                | Item Type eg: "UserOutfit" or "Asset" | */
 	GetBundleDetailsAsync(bundleId: number): BundleInfo;
 	/** Returns a `StandardPages` object which contains the name and placeId of places within the current ‘Game’ (otherwise known as a ‘Universe’). */
 	GetGamePlacesAsync(): StandardPages;
@@ -3725,9 +3749,7 @@ type Constraint =
 
 By default, this constraint only applies torque on the parent of `Constraint/Attachment0|Attachment0`, although it can be configured to apply torque on both attachments. This torque can be limited to a max amount via `AlignOrientation/MaxTorque`.
 
-Note that any torque created by **AlignOrientation** will be applied about the center of mass of the parent of the attachments (or the center of mass of parts rigidly connected to the parents). Also note that if this constraint attaches one part (**A**) to another part (**B**) that is anchored or connected to an anchored part (**Z**), part **A** will not be locally simulated when interacting with a player.
-
-![AlignmentOrientation Demonstration](https://developer.roblox.com/assets/5b38275a073818f8577295aa/alignorientation.gif) */
+Note that any torque created by **AlignOrientation** will be applied about the center of mass of the parent of the attachments (or the center of mass of parts rigidly connected to the parents). Also note that if this constraint attaches one part (**A**) to another part (**B**) that is anchored or connected to an anchored part (**Z**), part **A** will not be locally simulated when interacting with a player. */
 interface AlignOrientation extends RbxInternalConstraint {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "AlignOrientation";
@@ -3772,11 +3794,13 @@ interface AlignPosition extends RbxInternalConstraint {
 interface AngularVelocity extends RbxInternalConstraint {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "AngularVelocity";
-	/** [LACKS DOCUMENTATION] */
+	/** A `DataType/Vector3` force applied to achieve and maintain an angular velocity for the body. This vector is applied in the `DataType/CFrame` expressed by the `AngularVelocity/RelativeTo` property. Defaults to **(0, 0, 0)**. */
 	AngularVelocity: Vector3;
-	/** [LACKS DOCUMENTATION] */
+	/** Magnitude of the maximum torque the constraint can apply. Defaults to **0**. */
 	MaxTorque: number;
-	/** [LACKS DOCUMENTATION] */
+	/** The `DataType/CFrame` in which the `AngularVelocity` force is specified. If set to **`Enum/ActuatorRelativeToWorld|World`**, the angular velocity vector is used as is. If set to **Attachment1**, the angular velocity is transformed by the CFrame of the assigned attachment.
+
+AngularVelocity/RelativeTo|RelativeTo can also be set to Attachment0, but it makes no physical sense and will lead to unpredictable behaviors. There will be a warning in Studio but the API will not prevent setting this value. */
 	RelativeTo: Enum.ActuatorRelativeTo;
 }
 
@@ -7206,6 +7230,8 @@ A use case is you have a menu pop open, but there are other selectable objects o
 	AddSelectionParent(selectionName: string, selectionParent: Instance): void;
 	/** Functions similarly to `GuiService/AddSelectionParent`, but you can give it a tuple of `GuiObject` that you want to be contained in the group. */
 	AddSelectionTuple(selectionName: string, selections: Array<any>): void;
+
+	GetEmotesMenuOpen(): boolean;
 	/** Returns two `DataType/Vector2` values representing the inset of user GUIs in pixels, from the top left corner of the screen and the bottom right corner of the screen respectively.
 
 The inset values supplied by this function only take effect on `ScreenGui|ScreenGuis` that have their `ScreenGui/IgnoreGuiInset|IgnoreGuiInset` property set to false. */
@@ -7216,6 +7242,8 @@ This is the only guaranteed way to verify if the user is on a console or not. */
 	IsTenFootInterface(): boolean;
 	/** Removes a group that was created with `GuiService/AddSelectionParent` or `GuiService/AddSelectionTuple`. */
 	RemoveSelectionGroup(selectionName: string): void;
+
+	SetEmotesMenuOpen(isOpen: boolean): void;
 }
 
 /** An internal service, whose functionality is not accessible to developers. */
@@ -7620,14 +7648,12 @@ Humanoids are able to jump roughly 7.5 studs high by default, depending on both 
 	Jump: boolean;
 
 	JumpHeight: number;
-	/** ![enter image description here](https://developer.roblox.com/assets/5b64730f4bf5bf624023ecae/jumpgif_-_Copy.gif)
-
- Determines how much upwards force is applied to the `Humanoid` when jumping. The value of this property defaults to 50, and is constrained between 0 and 1000.
+	/** Determines how much upwards force is applied to the `Humanoid` when jumping. The value of this property defaults to 50 and is constrained between 0 and 1000.
 
 ### Notes
 
-- Jumps are also influenced by the `Workspace|Workspace's` `Workspace/Gravity` property which determines the acceleration due to gravity.
-- Although setting this property to 0 will prevent the `Humanoid` from jumping, developers are advised to disable the *Jumping* state using the `Humanoid/SetStateEnabled` function */
+- Jumps are also influenced by the `Workspace/Gravity` property which determines the acceleration due to gravity.
+- Although setting this property to 0 will prevent the `Humanoid` from jumping, developers are advised to disable the “Jumping” state using the `Humanoid/SetStateEnabled` function. */
 	JumpPower: number;
 	/** The maximum value of a humanoid’s Health. The value of this property is used with the value of the health property to size the default health bar display.
 
@@ -8778,7 +8804,7 @@ interface RbxInternalManualSurfaceJointInstance extends RbxInternalJointInstance
 /** The ManualSurfaceJointInstance is the base class for `ManualGlue`. This instance (when created) also used to cause the server to crash, however this behaviour has since been fixed. */
 type ManualSurfaceJointInstance = ManualGlue | ManualWeld;
 
-/** ManualGlue is a joint created in a similar manner to the `ManualWeld class. It functions identically to the`Glue\` class. */
+/** **ManualGlue** is a joint created in a similar manner to the `ManualWeld` class. It functions identically to the `Glue` class. */
 interface ManualGlue extends RbxInternalManualSurfaceJointInstance {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "ManualGlue";
@@ -11187,7 +11213,7 @@ If a part is not `/BasePart/Anchored` and has CanCollide disabled, it may fall o
 
 Even when CanCollide is disabled, parts may still fire the `/BasePart/Touched` event (as well the other parts touching them). In addition, a part allow other parts to pass through even if CanCollide is enabled if their collision groups are not set to collide with each other. Part collision groups are managed by `/PhysicsService`. */
 	CanCollide: boolean;
-	/** Determines whether this Part casts a shadow. */
+	/** Determines whether or not a part casts a shadow. It allows you to disable shadows for a part without having to make that part `BasePart/Transparency|transparent`. */
 	CastShadow: boolean;
 	/** The CenterOfMass property describes the position in which a `BasePart|part`'s [center of mass]() is located. Should a force be applied to the part toward this point, the part would not rotate as a result of this force. **CenterOfMass is currently not enabled.** */
 	readonly CenterOfMass: Vector3;
@@ -11576,16 +11602,7 @@ There are **many** different objects that interact with BasePart:
 - If parented to a `Tool` and given the name “Handle”, a BasePart can be held by characters.
 - You can make BasePart interactive by adding a `ClickDetector`
 - You can a mesh like a `BlockMesh` or `SpecialMesh` to change how a BasePart looks without change how it physically behaves. */
-type BasePart =
-	| CornerWedgePart
-	| FormFactorPart
-	| MeshPart
-	| PartOperation
-	| Terrain
-	| TrussPart
-	| VehicleSeat
-	| NegateOperation
-	| UnionOperation;
+type BasePart = CornerWedgePart | FormFactorPart | Terrain | TriangleMeshPart | TrussPart | VehicleSeat;
 
 /** This is a corner piece which has the same properties as a `Part`. */
 interface CornerWedgePart extends RbxInternalBasePart {
@@ -11794,82 +11811,6 @@ interface WedgePart extends RbxInternalFormFactorPart {
 	readonly ClassName: "WedgePart";
 }
 
-/** MeshParts are a form of `BasePart` that includes a physically simulated custom mesh. Unlike with other mesh classes, such as `SpecialMesh` and `BlockMesh`, they are not parented to a `BasePart` but rather behave as a `BasePart` in their own right.
-
-### How do I use MeshParts
-
-The mesh and texture of a MeshPart are determined by the `MeshPart/MeshId` and `MeshPart/TextureID` properties. For more information on how to use MeshParts please see `Articles/Mesh Parts|here`.
-
-### SpecialMesh or MeshPart?
-
-There are currently two ways of using a developer created mesh. They are using a `SpecialMesh` with the `SpecialMesh/FileType` set to ‘FileMesh’, or by using a MeshPart. Although, on the whole, the MeshPart object has superseded the SpecialMesh there are some differences developers should be aware of.
-
-- `BasePart/Material` displays correctly on the mesh when using a MeshPart and not when using a `SpecialMesh`
-- MeshParts include the `MeshPart/CollisionFidelity` property, meaning the collision model of a MeshPart can be set to resemble the geometry of the mesh. The `SpecialMesh` object by contrast, uses the parent `BasePart`s collision model
-- The mesh of a MeshPart scales on all axis depending on the `BasePart/Size` property of the MeshPart, the mesh of a `SpecialMesh` does not
-- The `SpecialMesh` object includes the `DataModelMesh/Offset` and `DataModelMesh/Scale` properties whereas MeshParts do not
-- The `DataModelMesh/MeshId` property of a `SpecialMesh` can be changed by a `Script` or `LocalScript` during runtime. The `MeshPart/MeshId` property of a MeshPart can not
-
-In most, but not all cases, using a MeshPart is more suitable. As MeshParts are a relatively new feature however, developers should expect some of the above behaviour to change. */
-interface MeshPart extends RbxInternalBasePart {
-	/** The string name of this Instance's most derived class. */
-	readonly ClassName: "MeshPart";
-	/** The **MeshId** is the content ID of the mesh that is to be displayed on the `MeshPart`.
-
-Note that this property currently cannot be changed by scripts as the collision model of the mesh cannot be recomputed during runtime. Developers should not rely on this behavior as it may change in the future. Those looking for a custom mesh object that can be updated during runtime should use `SpecialMesh`. */
-	readonly MeshId: string;
-	/** The texture applied to the `MeshPart`. When this property is set to an empty string, no texture will be applied to the mesh.
-
-```lua
-MeshPart.TextureID = "" -- no texture
-```
-
-Note, although the `MeshPart/MeshId` property cannot be changed during runtime, the texture can.
-
-### How can I change the texture of a mesh?
-
-Using the TextureId property, the texture of a mesh can be changed without having to reupload the mesh. To do this, a new image will need to be uploaded to Roblox with the desired texture. The original texture image file can be obtained by exporting the mesh using the ‘Export Selection’ option in Roblox Studio. The image file will be saved alongside the exported .obj file.
-
-The new texture can then be re-uploaded to Roblox as a Decal and its content ID can be applied to the mesh using the TextureId property.
-
-### How can I make a textured mesh?
-
-A mesh can only be textured if the mesh has been UV mapped. UV mapping refers to the practice of projecting a texture map onto a mesh. This cannot be done using Roblox Studio and has to be done using an external 3D modelling application such as [Blender](). */
-	TextureID: string;
-}
-
-interface RbxInternalDerivesFromPartOperation extends RbxInternalBasePart {
-	/** [LACKS DOCUMENTATION] */
-	readonly RenderFidelity: Enum.RenderFidelity;
-	/** The number of polygons in this solid model. This value will always be <= 5000.The number of polygons in this solid model. This value will always be <= 5000.
-
-Tags: ReadOnly, NotReplicated */
-	readonly TriangleCount: number;
-	/** Sets whether the PartOperation can be recolored using the BrickColor property. When true, the entire Union will be colored as per `BasePart/BrickColor`. When false, the parts in the Union will maintain their original colors before the Union operation was performed. */
-	UsePartColor: boolean;
-}
-/** An abstract class that all [solid modeling](https://developer.roblox.com/articles/3D-Modeling-with-Parts) based parts inherit from. */
-interface PartOperation extends RbxInternalDerivesFromPartOperation {
-	/** The string name of this Instance's most derived class. */
-	readonly ClassName: "PartOperation";
-}
-
-/** A CSG part created by the “Negate” option in studio ([Solid modeling](https://developer.roblox.com/articles/3D-Modeling-with-Parts)).
-
- Union this with another part, to cut this part out of the second one. */
-interface NegateOperation extends RbxInternalDerivesFromPartOperation {
-	/** The string name of this Instance's most derived class. */
-	readonly ClassName: "NegateOperation";
-}
-
-/** A CSG part created by the “Union” option in studio ([Solid modeling](https://developer.roblox.com/articles/3D-Modeling-with-Parts)).
-
- It is two (or more) parts merged into each other, which can be separated again. */
-interface UnionOperation extends RbxInternalDerivesFromPartOperation {
-	/** The string name of this Instance's most derived class. */
-	readonly ClassName: "UnionOperation";
-}
-
 /** Terrain is a feature that allows players to create dynamically morphable environments, with little to no lag. Terrain is currently based on a 4x4x4 grid of cells, where each cell has a number between 0 and 1 representing how much the geometry should occupy the cell, and the material of the cell. The occupancy determines how the cell will morph together with surrounding cells, and the result is the illusion of having no grid constraint. Terrain provides a practically unlimited amount of space to work with. */
 interface Terrain extends RbxInternalBasePart {
 	/** The string name of this Instance's most derived class. */
@@ -11926,6 +11867,81 @@ interface Terrain extends RbxInternalBasePart {
 		materials: Array<Array<Array<CastsToEnum<Enum.Material>>>>,
 		occupancy: Array<Array<Array<number>>>,
 	): void;
+}
+
+interface RbxInternalTriangleMeshPart extends RbxInternalBasePart {}
+type TriangleMeshPart = MeshPart | PartOperation | NegateOperation | UnionOperation;
+
+/** MeshParts are a form of `BasePart` that includes a physically simulated custom mesh. Unlike with other mesh classes, such as `SpecialMesh` and `BlockMesh`, they are not parented to a `BasePart` but rather behave as a `BasePart` in their own right.
+
+### How do I use MeshParts
+
+The mesh and texture of a MeshPart are determined by the `MeshPart/MeshId` and `MeshPart/TextureID` properties. For more information on how to use MeshParts please see `Articles/Mesh Parts|here`.
+
+### SpecialMesh or MeshPart?
+
+There are currently two ways of using a developer created mesh. They are using a `SpecialMesh` with the `SpecialMesh/FileType` set to ‘FileMesh’, or by using a MeshPart. Although, on the whole, the MeshPart object has superseded the SpecialMesh there are some differences developers should be aware of.
+
+- `BasePart/Material` displays correctly on the mesh when using a MeshPart and not when using a `SpecialMesh`
+- MeshParts include the `MeshPart/CollisionFidelity` property, meaning the collision model of a MeshPart can be set to resemble the geometry of the mesh. The `SpecialMesh` object by contrast, uses the parent `BasePart`s collision model
+- The mesh of a MeshPart scales on all axis depending on the `BasePart/Size` property of the MeshPart, the mesh of a `SpecialMesh` does not
+- The `SpecialMesh` object includes the `DataModelMesh/Offset` and `DataModelMesh/Scale` properties whereas MeshParts do not
+- The `DataModelMesh/MeshId` property of a `SpecialMesh` can be changed by a `Script` or `LocalScript` during runtime. The `MeshPart/MeshId` property of a MeshPart can not
+
+In most, but not all cases, using a MeshPart is more suitable. As MeshParts are a relatively new feature however, developers should expect some of the above behaviour to change. */
+interface MeshPart extends RbxInternalTriangleMeshPart {
+	/** The string name of this Instance's most derived class. */
+	readonly ClassName: "MeshPart";
+	/** The **MeshId** is the content ID of the mesh that is to be displayed on the `MeshPart`.
+
+Note that this property currently cannot be changed by scripts as the collision model of the mesh cannot be recomputed during runtime. Developers should not rely on this behavior as it may change in the future. Those looking for a custom mesh object that can be updated during runtime should use `SpecialMesh`. */
+	readonly MeshId: string;
+	/** [LACKS DOCUMENTATION] */
+	readonly RenderFidelity: Enum.RenderFidelity;
+	/** The texture applied to the `MeshPart`. When this property is set to an empty string, no texture will be applied to the mesh.
+
+```lua
+MeshPart.TextureID = "" -- no texture
+```
+
+Note, although the `MeshPart/MeshId` property cannot be changed during runtime, the texture can.
+
+### How can I change the texture of a mesh?
+
+Using the TextureId property, the texture of a mesh can be changed without having to reupload the mesh. To do this, a new image will need to be uploaded to Roblox with the desired texture. The original texture image file can be obtained by exporting the mesh using the ‘Export Selection’ option in Roblox Studio. The image file will be saved alongside the exported .obj file.
+
+The new texture can then be re-uploaded to Roblox as a Decal and its content ID can be applied to the mesh using the TextureId property.
+
+### How can I make a textured mesh?
+
+A mesh can only be textured if the mesh has been UV mapped. UV mapping refers to the practice of projecting a texture map onto a mesh. This cannot be done using Roblox Studio and has to be done using an external 3D modelling application such as [Blender](). */
+	TextureID: string;
+}
+
+interface RbxInternalDerivesFromPartOperation extends RbxInternalTriangleMeshPart {
+	/** [LACKS DOCUMENTATION] */
+	readonly RenderFidelity: Enum.RenderFidelity;
+	/** The number of polygons in this solid model. This value will always be <= 5000.The number of polygons in this solid model. This value will always be <= 5000.
+
+Tags: ReadOnly, NotReplicated */
+	readonly TriangleCount: number;
+	/** Sets whether the PartOperation can be recolored using the BrickColor property. When true, the entire Union will be colored as per `BasePart/BrickColor`. When false, the parts in the Union will maintain their original colors before the Union operation was performed. */
+	UsePartColor: boolean;
+}
+/** An abstract class that all [solid modeling](https://developer.roblox.com/articles/3D-Modeling-with-Parts) based parts inherit from. */
+interface PartOperation extends RbxInternalDerivesFromPartOperation {
+	/** The string name of this Instance's most derived class. */
+	readonly ClassName: "PartOperation";
+}
+
+interface NegateOperation extends RbxInternalDerivesFromPartOperation {
+	/** The string name of this Instance's most derived class. */
+	readonly ClassName: "NegateOperation";
+}
+
+interface UnionOperation extends RbxInternalDerivesFromPartOperation {
+	/** The string name of this Instance's most derived class. */
+	readonly ClassName: "UnionOperation";
 }
 
 /** Truss parts are the same as Parts, except that they have a different visual style, resize differently and characters are able to climb them. */
@@ -12202,17 +12218,9 @@ Enabling FilteringEnabled however, has implications on a game’s design that de
 - [Converting Experimental Mode games](https://developer.roblox.com/articles/Converting-From-Experimental-Mode) Converting a game to use FilteringEnabled
 - [Game Security](https://developer.roblox.com/articles/Game-Security) How to use FilteringEnabled to improve the security of your game */
 	readonly FilteringEnabled: boolean;
-	/** Determines the acceleration due to gravity applied to falling `BasePart`s.
+	/** Determines the acceleration due to gravity applied to falling `BasePart|BaseParts`. This value is measured in studs per second squared and by default is set to 196.2 studs/second2
 
-This value is measured in studs per second squared and by default is set to 196.2 studs/second2
-
-. By changing this value, developers can simulate the effects of lower or higher gravity in game.
-
-For more information on how gravity works on Roblox, please see [this article](https://developer.roblox.com/articles/Gravity).
-
-### Notes
-
-- Developers can also change the height `Humanoid|Humanoid's` jump using the `Humanoid/JumpPower` property */
+. By changing this value, developers can simulate the effects of lower or higher gravity in game. */
 	Gravity: number;
 	/** Whether network streaming is enabled for the place or not.
 
@@ -12564,14 +12572,21 @@ Developers interested in seeing how this function is used in the Roblox Studio s
 	UnjoinFromOutsiders(objects: Array<Instance>): void;
 }
 
+/** The purpose of the PackageLink object is to link a `DataModel` instance to a corresponding asset in the cloud. This improves flows for collaboration, version control and sharing for models. The PackageLink instance will be a child of the root of the entire package hierarchy.
+
+![PackageLink in Studio Explorer](https://developer.roblox.com/assets/5cbb90ccf8d0b9d818246d6b/PackageLink.jpg)
+
+In this case PackageLink designates `Model` to be the root of the Package hierarchy.
+
+They not creatable through `Script|scripts`. They can only be added through interaction with Studio and can only be parented to `Instance|Instances` that can be published independently of DataModel publish. The PackageLink instance will always be the first child shown in the tree view, regardless of sorting. */
 interface PackageLink extends RbxInternalInstance {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "PackageLink";
-	/** [LACKS DOCUMENTATION]
+	/** The id of the asset this package corresponds to.The id of the asset this package corresponds to.
 
 Tags: ReadOnly, NotReplicated */
 	readonly PackageId: string;
-	/** [LACKS DOCUMENTATION]
+	/** This property refers to a revision of a specific packageThis property refers to a revision of a specific package
 
 Tags: NotReplicated */
 	readonly VersionNumber: number;
@@ -16480,6 +16495,8 @@ interface Studio extends RbxInternalInstance {
 	["Import mesh files as single mesh"]: boolean;
 	/** Sets the text color of built-in Lua keywords. */
 	["Keyword Color"]: Color3;
+
+	Language: Enum.LanguagePreference;
 	/** Sets the thickness of the `Model/PrimaryPart` selection adornee.
 
  This value is constrained between 0 and 0.05 */
@@ -16766,11 +16783,29 @@ Note, the *customLoadingScreen* will not be used if the destination place is in 
 	>;
 	/** This event fires if a request to teleport (from a function such as `TeleportService/Teleport`) fails and the player does not leave the current place server.
 
-This event is fired on both the client and the server.
+It is fired on both the client and the server.
 
-TeleportInitFailed includes a *teleportResult* argument (a `Enum/TeleportResult` enum) describing the reason the teleport failed along with the error message that is displayed to the user.
+It includes a *teleportResult* argument (a `Enum/TeleportResult` enum) describing the reason the teleport failed along with the error message that is displayed to the user.
 
-It is possible for teleportation to fail after the `Player` has left the place due to Roblox server issues. This event will not fire in this case and the user will be disconnected and required to rejoin. */
+It is possible for teleportation to fail after the `Player` has left the place due to Roblox server issues. This event will not fire in this case and the user will be disconnected and required to rejoin.
+
+### TeleportResult
+
+The `Enum/TeleportResult` indicates the state of the teleport which can be one of several enum values:
+
+| Name                                                    | Value                                                   | Description                                             |
+| ------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------- |
+|                                                         | 0                                                       | Teleport successful                                     |
+|                                                         | 1                                                       | Teleport failed because the destination server was full |
+|                                                         | 2                                                       | Teleport failed                                         |
+
+### See also
+
+- `TeleportService/Teleport`
+- `TeleportService/TeleportPartyAsync`
+- `TeleportService/TeleportToPrivateServer`
+- `TeleportService/TeleportToPlaceInstance`
+- `TeleportService/TeleportToSpawnByName` */
 	readonly TeleportInitFailed: RBXScriptSignal<
 		(player: Player, teleportResult: Enum.TeleportResult, errorMessage: string) => void
 	>;
@@ -18714,7 +18749,7 @@ As this event only fires locally, it can only be used in a `LocalScript`.
 - `UserInputService/TouchStarted`
 - `UserInputService/TouchEnded` */
 	readonly TouchLongPress: RBXScriptSignal<
-		(touchPositions: Array<any>, state: Enum.UserInputState, gameProcessedEvent: boolean) => void
+		(touchPositions: Array<InputObject>, state: Enum.UserInputState, gameProcessedEvent: boolean) => void
 	>;
 	/** The TouchMoved event fires when a user moves their finger on a TouchEnabled device.
 
@@ -19618,21 +19653,20 @@ interface DoubleConstrainedValue extends RbxInternalValueBase {
 
 Tags: Hidden, NotReplicated */
 	ConstrainedValue: number;
-	/** The highest number that the `DoubleConstrainedValue/Value` property can be. */
+	/** The maximum we allow this Value to be set.  If Value is set higher than this, it automatically gets adjusted to MaxValue */
 	MaxValue: number;
-	/** The lowest number that the `DoubleConstrainedValue/Value` property can be. */
+	/** The minimum we allow this Value to be set.  If Value is set lower than this, it automatically gets adjusted to MinValue */
 	MinValue: number;
-	/** Used to hold a number value between `DoubleConstrainedValue/MinValue` and `DoubleConstrainedValue/MaxValue`.Used to hold a number value between `DoubleConstrainedValue/MinValue` and `DoubleConstrainedValue/MaxValue`.
+	/** [LACKS DOCUMENTATION]
 
 Tags: NotReplicated */
 	Value: number;
 }
 
-/** An IntConstrainedValue is used to store a value which can never be less than MinValue and can never be more than MaxValue. */
 interface IntConstrainedValue extends RbxInternalValueBase {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "IntConstrainedValue";
-	/** Hold a `Integer` value between `/IntConstrainedValue/MinValue` and `/IntConstrainedValue/MaxValue`. Replaced by `/IntConstrainedValue/Value`, but still functional.Hold a `Integer` value between `/IntConstrainedValue/MinValue` and `/IntConstrainedValue/MaxValue`. Replaced by `/IntConstrainedValue/Value`, but still functional.
+	/** [LACKS DOCUMENTATION]
 
 Tags: Hidden, NotReplicated */
 	ConstrainedValue: number;

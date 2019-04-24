@@ -762,6 +762,18 @@ interface UserInputService {
 			gameProcessedEvent: boolean,
 		) => void
 	>;
+	readonly TouchPinch: RBXScriptSignal<
+		(
+			touchPositions: Array<InputObject>,
+			scale: number,
+			velocity: number,
+			state: Enum.UserInputState,
+			gameProcessedEvent: boolean,
+		) => void
+	>;
+	readonly TouchLongPress: RBXScriptSignal<
+		(touchPositions: Array<InputObject>, state: Enum.UserInputState, gameProcessedEvent: boolean) => void
+	>;
 	readonly TouchStarted: RBXScriptSignal<(touch: InputObject, gameProcessedEvent: boolean) => void>;
 	readonly TouchTap: RBXScriptSignal<(touchPositions: Array<InputObject>, gameProcessedEvent: boolean) => void>;
 	readonly DeviceAccelerationChanged: RBXScriptSignal<(acceleration: InputObject) => void>;
