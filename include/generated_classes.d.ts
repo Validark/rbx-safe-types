@@ -19625,6 +19625,7 @@ interface Color3Value extends RbxInternalValueBase {
 	Value: Color3;
 }
 
+/** An instance which is used to create a number value which can never be less than the MinValue or more than the MaxValue. */
 interface DoubleConstrainedValue extends RbxInternalValueBase {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "DoubleConstrainedValue";
