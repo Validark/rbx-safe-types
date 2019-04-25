@@ -195,6 +195,10 @@ interface GroupService extends RbxInternalInstance {
 	GetGroupsAsync(userId: number): Array<GetGroupsAsyncResult>;
 }
 
+interface MessagingService extends RbxInternalInstance {
+	SubscribeAsync(topic: string, callback: (Data: any, Sent: number) => void): RBXScriptConnection;
+}
+
 interface RbxInternalGuiObject extends RbxInternalGuiBase2d {
 	readonly InputBegan: RBXScriptSignal<(input: InputObject) => void>;
 	readonly InputChanged: RBXScriptSignal<(input: InputObject) => void>;
@@ -215,6 +219,34 @@ interface RbxInternalGuiObject extends RbxInternalGuiBase2d {
 		(touchPositions: Array<Vector2>, rotation: number, velocity: number, state: Enum.UserInputState) => void
 	>;
 	readonly TouchTap: RBXScriptSignal<(touchPositions: Array<Vector2>) => void>;
+
+	TweenPosition(
+		endPosition: UDim2,
+		easingDirection?: CastsToEnum<Enum.EasingDirection>,
+		easingStyle?: CastsToEnum<Enum.EasingStyle>,
+		time?: number,
+		override?: boolean,
+		callback?: (finishedTween: Enum.TweenStatus) => void,
+	): boolean;
+
+	TweenSize(
+		endSize: UDim2,
+		easingDirection?: CastsToEnum<Enum.EasingDirection>,
+		easingStyle?: CastsToEnum<Enum.EasingStyle>,
+		time?: number,
+		override?: boolean,
+		callback?: (finishedTween: Enum.TweenStatus) => void,
+	): boolean;
+
+	TweenSizeAndPosition(
+		endSize: UDim2,
+		endPosition: UDim2,
+		easingDirection?: CastsToEnum<Enum.EasingDirection>,
+		easingStyle?: CastsToEnum<Enum.EasingStyle>,
+		time?: number,
+		override?: boolean,
+		callback?: (finishedTween: Enum.TweenStatus) => void,
+	): boolean;
 }
 
 interface GuiService extends RbxInternalInstance {

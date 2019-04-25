@@ -2,7 +2,8 @@ import * as jsdom from "jsdom";
 import fetch from "node-fetch";
 import * as path from "path";
 import * as showdown from "showdown";
-import Project, * as ts from "ts-morph";
+import { Project } from "ts-morph";
+import * as ts from "ts-morph";
 import {
 	ApiCallback,
 	ApiClass,

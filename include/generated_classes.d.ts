@@ -5611,18 +5611,20 @@ Note, if a group has no owner the Owner field will be set to nil.
 
 This function has a number of useful applications, including loading the latest description and logo of a group for display in a group base. */
 	GetGroupInfoAsync(groupId: number): GroupInfo;
-	/** Returns a list of tables containing information on all of the groups a given player is a member of.
+	/** This function returns a list of tables containing information on all of the groups a given `Player` is a member of.
 
 The list returned will include an entry for every group the player is a member of. These entries are tables with the following fields.
 
-- **Name:** The group’s name
-- **Id:** The group ID
-- **EmblemUrl:** An asset url linking to the group’s thumbnail (for example: [http://www.roblox.com/asset/?id=276165514]())
-- **EmblemId:** The assetId of the emblem, the same which is used in the EmblemUrl
-- **Rank:** The rankId the player has (for example: 255 for the owner)
-- **Role:** The name of the player’s grouprank (for example: Group Owner)
-- **IsPrimary:** A boolean indicating if this is the player’s primary group
-- **IsInClan:** A boolean indicating if the player is in this group’s clan
+| Name                                                                                                   | Description                                                                                            |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+|                                                                                                        | The group’s name                                                                                       |
+|                                                                                                        | The group ID                                                                                           |
+|                                                                                                        | An asset url linking to the group's thumbnail (for example: http://www.roblox.com/asset/?id=276165514) |
+|                                                                                                        | The assetId of the emblem, the same which is used in the EmblemUrl                                     |
+|                                                                                                        | The rankId the player has (for example: 255 for the owner)                                             |
+|                                                                                                        | The name of the player's grouprank (for example: Group Owner)                                          |
+|                                                                                                        | A boolean indicating if this is the player's primary group                                             |
+| IsInClan                                                                                               | A boolean indicating if the player is in this group's clan                                             |
 
 Note unlike `GroupService/GetAlliesAsync` and `GroupService/GetEnemiesAsync`, GetGroupsAsync returns a table rather than a `StandardPages` object. */
 	GetGroupsAsync(userId: number): Array<GetGroupsAsyncResult>;
@@ -6058,7 +6060,7 @@ This function will return whether the tween will play. It will not play if anoth
 		easingStyle?: CastsToEnum<Enum.EasingStyle>,
 		time?: number,
 		override?: boolean,
-		callback?: Function,
+		callback?: (finishedTween: Enum.TweenStatus) => void,
 	): boolean;
 	/** Smoothly resizes a GUI to a new `DataType/UDim2` in the specified time using the specified `Enum/EasingDirection|EasingDirection` and `Enum/EasingStyle|EasingStyle`.
 
@@ -6074,7 +6076,7 @@ This function will return whether the tween will play. Normally this will always
 		easingStyle?: CastsToEnum<Enum.EasingStyle>,
 		time?: number,
 		override?: boolean,
-		callback?: Function,
+		callback?: (finishedTween: Enum.TweenStatus) => void,
 	): boolean;
 	/** Smoothly resizes and moves a GUI to a new `DataType/UDim2` size and position in the specified time using the specified `Enum/EasingDirection|EasingDirection` and `Enum/EasingStyle|EasingStyle`.
 
@@ -6091,7 +6093,7 @@ This function will return whether the tween will play. Normally this will always
 		easingStyle?: CastsToEnum<Enum.EasingStyle>,
 		time?: number,
 		override?: boolean,
-		callback?: Function,
+		callback?: (finishedTween: Enum.TweenStatus) => void,
 	): boolean;
 }
 /** GuiObject is an abstract class (much like `BasePart`) for a 2D user interface object. It defines all the properties relating to the display of a graphical user interface (GUI) object such as `GuiObject/Size` and `GuiObject/Position`. It also has some useful read-only properties like `GuiObject/AbsolutePosition`, `GuiObject/AbsoluteSize`, and `GuiObject/AbsoluteRotation`. It should be noted that `GuiObject` can have negative sizes and render normally, though `GuiObject/AnchorPoint` ought to be used to better control rendering.
@@ -6767,6 +6769,14 @@ interface BillboardGui extends RbxInternalLayerCollector {
 	AlwaysOnTop: boolean;
 	/** When set to true, portions of GuiObjects that fall outside of the BillboardGui’s canvas borders will not be drawn. */
 	ClipsDescendants: boolean;
+
+	readonly CurrentDistance: number;
+
+	DistanceLowerLimit: number;
+
+	DistanceStep: number;
+
+	DistanceUpperLimit: number;
 	/** A Vector3 (x,y,z) defined in studs that will offset the GUI from the extents of the 3D object it is rendering from. */
 	ExtentsOffset: Vector3;
 	/** Offsets the BillboardGui relative to it’s `BillboardGui/Adornee`'s orientation and size. */
@@ -10190,17 +10200,7 @@ Yields until the message is received by the backend.
 
 ### See also
 
-- `MessagingService/SubscribeAsync`, begins listening to the given topicBetaThis feature is in beta and may have unexpected or unreliable behavior.
-
-This function invokes the supplied callback whenever a message is pushed to the topic.
-
-Yields until the message is received by the backend.
-
-### See also
-
-- `MessagingService/SubscribeAsync`, begins listening to the given topic
-
-Tags: Yields */
+- `MessagingService/SubscribeAsync`, begins listening to the given topic */
 	PublishAsync(topic: string, message?: any): void;
 	/** BetaThis feature is in beta and may have unexpected or unreliable behavior.
 
@@ -10221,29 +10221,8 @@ To unsubscribe, call `Datatype/RBXScriptConnection|:Disconnect()` on the returne
 
 ### See also
 
-- `MessagingService/PublishAsync`, invokes the supplied callback whenever a message is pushed to the topicBetaThis feature is in beta and may have unexpected or unreliable behavior.
-
-This function registers a callback to begin listening to the given topic. The callback is invoked when a topic receives a message. It can be called multiple times for the same topic.
-
-### Callback
-
-The callback is invoked with two arguments:
-
-| Field                                              | Summary                                            |
-| -------------------------------------------------- | -------------------------------------------------- |
-|                                                    | Developer supplied payload                         |
-|                                                    | Unix time in seconds at which the message was sent |
-
-It yields until the subscription is properly registered and returns a connection object.
-
-To unsubscribe, call `Datatype/RBXScriptConnection|:Disconnect()` on the returned object. Once Disconnect() is called, the callback should never be invoked. Killing the script containing the connections also causes the underlying connect to be unsubscribed.
-
-### See also
-
-- `MessagingService/PublishAsync`, invokes the supplied callback whenever a message is pushed to the topic
-
-Tags: Yields */
-	SubscribeAsync(topic: string, callback: Function): RBXScriptConnection;
+- `MessagingService/PublishAsync`, invokes the supplied callback whenever a message is pushed to the topic */
+	SubscribeAsync(topic: string, callback: (Data: any, Sent: number) => void): RBXScriptConnection;
 }
 
 interface RbxInternalMouse extends RbxInternalInstance {
@@ -14633,6 +14612,8 @@ Tags: NotReplicated */
 	ShouldSkip: boolean;
 	/** A label of the internal JIRA ticket this RenderingTest is associated with. */
 	Ticket: string;
+	/** [LACKS DOCUMENTATION] */
+	RenderdocTriggerCapture(): void;
 }
 
 /** A container whose contents are replicated to all clients (but not back to the server) first before anything else.
@@ -19633,19 +19614,17 @@ interface BrickColorValue extends RbxInternalValueBase {
 interface CFrameValue extends RbxInternalValueBase {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "CFrameValue";
-	/** Used to hold a [CFrame](https://developer.roblox.com/api-reference/datatype/CFrame) value. */
+	/** [LACKS DOCUMENTATION] */
 	Value: CFrame;
 }
 
-/** A container object for a single `DataType/Color3` value. */
 interface Color3Value extends RbxInternalValueBase {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "Color3Value";
-	/** The stored [Color3](https://developer.roblox.com/api-reference/datatype/Color3). */
+	/** [LACKS DOCUMENTATION] */
 	Value: Color3;
 }
 
-/** An instance which is used to create a number value which can never be less than the MinValue or more than the MaxValue. */
 interface DoubleConstrainedValue extends RbxInternalValueBase {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "DoubleConstrainedValue";
