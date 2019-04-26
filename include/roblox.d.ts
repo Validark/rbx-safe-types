@@ -17,6 +17,19 @@ type GetProperties<T> = {
 		: Key
 }[keyof T];
 
+type GetWritableProperties<T> = Extract<
+	GetProperties<T>,
+	{
+		[K in keyof T]: (<F>() => F extends { [Q in K]: T[K] } ? 1 : 2) extends (<F>() => F extends {
+			-readonly [Q in K]: T[K]
+		}
+			? 1
+			: 2)
+			? K
+			: never
+	}[keyof T]
+>;
+
 type FunctionArguments<T> = T extends (...args: infer U) => void ? U : [];
 
 type Callback = (...args: Array<any>) => void;
