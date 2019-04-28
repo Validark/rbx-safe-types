@@ -1781,3 +1781,13 @@ if (typeIs(v, "Vector3")) {
  * */
 declare function typeIs<T extends keyof CheckableTypes>(value: any, type: T): value is CheckableTypes[T];
 declare function typeIs(value: any, type: string): boolean;
+
+/**
+ * Calls the function func with the given arguments in protected mode.
+ *
+ * opcall is an easier to use version of pcall. It returns a result object instead of multiple returns.
+ **/
+declare function opcall<T extends Array<any>, U>(
+	func: (...args: T) => U,
+	...args: T
+): { success: true; value: U } | { success: false; error: string };
