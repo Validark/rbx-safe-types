@@ -845,3 +845,6 @@ interface Workspace extends RbxInternalDerivesFromModel {
 		ignoreWater?: boolean,
 	): LuaTuple<[BasePart | undefined, Vector3, Vector3, Enum.Material]>;
 }
+
+/** An instance which is used to create a number value which can never be less than the MinValue or more than the MaxValue. */
+interface DoubleConstrainedValue extends RbxInternalValueBase {}
