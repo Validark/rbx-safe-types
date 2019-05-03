@@ -11239,6 +11239,25 @@ declare namespace Enum {
 		| SurfaceConstraint.SteppingMotor
 		| SurfaceConstraint.Motor;
 
+	export namespace SurfaceGuiSizingMode {
+		export interface FixedSize {
+			Name: "FixedSize";
+			Value: 0;
+			EnumType: Enum_SurfaceGuiSizingMode;
+		}
+
+		export const FixedSize: FixedSize;
+
+		export interface PixelsPerStud {
+			Name: "PixelsPerStud";
+			Value: 1;
+			EnumType: Enum_SurfaceGuiSizingMode;
+		}
+
+		export const PixelsPerStud: PixelsPerStud;
+	}
+	export type SurfaceGuiSizingMode = SurfaceGuiSizingMode.FixedSize | SurfaceGuiSizingMode.PixelsPerStud;
+
 	export namespace SurfaceType {
 		export interface Smooth {
 			Name: "Smooth";
@@ -14479,6 +14498,11 @@ interface Enum_SurfaceConstraint {
 	Motor: Enum.SurfaceConstraint.Motor;
 }
 
+interface Enum_SurfaceGuiSizingMode {
+	FixedSize: Enum.SurfaceGuiSizingMode.FixedSize;
+	PixelsPerStud: Enum.SurfaceGuiSizingMode.PixelsPerStud;
+}
+
 interface Enum_SurfaceType {
 	Smooth: Enum.SurfaceType.Smooth;
 	Glue: Enum.SurfaceType.Glue;
@@ -14915,6 +14939,7 @@ declare type CastsToEnum<
 		| Enum.StudioStyleGuideModifier
 		| Enum.Style
 		| Enum.SurfaceConstraint
+		| Enum.SurfaceGuiSizingMode
 		| Enum.SurfaceType
 		| Enum.SwipeDirection
 		| Enum.TableMajorAxis

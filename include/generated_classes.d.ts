@@ -6983,6 +6983,10 @@ interface SurfaceGui extends RbxInternalLayerCollector {
 	Face: Enum.NormalId;
 	/** Controls how much the SurfaceGui is influenced by the lighting in the game world. */
 	LightInfluence: number;
+
+	PixelsPerStud: number;
+
+	SizingMode: Enum.SurfaceGuiSizingMode;
 	/** Sets the distance left clicking starts acting on the surface gui instead of the held tool. If a character is within this distance of the surface gui, then the tool will not activate on click. */
 	ToolPunchThroughDistance: number;
 	/** Offsets the SurfaceGui relative to the normal of the surface it is attached to. */
@@ -8173,7 +8177,11 @@ The `Humanoid` does not need to belong to a `Player` `Player/Character` for this
 - To attach an `Accessory` use the `Humanoid/AddAccessory` function
 - To get all `Accessory|Accessories` belonging to a `Humanoid` use the `Humanoid/GetAccessories` function */
 	RemoveAccessories(): void;
-	/** Replaces the desired bodypart on the Humanoid's Character using a specified Enum.BodyPartR15 and BasePart. Returns a success boolean. */
+	/** ReplaceBodyPartR15 dynamically replaces a R15/Rthro limb part in a Humanoid with a different part. The part is automatically scaled as normal. In the image below, a R15 avatar has had his right hand replaced with a slightly larger version (also pictured).
+
+![An image of a Roblox avatar with a large right hand, replaced using ReplaceBodyPartR15. How handy.](https://developer.roblox.com/assets/5cc9fa35358b42d76596ba15/Humanoid.ReplaceBodyPartR15.png)
+
+This function is useful for modifying characters during gameplay or building characters from a base rig. The related function `Humanoid/GetBodyPartR15|GetBodyPartR15` can come in handy when using this function. */
 	ReplaceBodyPartR15(bodyPart: Enum.BodyPartR15, part: BasePart): boolean;
 	/** This function sets whether a given `Enum/HumanoidStateType` is enabled for the `Humanoid`.
 
@@ -10110,7 +10118,7 @@ Information about the queried item is provided in a dictionary with the followin
 | `ProductId`                                                                                                | number                                                                                                     | If the InfoType was Product, this is the product ID                                                        |
 | `IconImageAssetId`                                                                                         | number                                                                                                     | For developer products, this is the asset ID of the product's icon (or 0 if the product does not have one) |
 
- \* See `articles/Asset-types|Asset Types` for the asset type ID numbers.
+ \* See `articles/Asset types|Asset Types` for the asset type ID numbers.
 
  †Timestamps are formatted using [ISO 8601]()
 
@@ -16456,12 +16464,6 @@ interface Studio extends RbxInternalInstance {
 	["Auto-Recovery Interval (Minutes)"]: number;
 
 	["Auto-Recovery Path"]: QDir;
-	/** If set to true, the auto-save mode will be enabled. */
-	["Auto-Save Enabled"]: boolean;
-	/** Sets the interval (in minutes) that Roblox auto-saves at. */
-	["Auto-Save Interval (Minutes)"]: number;
-	/** Specifies the directory where auto-save files will be saved in. */
-	["Auto-Save Path"]: QDir;
 	/** Specifies the background color of Roblox Studio’s script editor. */
 	["Background Color"]: Color3;
 	/** Sets the scrolling mode of the *Advanced Objects* tab in Roblox Studio. */
@@ -16506,8 +16508,6 @@ interface Studio extends RbxInternalInstance {
 	["Hover Animate Speed"]: Enum.HoverAnimateSpeed;
 	/** Specifies the color that the hover selection box uses. */
 	["Hover Over Color"]: Color3;
-
-	["Import mesh files as single mesh"]: boolean;
 	/** Sets the text color of built-in Lua keywords. */
 	["Keyword Color"]: Color3;
 
@@ -19648,10 +19648,11 @@ interface BrickColorValue extends RbxInternalValueBase {
 interface CFrameValue extends RbxInternalValueBase {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "CFrameValue";
-	/** [LACKS DOCUMENTATION] */
+	/** Used to hold a [CFrame](https://developer.roblox.com/api-reference/datatype/CFrame) value. */
 	Value: CFrame;
 }
 
+/** A container object for a single `DataType/Color3` value. */
 interface Color3Value extends RbxInternalValueBase {
 	/** The string name of this Instance's most derived class. */
 	readonly ClassName: "Color3Value";
