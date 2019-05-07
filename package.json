@@ -31,7 +31,7 @@
 		"typescript": "^3.4.5",
 		"ts-morph": "^2.0.1",
 		"jsdom": "^15.0.0",
-		"breakdance": "^3.0.1",
+		"breakdance": "^3.0.1"
 	},
 	"bundleDependencies": [],
 	"dependencies": {
