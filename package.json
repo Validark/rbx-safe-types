@@ -1,6 +1,6 @@
 {
 	"name": "rbx-safe-types",
-	"version": "1.0.26",
+	"version": "1.0.27",
 	"description": "A drop-in replacement for rbx-types.",
 	"scripts": {
 		"build": "ts-node src/index.ts"
@@ -30,11 +30,12 @@
 		"@types/node-fetch": "^2.3.2",
 		"typescript": "^3.4.5",
 		"ts-morph": "^2.0.1",
-		"jsdom": "^15.0.0"
+		"jsdom": "^15.0.0",
+		"breakdance": "^3.0.1",
 	},
 	"bundleDependencies": [],
 	"dependencies": {
-		"rbx-types": "1.0.173"
+		"rbx-types": "1.0.179"
 	},
 	"keywords": [
 		"rbx-types",

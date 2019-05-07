@@ -20,6 +20,68 @@ import {
 import { Generator } from "./Generator";
 import { ReflectionMetadata } from "./ReflectionMetadata";
 
+interface BreakdanceNodeBase {
+	type: string;
+	parent: BreakdanceNode | null;
+	next: BreakdanceNode | null;
+	prev: BreakdanceNode | null;
+	html?: string;
+}
+
+interface BreakdanceNodeVal extends BreakdanceNodeBase {
+	val: string;
+	nodes: undefined;
+}
+
+interface BreakdanceNodeNodes extends BreakdanceNodeBase {
+	val: undefined;
+	nodes: Array<BreakdanceNode>;
+}
+
+type BreakdanceNode = BreakdanceNodeVal | BreakdanceNodeNodes;
+
+const breakdance = require("breakdance") as (
+	HTMLtoConvert: string,
+	options?: {
+		/**
+		 * Include HTML code comments in the generated markdown string. Disabled by default.
+		 */
+		comments?: boolean;
+		/**
+		 * Collapse more than two newlines to only two newlines. Enabled by default.
+		 *
+		 * Default: `true`
+		 */
+		condense?: boolean;
+		/**
+		 * Specify the root domain name to prefix onto href or src paths that do not start with `#` or contain `://`.
+		 */
+		domain?: string;
+
+		/** Selective keep tags that are omitted by omitEmpty, so you don't need to redefine all of the omitted tags.
+		 */
+		keepEmpty?: string | Array<string>;
+
+		/**
+		 * When `true`, breakdance will throw an error if any non-standard/custom HTML tags are encountered. If you find a tag that breakdance doesn't cover, but you think it should, please create an issue to let us know about it.
+		 *
+		 * See the [breakdance recipes](https://breakdance.github.io/breakdance/recipes.html) for an example of how to add support for custom HTML elements.
+		 */
+		knownOnly?: boolean;
+
+		/** Add a newline at the beggining of the generated markdown string. */
+		leadingNewline?: boolean;
+
+		/** Default: One or more tags to omit entirely from the HTML before converting to markdown. */
+		omit?: string | Array<string>;
+
+		/** Default: One or more tags to pick entirely from the HTML before converting to markdown. */
+		pick?: string | Array<string>;
+
+		before?: { [key: string]: (node: BreakdanceNode) => void };
+	},
+) => string;
+
 export const IMPL_PREFIX = "RbxInternal";
 const ROOT_CLASS_NAME = "<<<ROOT>>>";
 const DERIVATIVE_PREFIX = "DerivesFrom";
@@ -253,85 +315,270 @@ class NumberHelper {
 	}
 }
 
-function htmlToMarkdown(text: string) {
-	const converter = new showdown.Converter();
-	const { document } = new jsdom.JSDOM(`...`).window;
-	const md = converter.makeMarkdown(text, document);
-	return md;
-}
-
-function getDescriptionFromHtml(rawData: string, link: string) {
-	let data = rawData;
-	const openingStr = "Description:";
-	const startingPosition = data.indexOf(openingStr);
-
-	let descOpener: string;
-	let index: number;
-
-	if (startingPosition !== -1) {
-		descOpener = `<div class="markdown-field-data description">`;
-		index = data.indexOf(descOpener, startingPosition + openingStr.length);
-	} else {
-		descOpener = `<div class="markdown-field-data">`;
-		index = data.indexOf(descOpener);
+namespace ClassInformation {
+	interface Argument {
+		name: string;
+		summary: string;
 	}
 
-	if (index !== -1) {
-		const frontIndex = index + descOpener.length;
-		data = data.slice(frontIndex);
-		const iter = 0;
-		let depth = 1;
-		let backIndex = 0;
-		let searcher = data;
+	export type CodeSamples = Array<{
+		display_title: string;
+		code_summary: string;
+		code_sample: string;
+	}>;
 
-		do {
-			const results = searcher.match(/<\/?div/);
+	export interface Member {
+		/** Describes this member */
+		description: string;
 
-			if (results) {
-				const resultIndex = results.index || 0;
-				backIndex += resultIndex;
-				searcher = searcher.slice(resultIndex + 3);
-				if (results[0] === "<div") {
-					depth++;
-				} else {
-					depth--;
+		/** The code samples demonstating this member's use */
+		code_sample?: CodeSamples;
+
+		/** The name of this member */
+		title: string;
+	}
+
+	interface Property extends Member {}
+
+	interface Event extends Member {
+		argument: Array<Argument>;
+	}
+
+	interface Method extends Event {
+		returns: [{ summary: string }];
+	}
+
+	interface Callback extends Method {}
+
+	export interface ClassDescription extends Member {
+		property: Array<Property>;
+		function: Array<Method>;
+		event: Array<Event>;
+		callback: Array<Callback>;
+	}
+
+	function processBreakdownNode(node: BreakdanceNode, index: number = 0) {
+		if (node.nodes) {
+			node.nodes.forEach(processBreakdownNode);
+
+			if (node.type.match(/^h[1-6]$/)) {
+				const parent = node.parent!;
+				const parentArray = parent.nodes!;
+				const [, textNode] = node.nodes;
+
+				for (const dead of parentArray.splice(index - 1, 3, textNode)) {
+					dead.val = undefined;
+					try {
+						dead.next = null;
+						dead.prev = null;
+					} catch {}
+					dead.parent = null;
+					dead.nodes = undefined;
 				}
-			} else {
-				break;
+
+				const previous = parentArray[index - 1];
+				const next = parentArray[index + 1];
+
+				textNode.parent = parent;
+				textNode.prev = previous;
+				textNode.next = next;
+
+				if (previous) previous.next = textNode;
+				if (next) next.prev = textNode;
 			}
-		} while (depth !== 0);
-
-		if (backIndex) {
-			const myHtml = data.slice(0, backIndex).trim();
-
-			return (
-				htmlToMarkdown(myHtml)
-					.replace(/<!--[^]+?-->/g, "")
-					.replace(/\(<\/([^<>]+)>[^()]*\)/g, (_, b) => {
-						if (b) {
-							return `(https://developer.roblox.com/${b as string})`;
-						} else {
-							return "";
-						}
-					})
-					.replace(/<[^]+?>/g, "")
-					.replace(/\s+\]/g, "]")
-					.replace(/#+/g, a => (a.length < 3 ? "###" : a))
-					.replace(/\*\//g, "*")
-					.replace(/```[^]+?```/g, a => {
-						const b = a.slice(3);
-						if (b.substr(0, 3) === "lua") {
-							return a;
-						} else {
-							return "```lua" + b;
-						}
-					})
-					// .replace(/```((?!lua).+?```)/g, (_, b) => "```lua" + b)
-					.trim()
-			);
 		}
 	}
-	return "";
+
+	function processText(text: string) {
+		const assets = new Map<string, string>();
+
+		return text
+			.replace(/```([^]+?)```/g, (a, b: string) => {
+				const middle = b.trim().replace(/    /g, "\t");
+				// console.log(middle);
+				if (b.substr(0, 3) === "lua") {
+					return "```\n" + middle + "\n```\n";
+				} else {
+					return "```lua\n" + middle + "\n```\n";
+				}
+			})
+			.replace(/    [^]+?\n\n/g, a => {
+				let found = true;
+
+				const middle = a.trim().replace(/.+/g, s => {
+					let gotLocal = false;
+					const str = s.replace(/^    /, () => {
+						gotLocal = true;
+						return "";
+					});
+
+					if (!gotLocal) {
+						found = false;
+					}
+
+					return str;
+				});
+
+				return found ? "```lua\n" + middle + "\n```\n" : a;
+			})
+			.replace(/\[(\d+)\]: (\/assets\/.+)/g, (_, a: string, b: string) => {
+				assets.set(a, b);
+				return "";
+			})
+			.replace(/(!\[[^\]]+])\[(\d+)\]/g, (_, a: string, b: string) => {
+				return a + `(https://developer.roblox.com${assets.get(b)})`;
+			})
+			.replace(/<([^ ]+)[^]+<\/\1>/g, a =>
+				breakdance(a, {
+					before: {
+						table(node) {
+							node.html = node.html!.replace(/<\/?h[1-6]>/g, "");
+							processBreakdownNode(node);
+						},
+					},
+
+					domain: "https://developer.roblox.com/",
+				}),
+			)
+			.replace(/<[^]+?>/g, a =>
+				breakdance(a, {
+					domain: "https://developer.roblox.com/",
+				}),
+			)
+			.replace(/(\n?)(!\[[^\]]+\])\]+/g, (_, a: string, b: string) => {
+				let str = "";
+				if (a) {
+					str += "\n\n";
+				}
+				return str + b;
+			})
+			.replace(/<br>|\*\/|\/\*/g, "")
+			.replace(/`(\w+)[\/\|]([^`]+)`/g, (_, a, b) => {
+				/* - To make a`Humanoid` walk to a point, use the `Humanoid/MoveTo` function
+					- For `Player|Players` the `Player/Move|Player:Move` function exists that calls this function
+					*/
+				return (
+					"`" +
+					b.replace(/(\w+)[\/\|]([^`]+)/g, (c: any, d: any, e: string) => {
+						return e;
+					}) +
+					"`"
+				);
+			})
+			.replace(/```(prettyprintlinenums|\n)lua/g, "```lua")
+			.replace(/```(?!lua)(?!\n)/g, "```\n")
+			.trim();
+	}
+
+	function processCodeSamples(codeSample: CodeSamples) {
+		if (codeSample.length > 0) {
+			return codeSample.reduce(
+				(result, code) =>
+					result +
+					"\n### " +
+					code.display_title +
+					"\n\n" +
+					processText(code.code_summary) +
+					"\n```lua\n" +
+					code.code_sample +
+					"\n```\n",
+				"\n\n## Code Samples\n",
+			);
+		} else {
+			return "";
+		}
+	}
+
+	export function processDescription(data: { description: string; code_sample?: CodeSamples }) {
+		return processText(data.description || "") + processCodeSamples(data.code_sample || []);
+	}
+}
+
+const { processDescription } = ClassInformation;
+
+function handleLinkData(
+	myLinks: Array<Promise<any>>,
+	linkDatum: {
+		rbxMember: ApiClass;
+		link: string;
+	},
+	linkData: Array<{
+		rbxMember: ApiClass;
+		link: string;
+	}>,
+) {
+	const rbxMember = linkDatum.rbxMember;
+	const rbxMemberName = rbxMember.Name;
+	const link = linkDatum.link;
+
+	myLinks.push(
+		new Promise((resolve, reject) => {
+			setTimeout(reject, 10000);
+			fetch(link)
+				.then(response => {
+					if (response.status !== 200) {
+						throw new Error("bad request");
+					}
+					return response.text();
+				})
+				.then(rawData => {
+					const obj = JSON.parse(rawData);
+					const functionData = obj.entry.modular_blocks[0].api_class_section
+						.current_class[0] as ClassInformation.ClassDescription;
+
+					rbxMember.Description = processDescription(functionData);
+
+					for (const [arr, type] of new Map<Array<ClassInformation.Member>, ApiMember["MemberType"]>([
+						[functionData.property, "Property"],
+						[functionData.event, "Event"],
+						[functionData.callback, "Callback"],
+					])) {
+						for (const property of arr) {
+							const propertyName = property.title.slice(rbxMemberName.length + 1);
+							const propertyMember = rbxMember.Members.find(
+								member => member.Name === propertyName && member.MemberType === type,
+							);
+
+							if (propertyMember) {
+								propertyMember.Description = processDescription(property);
+							}
+						}
+					}
+
+					for (const func of functionData.function) {
+						const funcName = func.title.slice(rbxMemberName.length + 1);
+
+						const funcMember = rbxMember.Members.find(
+							member => member.Name === funcName && member.MemberType === "Function",
+						);
+
+						if (funcMember && funcMember.MemberType === "Function") {
+							const returnValue = func.returns[0] && func.returns[0].summary;
+							funcMember.Description =
+								processDescription(func) +
+								func.argument.reduce((a, x, j) => {
+									return x.summary
+										? a + "\n@param " + funcMember.Parameters[j].Name + " " + x.summary
+										: a;
+								}, "") +
+								(returnValue ? `\n@returns ${returnValue}` : "");
+						}
+					}
+
+					resolve();
+				})
+				.catch(() => {
+					reject();
+				});
+		}).catch(errorMessage => {
+			console.log("\tFailed for " + link, errorMessage);
+			linkData.push({
+				rbxMember,
+				link,
+			});
+			return "";
+		}),
+	);
 }
 
 export class ClassGenerator extends Generator {
@@ -656,7 +903,7 @@ export class ClassGenerator extends Generator {
 	public async generate(rbxClasses: Array<ApiClass>) {
 		const linkData = new Array<{
 			// classFolder: string;
-			rbxMember: ApiMember | ApiClass;
+			rbxMember: ApiClass;
 			link: string;
 		}>();
 
@@ -684,68 +931,46 @@ export class ClassGenerator extends Generator {
 
 			linkData.push({
 				rbxMember: rbxClass,
-				link: `https://developer.roblox.com/api-reference/class/${rbxClassName}`,
+				link: `https://developer.roblox.com/api-reference/class/${rbxClassName}.json`,
 			});
 
-			for (const rbxMember of rbxClass.Members) {
-				const rbxMemberName = rbxMember.Name.replace(/\s+/g, "-").replace(/[\(\)]/g, "");
-				if (this.shouldGenerateMember(rbxClass, rbxMember)) {
-					const memberType = rbxMember.MemberType.toLowerCase();
-					const link = `https://developer.roblox.com/api-reference/${memberType}/${rbxClassName}/${rbxMemberName}`;
+			// for (const rbxMember of rbxClass.Members) {
+			// 	const rbxMemberName = rbxMember.Name.replace(/\s+/g, "-").replace(/[\(\)]/g, "");
+			// 	if (this.shouldGenerateMember(rbxClass, rbxMember)) {
+			// 		const memberType = rbxMember.MemberType.toLowerCase();
+			// 		const link = `https://developer.roblox.com/api-reference/${memberType}/${rbxClassName}/${rbxMemberName}.json`;
 
-					linkData.push({
-						// classFolder,
-						rbxMember,
-						link,
-					});
-				}
-			}
+			// 		linkData.push({
+			// 			// classFolder,
+			// 			rbxMember,
+			// 			link,
+			// 		});
+			// 	}
+			// }
 		}
 
-		const interval = 100;
+		const interval = 110;
+		let k = 0;
 		for (let i = interval; i < linkData.length; i += interval) {
 			const myLinks = new Array<Promise<any>>();
-			for (let k = i - interval; k < i; k++) {
+			for (k = i - interval; k < i; k++) {
 				const linkDatum = linkData[k];
 				if (linkDatum) {
-					const rbxMember = linkDatum.rbxMember;
-					const rbxMemberName = rbxMember.Name;
-					// const classFolder = linkDatum.classFolder;
-					// const memberFile = `${classFolder}\\${rbxMemberName}`;
-					const link = linkDatum.link;
-
-					myLinks.push(
-						new Promise((resolve, reject) => {
-							setTimeout(reject, 10000);
-							fetch(link)
-								.then(response => {
-									if (response.status !== 200) {
-										throw new Error("bad request");
-									}
-									return response.text();
-								})
-								.then(rawData => {
-									const desc =
-										typeof rawData === "string" ? getDescriptionFromHtml(rawData, link) : "";
-									if (desc !== "") {
-										// const cache = new Generator(classFolder, rbxMemberName + ".md");
-										// cache.write(desc);
-										rbxMember.Description = desc;
-										resolve();
-									} else {
-										throw new Error("bad data");
-									}
-								})
-								.catch(reject);
-						}).catch(errorMessage => {
-							console.log("\tFailed for " + link);
-							return "";
-						}),
-					);
+					handleLinkData(myLinks, linkDatum, linkData);
 				}
 			}
 			await Promise.all(myLinks);
 		}
+
+		const leftoverLinks = new Array<Promise<any>>();
+
+		for (; k < linkData.length; k++) {
+			const linkDatum = linkData[k];
+			if (linkDatum) {
+				handleLinkData(leftoverLinks, linkDatum, linkData);
+			}
+		}
+		await Promise.all(leftoverLinks);
 
 		console.log("\tFinishing...");
 		const project = new Project({

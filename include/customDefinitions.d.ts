@@ -130,6 +130,7 @@ interface ContextActionService extends RbxInternalInstance {
 		/** The event to which the functionToBind will be bound. */
 		...inputTypes: Array<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType>
 	): void;
+
 	/** @rbxts client */
 	BindActionAtPriority(
 		/** The name of the action being bound */
@@ -170,9 +171,6 @@ interface GamePassService extends RbxInternalInstance {
 	PlayerHasPass(player: Player, gamePassId: number): boolean;
 }
 
-/** The PlayerGui object is a container that holds a Player's user GUI. If a ScreenGui is a descendant of a PlayerGui, then any GuiObject inside of the ScreenGui will be drawn to the player’s screen. Any LocalScript will run as soon as it is inserted into a PlayerGui.
-
-When a player first joins a game, their PlayerGui is automatically inserted into their Player object. When the player’s Player.Character spawns for the first time all of the contents of StarterGui are automatically copied into the player’s PlayerGui. Note that if Players.CharacterAutoLoads is set to false the character will not spawn and StarterGui contents will not be copied until Player:LoadCharacter is called. If StarterGui.ResetPlayerGuiOnSpawn is set to true then every time the player’s character respawns all of the contents of that player’s PlayerGui is cleared and replaced with the contents of StarterGui. */
 interface PlayerGui extends RbxInternalBasePlayerGui {}
 
 /** @server */
@@ -392,17 +390,6 @@ interface DataModel extends RbxInternalServiceProvider {
 }
 
 interface MarketplaceService extends RbxInternalInstance {
-	/**
-	 * Callback that is executed for pending Developer Product receipts.
-	 * If this function does not return Enum.ProductPurchaseDecision.PurchaseGranted, then you will not be granted the money for the purchase!
-	 * The callback will be invoked with a table, containing the following informational fields:
-	 * - **PlayerId** - the id of the player making the purchase.
-	 * - **PlaceIdWherePurchased** - the specific place where the purchase was made.
-	 * - **PurchaseId** - a unique identifier for the purchase, should be used to prevent granting an item multiple times for one purchase.
-	 * - **ProductId** - the id of the purchased product.
-	 * - **CurrencyType** - the type of currency used (Tix, Robux).
-	 * - **CurrencySpent** - the amount of currency spent on the product for this purchase.
-	 */
 	ProcessReceipt: (receiptInfo: ReceiptInfo) => Enum.ProductPurchaseDecision;
 	readonly PromptGamePassPurchaseFinished: RBXScriptSignal<
 		(player: Player, gamePassId: number, wasPurchased: boolean) => void

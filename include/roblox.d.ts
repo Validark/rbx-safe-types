@@ -1418,7 +1418,7 @@ interface Color3Constructor {
 	/** Creates a Color3 with the given hue, saturation, and value. The numbers can range from 0 to 1. */
 	fromHSV: (hue: number, sat: number, val: number) => Color3;
 	/** Returns the hue, saturation, and value of a Color3. */
-	toHSV: (color: Color3) => [number, number, number];
+	toHSV: (color: Color3) => LuaTuple<[number, number, number]>;
 	/** Creates a Color3 whose values are (0,0,0) [black] */
 	new (): Color3<0, 0, 0>;
 	/** Returns a Color3 with the given red, green, and blue values. The numbers can range from 0 to 1. */
