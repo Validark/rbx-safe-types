@@ -1,10 +1,3 @@
-/// <reference no-default-lib="true"/>
-/// <reference path="roblox.d.ts" />
-/// <reference path="generated_enums.d.ts" />
-/// <reference path="generated_classes.d.ts" />
-
-// GENERATED API OVERRIDES
-
 interface AnimationController extends RbxInternalInstance {
 	readonly AnimationPlayed: RBXScriptSignal<(animationTrack: AnimationTrack) => void>;
 	GetPlayingAnimationTracks(): Array<AnimationTrack>;
@@ -121,27 +114,18 @@ interface ContextActionService extends RbxInternalInstance {
 	readonly LocalToolUnequipped: RBXScriptSignal<(toolUnequipped: Tool | Flag) => void>;
 	/** @rbxts client */
 	BindAction(
-		/** The name of the action being bound */
 		actionName: string,
-		/** The function to call when the corresponding event fires */
 		functionToBind: (actionName: string, state: Enum.UserInputState, inputObject: InputObject) => void,
-		/** Whether or not a TouchButton will be created for this action on mobile */
 		createTouchButton: boolean,
-		/** The event to which the functionToBind will be bound. */
 		...inputTypes: Array<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType>
 	): void;
 
 	/** @rbxts client */
 	BindActionAtPriority(
-		/** The name of the action being bound */
 		actionName: string,
-		/** The function to call when the corresponding event fires */
 		functionToBind: (actionName: string, state: Enum.UserInputState, inputObject: InputObject) => void,
-		/** Whether or not a TouchButton will be created for this action on mobile */
 		createTouchButton: boolean,
-		/** The priority level.  */
 		priorityLevel: number,
-		/** The event to which the functionToBind will be bound. */
 		...inputTypes: Array<Enum.KeyCode | Enum.PlayerActions | Enum.UserInputType>
 	): void;
 	/** @rbxts client */
@@ -833,5 +817,4 @@ interface Workspace extends RbxInternalDerivesFromModel {
 	): LuaTuple<[BasePart | undefined, Vector3, Vector3, Enum.Material]>;
 }
 
-/** An instance which is used to create a number value which can never be less than the MinValue or more than the MaxValue. */
 interface DoubleConstrainedValue extends RbxInternalValueBase {}

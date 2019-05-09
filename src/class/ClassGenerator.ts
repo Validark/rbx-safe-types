@@ -1,7 +1,6 @@
-import * as jsdom from "jsdom";
+import { fs } from "mz";
 import fetch from "node-fetch";
 import * as path from "path";
-import * as showdown from "showdown";
 import { Project } from "ts-morph";
 import * as ts from "ts-morph";
 import {
@@ -61,6 +60,9 @@ const breakdance = require("breakdance") as (
 		/** Selective keep tags that are omitted by omitEmpty, so you don't need to redefine all of the omitted tags.
 		 */
 		keepEmpty?: string | Array<string>;
+
+		/** Sets all numeric lists to 1. so the system can dynamically assign numbers */
+		one?: boolean;
 
 		/**
 		 * When `true`, breakdance will throw an error if any non-standard/custom HTML tags are encountered. If you find a tag that breakdance doesn't cover, but you think it should, please create an issue to let us know about it.
@@ -316,6 +318,7 @@ class NumberHelper {
 }
 
 namespace ClassInformation {
+	let nextFileName = 0;
 	interface Argument {
 		name: string;
 		summary: string;
@@ -389,45 +392,10 @@ namespace ClassInformation {
 		}
 	}
 
-	function processText(text: string) {
+	function processText(text: string, rbxClasses: Array<ApiClass>, tabChar: "" | "\t"): string {
 		const assets = new Map<string, string>();
-
 		return text
-			.replace(/```([^]+?)```/g, (a, b: string) => {
-				const middle = b.trim().replace(/    /g, "\t");
-				// console.log(middle);
-				if (b.substr(0, 3) === "lua") {
-					return "```\n" + middle + "\n```\n";
-				} else {
-					return "```lua\n" + middle + "\n```\n";
-				}
-			})
-			.replace(/    [^]+?\n\n/g, a => {
-				let found = true;
-
-				const middle = a.trim().replace(/.+/g, s => {
-					let gotLocal = false;
-					const str = s.replace(/^    /, () => {
-						gotLocal = true;
-						return "";
-					});
-
-					if (!gotLocal) {
-						found = false;
-					}
-
-					return str;
-				});
-
-				return found ? "```lua\n" + middle + "\n```\n" : a;
-			})
-			.replace(/\[(\d+)\]: (\/assets\/.+)/g, (_, a: string, b: string) => {
-				assets.set(a, b);
-				return "";
-			})
-			.replace(/(!\[[^\]]+])\[(\d+)\]/g, (_, a: string, b: string) => {
-				return a + `(https://developer.roblox.com${assets.get(b)})`;
-			})
+			.trim()
 			.replace(/<([^ ]+)[^]+<\/\1>/g, a =>
 				breakdance(a, {
 					before: {
@@ -436,65 +404,173 @@ namespace ClassInformation {
 							processBreakdownNode(node);
 						},
 					},
+					one: true,
 
 					domain: "https://developer.roblox.com/",
-				}),
+				}).trim(),
 			)
 			.replace(/<[^]+?>/g, a =>
 				breakdance(a, {
+					one: true,
 					domain: "https://developer.roblox.com/",
-				}),
+				}).trim(),
 			)
-			.replace(/(\n?)(!\[[^\]]+\])\]+/g, (_, a: string, b: string) => {
-				let str = "";
-				if (a) {
-					str += "\n\n";
+
+			.replace(/(\| [^\|\s]+ )+\|\n(?!\|.\-\-\-)/g, a => {
+				if (!a.match(/(\|.\-+.)+\|/)) {
+					if (!fs.existsSync("cache")) {
+						fs.mkdirSync("cache");
+					}
+					fs.writeFileSync("cache/" + nextFileName++, a);
 				}
-				return str + b;
+				return a.match(/(\|.\-+.)+\|/) ? a : a + a.replace(/[^\|\s]+/g, "---");
 			})
-			.replace(/<br>|\*\/|\/\*/g, "")
-			.replace(/`(\w+)[\/\|]([^`]+)`/g, (_, a, b) => {
-				/* - To make a`Humanoid` walk to a point, use the `Humanoid/MoveTo` function
-					- For `Player|Players` the `Player/Move|Player:Move` function exists that calls this function
-					*/
-				return (
-					"`" +
-					b.replace(/(\w+)[\/\|]([^`]+)/g, (c: any, d: any, e: string) => {
-						return e;
-					}) +
-					"`"
-				);
+
+			.replace(/    [^]+?\n(?!    )/g, a => {
+				let found = true;
+				let numFound = 0;
+
+				const middle = a.replace(/.+/g, s => {
+					let gotLocal = false;
+					const str = s.replace(/^    /, () => {
+						gotLocal = true;
+						return "";
+					});
+
+					if (!gotLocal) {
+						found = false;
+					} else {
+						numFound++;
+					}
+
+					return str;
+				});
+
+				return found && numFound > 1 ? "```lua\n" + middle + "\n```\n" : a;
+			})
+			.replace(/```([^]+?)```/g, (a, b: string) => {
+				const middle = b.trim().replace(/    /g, "\t");
+
+				if (middle.substr(0, 3) === "lua") {
+					return "```\n" + middle + "\n```\n";
+				} else {
+					return "```lua\n" + middle + "\n```\n";
+				}
 			})
 			.replace(/```(prettyprintlinenums|\n)lua/g, "```lua")
-			.replace(/```(?!lua)(?!\n)/g, "```\n")
-			.trim();
+			.replace(/([^]+?)($|```lua[^]+?```)/g, (_, cap: string, code: string) => {
+				const trimmedCode = code.trim();
+				const i = 0;
+				let previousHadTable = false;
+				const myStr = cap
+					.replace(/(\[[^\]]+\]: )(\/.+?)/g, (_, a: string, b: string) => {
+						return a + "https://developer.roblox.com" + b;
+					})
+					.replace(/(\[.+?\])\((\/.+?)\)/g, (_, a: string, b: string) => {
+						return a + "(https://developer.roblox.com" + b + ")";
+					})
+					.replace(/<br>|\*\/|\/\*/g, "")
+					.replace(/`\/?(\w+)\/([^`]+)`/g, (_, className: string, methodStr: string) => {
+						const c = methodStr.match(/^(.+?)\|(.+)$/);
+						let memberName: string;
+						let str: string;
+						if (c) {
+							[, memberName, str] = c;
+						} else {
+							memberName = methodStr;
+							str = className + "." + memberName;
+						}
+						let link: string | undefined;
+						for (const rbxClass of rbxClasses) {
+							if (rbxClass.Name === className) {
+								for (const rbxMember of rbxClass.Members) {
+									if (rbxMember.Name === memberName) {
+										const memberType = rbxMember.MemberType.toLowerCase();
+										link = `https://developer.roblox.com/api-reference/${memberType}/${className}/${memberName}`;
+										break;
+									}
+								}
+							}
+						}
+						return `[${str}](${link ||
+							`https://developer.roblox.com/search#stq=${memberName.replace(" ", "%20")}`})`;
+					})
+					.replace(/`(\w+)\|([^`]+)`/g, (_, className: string, alias: string) => {
+						const link = `https://developer.roblox.com/api-reference/class/${className}`;
+						return `[${alias}](${link})`;
+					})
+					.trim()
+					.replace(/.*($|\n)/g, line => {
+						let trimmed = line.trimRight();
+						if (trimmed !== "") {
+							const hasTable = !!trimmed.match(/(\|(.)[^\|]+(\2))+\|/);
+							const extraPush = hasTable && previousHadTable;
+							previousHadTable = hasTable;
+
+							if (trimmed.match(/\[[^\]]+\]: /)) {
+								trimmed = trimmed.trim();
+							}
+
+							return trimmed === "-"
+								? ""
+								: "".concat(
+										extraPush ? tabChar + " * " : tabChar + " *\n" + tabChar + " * ",
+										trimmed,
+										"\n",
+								  );
+						} else {
+							return "";
+						}
+					})
+					.concat(
+						trimmedCode ? tabChar + " *\n" + tabChar + " * " + trimmedCode + "\n" + tabChar + " * " : "",
+					)
+					.replace(/^\s+\*/, "");
+
+				return myStr + "\n";
+			});
 	}
 
-	function processCodeSamples(codeSample: CodeSamples) {
+	function processCodeSamples(codeSample: CodeSamples, rbxClasses: Array<ApiClass>, tabChar: "" | "\t" = "\t") {
 		if (codeSample.length > 0) {
 			return codeSample.reduce(
 				(result, code) =>
 					result +
-					"\n### " +
+					tabChar +
+					" * ### " +
 					code.display_title +
-					"\n\n" +
-					processText(code.code_summary) +
-					"\n```lua\n" +
-					code.code_sample +
+					"\n" +
+					processText(code.code_summary, rbxClasses, tabChar) +
+					"\n" +
+					tabChar +
+					" * ```lua\n" +
+					code.code_sample.trim() +
 					"\n```\n",
-				"\n\n## Code Samples\n",
+				"\n" + tabChar + " * ## Code Samples\n",
 			);
 		} else {
 			return "";
 		}
 	}
 
-	export function processDescription(data: { description: string; code_sample?: CodeSamples }) {
-		return processText(data.description || "") + processCodeSamples(data.code_sample || []);
+	export function processDescriptionInfo(
+		data: { description: string; code_sample?: CodeSamples },
+		rbxClasses: Array<ApiClass>,
+		tabChar: "" | "\t" = "\t",
+	) {
+		return (
+			"\n" +
+			tabChar +
+			" ".concat(
+				processText(data.description || "", rbxClasses, tabChar).trim(),
+				// processCodeSamples(data.code_sample || [], rbxClasses),
+				"\n" + tabChar,
+			)
+		);
 	}
 }
 
-const { processDescription } = ClassInformation;
+const { processDescriptionInfo: processDescription } = ClassInformation;
 
 function handleLinkData(
 	myLinks: Array<Promise<any>>,
@@ -506,6 +582,7 @@ function handleLinkData(
 		rbxMember: ApiClass;
 		link: string;
 	}>,
+	rbxClasses: Array<ApiClass>,
 ) {
 	const rbxMember = linkDatum.rbxMember;
 	const rbxMemberName = rbxMember.Name;
@@ -526,7 +603,7 @@ function handleLinkData(
 					const functionData = obj.entry.modular_blocks[0].api_class_section
 						.current_class[0] as ClassInformation.ClassDescription;
 
-					rbxMember.Description = processDescription(functionData);
+					rbxMember.Description = processDescription(functionData, rbxClasses, "");
 
 					for (const [arr, type] of new Map<Array<ClassInformation.Member>, ApiMember["MemberType"]>([
 						[functionData.property, "Property"],
@@ -540,7 +617,7 @@ function handleLinkData(
 							);
 
 							if (propertyMember) {
-								propertyMember.Description = processDescription(property);
+								propertyMember.Description = processDescription(property, rbxClasses);
 							}
 						}
 					}
@@ -554,28 +631,33 @@ function handleLinkData(
 
 						if (funcMember && funcMember.MemberType === "Function") {
 							const returnValue = func.returns[0] && func.returns[0].summary;
-							funcMember.Description =
-								processDescription(func) +
+							const docs =
 								func.argument.reduce((a, x, j) => {
 									return x.summary
-										? a + "\n@param " + funcMember.Parameters[j].Name + " " + x.summary
+										? a + "\n\t * @param " + funcMember.Parameters[j].Name + " " + x.summary
 										: a;
 								}, "") +
-								(returnValue ? `\n@returns ${returnValue}` : "");
+								(returnValue
+									? `\n\t * @returns ${returnValue.startsWith("No return") ? "void" : returnValue}`
+									: "");
+							funcMember.Description = processDescription(func, rbxClasses).concat(
+								docs ? docs.slice(2) + "\n\t" : "",
+							);
 						}
 					}
 
 					resolve();
 				})
-				.catch(() => {
-					reject();
-				});
+				.catch(reject);
 		}).catch(errorMessage => {
-			console.log("\tFailed for " + link, errorMessage);
-			linkData.push({
-				rbxMember,
-				link,
-			});
+			if (errorMessage === undefined) {
+				console.log("\tFailed for", link, "will retry.");
+				linkData.push({
+					rbxMember,
+					link,
+				});
+			}
+
 			return "";
 		}),
 	);
@@ -642,15 +724,19 @@ export class ClassGenerator extends Generator {
 	private writeDescription(rbxMember: ApiMemberBase, desc?: string) {
 		const description = desc || "";
 		const tags = rbxMember.Tags;
-		const tagStr = tags && tags.length > 0 ? description + "\n\nTags: " + tags.join(", ") : "";
+		const tagStr = tags && tags.length > 0 ? description + " *\n\t * Tags: " + tags.join(", ") + "\n\t" : "";
 
-		this.write(`/** ${(description || "[LACKS DOCUMENTATION]") + tagStr} */`);
+		this.write(`/** ${(description.trim() !== "" ? description : "[LACKS DOCUMENTATION]") + tagStr} */`);
 	}
 
 	private generateCallback(rbxCallback: ApiCallback, className: string, tsImplInterface?: ts.InterfaceDeclaration) {
 		const name = rbxCallback.Name;
 		const args = generateArgs(rbxCallback.Parameters);
-		const description = rbxCallback.Description || this.metadata.getCallbackDescription(className, name);
+		const { Description: wikiDescription } = rbxCallback;
+		const description =
+			wikiDescription && wikiDescription.trim() !== ""
+				? wikiDescription
+				: this.metadata.getCallbackDescription(className, name);
 
 		if (!this.writeSignatures(rbxCallback, impl => impl.getProperties(), tsImplInterface, description)) {
 			this.write(`${name}: (${args}) => void;`);
@@ -660,7 +746,11 @@ export class ClassGenerator extends Generator {
 	private generateEvent(rbxEvent: ApiEvent, className: string, tsImplInterface?: ts.InterfaceDeclaration) {
 		const name = rbxEvent.Name;
 		const args = generateArgs(rbxEvent.Parameters, false);
-		const description = rbxEvent.Description || this.metadata.getEventDescription(className, name);
+		const { Description: wikiDescription } = rbxEvent;
+		const description =
+			wikiDescription && wikiDescription.trim() !== ""
+				? wikiDescription
+				: this.metadata.getEventDescription(className, name);
 
 		if (!this.writeSignatures(rbxEvent, impl => impl.getProperties(), tsImplInterface, description)) {
 			this.write(`readonly ${name}: RBXScriptSignal<(${args}) => void>;`);
@@ -672,7 +762,11 @@ export class ClassGenerator extends Generator {
 		const returnType = safeReturnType(safeValueType(rbxFunction.ReturnType));
 		if (returnType !== null) {
 			const args = generateArgs(rbxFunction.Parameters);
-			const description = rbxFunction.Description || this.metadata.getMethodDescription(className, name);
+			const { Description: wikiDescription } = rbxFunction;
+			const description =
+				wikiDescription && wikiDescription.trim() !== ""
+					? wikiDescription
+					: this.metadata.getMethodDescription(className, name);
 			if (!this.writeSignatures(rbxFunction, impl => impl.getMethods(), tsImplInterface, description)) {
 				this.write(`${name}(${args}): ${returnType};`);
 			}
@@ -683,7 +777,11 @@ export class ClassGenerator extends Generator {
 		const name = rbxProperty.Name;
 		const valueType = safePropType(safeValueType(rbxProperty.ValueType));
 		if (valueType !== null) {
-			const description = rbxProperty.Description || this.metadata.getPropertyDescription(className, name);
+			const { Description: wikiDescription } = rbxProperty;
+			const description =
+				wikiDescription && wikiDescription.trim() !== ""
+					? wikiDescription
+					: this.metadata.getPropertyDescription(className, name);
 			const surelyDefined = rbxProperty.ValueType.Category !== "Class";
 			const prefix = canWrite(rbxProperty) && !memberHasTag(rbxProperty, "ReadOnly") ? "" : "readonly ";
 
@@ -754,14 +852,15 @@ export class ClassGenerator extends Generator {
 		const members = rbxClass.Members.filter(rbxMember => this.shouldGenerateMember(rbxClass, rbxMember));
 		const isEmpty = members.length === 0 && hasSubclasses;
 		const descriptions = new Array<string>();
-		if (tsImplInterface)
-			tsImplInterface.getLeadingCommentRanges().forEach(comment => descriptions.push(comment.getText()));
 
 		const desc = rbxClass.Description;
 
 		if (desc) {
 			descriptions.push(`/** ${desc} */`);
 		}
+
+		if (tsImplInterface)
+			tsImplInterface.getLeadingCommentRanges().forEach(comment => descriptions.push(comment.getText()));
 
 		const description = descriptions.join("\n\t").trim();
 		if (description && !hasSubclasses) this.write(description);
@@ -949,14 +1048,14 @@ export class ClassGenerator extends Generator {
 			// }
 		}
 
-		const interval = 110;
+		const interval = 60;
 		let k = 0;
 		for (let i = interval; i < linkData.length; i += interval) {
 			const myLinks = new Array<Promise<any>>();
 			for (k = i - interval; k < i; k++) {
 				const linkDatum = linkData[k];
 				if (linkDatum) {
-					handleLinkData(myLinks, linkDatum, linkData);
+					handleLinkData(myLinks, linkDatum, linkData, rbxClasses);
 				}
 			}
 			await Promise.all(myLinks);
@@ -967,7 +1066,7 @@ export class ClassGenerator extends Generator {
 		for (; k < linkData.length; k++) {
 			const linkDatum = linkData[k];
 			if (linkDatum) {
-				handleLinkData(leftoverLinks, linkDatum, linkData);
+				handleLinkData(leftoverLinks, linkDatum, linkData, rbxClasses);
 			}
 		}
 		await Promise.all(leftoverLinks);

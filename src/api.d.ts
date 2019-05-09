@@ -95,7 +95,7 @@ export interface ApiFunction extends ApiMemberBase {
 export interface ApiEvent extends ApiMemberBase {
 	MemberType: "Event";
 	Parameters: Array<ApiParameter>;
-	Description: string;
+	Description?: string;
 }
 
 export interface ApiCallback extends ApiMemberBase {

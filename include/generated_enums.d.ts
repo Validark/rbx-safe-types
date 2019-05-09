@@ -630,6 +630,14 @@ declare namespace Enum {
 		}
 
 		export const EyeAccessory: EyeAccessory;
+
+		export interface EmoteAnimation {
+			Name: "EmoteAnimation";
+			Value: 61;
+			EnumType: Enum_AssetType;
+		}
+
+		export const EmoteAnimation: EmoteAnimation;
 	}
 	export type AssetType =
 		| AssetType.Image
@@ -674,7 +682,8 @@ declare namespace Enum {
 		| AssetType.WalkAnimation
 		| AssetType.PoseAnimation
 		| AssetType.EarAccessory
-		| AssetType.EyeAccessory;
+		| AssetType.EyeAccessory
+		| AssetType.EmoteAnimation;
 
 	export namespace AutoJointsMode {
 		export interface Default {
@@ -727,11 +736,20 @@ declare namespace Enum {
 		}
 
 		export const Emote: Emote;
+
+		export interface InspectMenu {
+			Name: "InspectMenu";
+			Value: 3;
+			EnumType: Enum_AvatarContextMenuOption;
+		}
+
+		export const InspectMenu: InspectMenu;
 	}
 	export type AvatarContextMenuOption =
 		| AvatarContextMenuOption.Friend
 		| AvatarContextMenuOption.Chat
-		| AvatarContextMenuOption.Emote;
+		| AvatarContextMenuOption.Emote
+		| AvatarContextMenuOption.InspectMenu;
 
 	export namespace AvatarJointPositionType {
 		export interface Fixed {
@@ -10321,6 +10339,36 @@ declare namespace Enum {
 	}
 	export type Status = Status.Poison | Status.Confusion;
 
+	export namespace StreamingPauseMode {
+		export interface Default {
+			Name: "Default";
+			Value: 0;
+			EnumType: Enum_StreamingPauseMode;
+		}
+
+		export const Default: Default;
+
+		export interface Disabled {
+			Name: "Disabled";
+			Value: 1;
+			EnumType: Enum_StreamingPauseMode;
+		}
+
+		export const Disabled: Disabled;
+
+		export interface ClientPhysicsPause {
+			Name: "ClientPhysicsPause";
+			Value: 2;
+			EnumType: Enum_StreamingPauseMode;
+		}
+
+		export const ClientPhysicsPause: ClientPhysicsPause;
+	}
+	export type StreamingPauseMode =
+		| StreamingPauseMode.Default
+		| StreamingPauseMode.Disabled
+		| StreamingPauseMode.ClientPhysicsPause;
+
 	export namespace StudioStyleGuideColor {
 		export interface MainBackground {
 			Name: "MainBackground";
@@ -12916,6 +12964,7 @@ interface Enum_AssetType {
 	PoseAnimation: Enum.AssetType.PoseAnimation;
 	EarAccessory: Enum.AssetType.EarAccessory;
 	EyeAccessory: Enum.AssetType.EyeAccessory;
+	EmoteAnimation: Enum.AssetType.EmoteAnimation;
 }
 
 interface Enum_AutoJointsMode {
@@ -12928,6 +12977,7 @@ interface Enum_AvatarContextMenuOption {
 	Friend: Enum.AvatarContextMenuOption.Friend;
 	Chat: Enum.AvatarContextMenuOption.Chat;
 	Emote: Enum.AvatarContextMenuOption.Emote;
+	InspectMenu: Enum.AvatarContextMenuOption.InspectMenu;
 }
 
 interface Enum_AvatarJointPositionType {
@@ -14385,6 +14435,12 @@ interface Enum_Status {
 	Confusion: Enum.Status.Confusion;
 }
 
+interface Enum_StreamingPauseMode {
+	Default: Enum.StreamingPauseMode.Default;
+	Disabled: Enum.StreamingPauseMode.Disabled;
+	ClientPhysicsPause: Enum.StreamingPauseMode.ClientPhysicsPause;
+}
+
 interface Enum_StudioStyleGuideColor {
 	MainBackground: Enum.StudioStyleGuideColor.MainBackground;
 	Titlebar: Enum.StudioStyleGuideColor.Titlebar;
@@ -14935,6 +14991,7 @@ declare type CastsToEnum<
 		| Enum.SpecialKey
 		| Enum.StartCorner
 		| Enum.Status
+		| Enum.StreamingPauseMode
 		| Enum.StudioStyleGuideColor
 		| Enum.StudioStyleGuideModifier
 		| Enum.Style
