@@ -1,8 +1,14 @@
-# rbx-safe-types
+# ARCHIVED
+
+rbx-safe-types allowed me to iterate over rbx-types ideas much faster and allowed me to experiment and figure out the best ideas for how roblox types should work. Since we have now integrated almost everything I want into rbx-types, I will no longer be maintaining this. I now recommend using [the latest rbx-types](https://www.npmjs.com/package/rbx-types), which is what I and the roblox-ts team officially support.
+
+Although unrecommended, if you *really* want to take this idea for yourself, and work on it yourself, you may fork [Validark/rbx-types](https://github.com/Validark/rbx-types).
+
+## rbx-safe-types
 
 This is a drop-in replacement for rbx-types.
 
-# Installation
+## Installation
 
 Make sure you have the latest version of TypeScript installed by simply running `npm i -g typescript`.
 

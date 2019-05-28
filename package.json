@@ -1,6 +1,6 @@
 {
 	"name": "rbx-safe-types",
-	"version": "1.0.28",
+	"version": "1.0.29",
 	"description": "A drop-in replacement for rbx-types.",
 	"scripts": {
 		"build": "ts-node src/index.ts"
