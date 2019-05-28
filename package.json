@@ -1,6 +1,6 @@
 {
 	"name": "rbx-safe-types",
-	"version": "1.0.30",
+	"version": "1.0.31",
 	"description": "A drop-in replacement for rbx-types.",
 	"scripts": {
 		"build": "ts-node src/index.ts"
@@ -35,11 +35,5 @@
 	"dependencies": {
 		"rbx-types": "1.0.179"
 	},
-	"keywords": [
-		"rbx-types",
-		"types",
-		"Roblox",
-		"ClassName",
-		"narrowing"
-	]
+	"keywords": []
 }
